@@ -25,7 +25,24 @@ create table if not exists public.rescue_cases (
   target_amount numeric check (target_amount is null or target_amount>=0),
   publication text not null default 'draft' check (publication in ('draft','pending_review','published','unpublished','archived','rejected')),
   photo_path text, submitted_by uuid references auth.users(id), created_at timestamptz not null default now(), updated_at timestamptz not null default now());
-create table if not exists public.case_updates (
+ALTER TABLE public.rescue_cases
+ADD COLUMN IF NOT EXISTS publication text NOT NULL DEFAULT 'draft';
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'rescue_cases_publication_check'
+      AND conrelid = 'public.rescue_cases'::regclass
+  ) THEN
+    ALTER TABLE public.rescue_cases
+    ADD CONSTRAINT rescue_cases_publication_check
+    CHECK (publication IN (
+      'draft', 'pending_review', 'published',
+      'unpublished', 'archived', 'rejected'
+    ));
+  END IF;
+END $$;create table if not exists public.case_updates (
   id uuid primary key default gen_random_uuid(), case_id uuid not null references rescue_cases(id) on delete cascade,
   note text not null, public_visible boolean not null default false, created_by uuid references auth.users(id), created_at timestamptz not null default now());
 
