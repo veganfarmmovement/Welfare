@@ -120,13 +120,7 @@ footer{background:#132b1b;color:#eef5ee;border:0}footer a{color:#eef5ee}
 <p id="socf"></p><p><a href="#admin">Founder dashboard</a> · <a href="#veganfarm-team">Veganfarm Team</a> · <a href="#team">TEAM MEMBER</a></p></div></div></footer>
 <div id="nf" aria-live="polite"></div><div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <script> 
-  const SUPABASE_URL = "https://isijlklxfdqhrlpjxadj.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY = "YOUR_KEY_HERE";
-
-const sb = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_pfzx6EONVzzemRZ6jegG_Q_qvEqgMjS";
 );// 
 const $=s=>document.querySelector(s);
 const toast=m=>{const t=$('#toast');t.textContent=m;t.className='s';setTimeout(()=>t.className='',2200)};
