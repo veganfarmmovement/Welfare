@@ -1244,4 +1244,128 @@ currentUser().then(function(u){
 })();
 
 </script>
+
+<script>
+<!-- VEGANFARM persistent team access requests -->
+(function(){
+  'use strict';
+  var client=window.vfSupabase;
+  if(!client)return;
+  var requestComplete=false;
+  var requestEmail='';
+  var oldFounderLoad=window.vfLoadFounderMore;
+
+  function escTeam(v){
+    return String(v==null?'':v).replace(/[&<>"']/g,function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+  function teamRequestPage(){
+    if(requestComplete){
+      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request received</h1><p class="note">Your access request for <b>'+escTeam(requestEmail)+'</b> is saved. The Founder can review it in Founder Dashboard → Team → Team Requests.</p><p>After the Founder approves your request, use the Team Member page to create your email/password account with the same email address.</p><a class="btn" href="#team">Open Team Member login</a></div></section>';
+    }
+    return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request VEGANFARM Team access</h1><p class="mut">Submit your name and email. The Founder will review your request before team access is granted.</p><form onsubmit="vfSaveTeamRequest(event)"><label for="vf-req-name">Full name</label><input id="vf-req-name" name="name" autocomplete="name" required minlength="3"><label for="vf-req-email">Email address</label><input id="vf-req-email" name="email" type="email" autocomplete="email" required><p id="vf-req-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Submit access request</button></form><p class="mut" style="margin-top:18px">Already approved? <a href="#team">Open the Team Member login and register with your email and password.</a></p></div></section>';
+  }
+  window.vfSaveTeamRequest=function(e){
+    e.preventDefault();
+    var form=e.target;
+    var name=(form.elements.name.value||'').trim().replace(/\\s+/g,' ');
+    var email=(form.elements.email.value||'').trim().toLowerCase();
+    var error=document.getElementById('vf-req-error');
+    var button=form.querySelector('button[type="submit"],button:not([type])');
+    function fail(message){if(error)error.textContent=message;if(button){button.disabled=false;button.textContent='Submit access request';}}
+    if(name.length<3){fail('Enter your full name.');return;}
+    if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)){fail('Enter a valid email address.');return;}
+    if(button){button.disabled=true;button.textContent='Submitting…';}
+    client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).select('id').single().then(function(r){
+      if(r.error){
+        if(r.error.code==='23505'){fail('A request already exists for this email. Contact the Founder to check its status.');return;}
+        fail('Your request could not be saved: '+r.error.message);return;
+      }
+      requestComplete=true;requestEmail=email;go(true);
+    }).catch(function(err){fail('Network error. Your request was not saved. Please try again.');console.error(err);});
+  };
+
+  // The older footer/menu route now uses the persistent request form.
+  P['veganfarm-team']=teamRequestPage;
+
+  // Merge access requests with Auth profiles so both request-first and account-first members appear.
+  window.vfLoadFounderMore=function(){
+    return Promise.resolve(oldFounderLoad&&oldFounderLoad()).then(function(){
+      return client.from('team_access_requests').select('*').order('submitted_at',{ascending:false});
+    }).then(function(result){
+      if(result.error)throw result.error;
+      var profiles=(window.TREQ||[]).slice();
+      var merged=(result.data||[]).map(function(req){
+        var profile=profiles.find(function(p){return String(p.email||'').toLowerCase()===String(req.email||'').toLowerCase();});
+        return {
+          id:req.id,
+          requestId:req.id,
+          profileId:profile?profile.id:null,
+          name:req.name,
+          email:req.email,
+          eh:req.email_normalized,
+          status:req.status,
+          ts:Date.parse(req.submitted_at),
+          date:new Date(req.submitted_at).toLocaleString('en-IN')
+        };
+      });
+      profiles.forEach(function(p){
+        if(!merged.some(function(r){return String(r.email||'').toLowerCase()===String(p.email||'').toLowerCase();})){
+          merged.push(Object.assign({},p,{profileId:p.id,requestId:null}));
+        }
+      });
+      merged.sort(function(a,b){
+        var ap=a.status==='pending'?0:1,bp=b.status==='pending'?0:1;
+        return ap-bp||(b.ts||0)-(a.ts||0);
+      });
+      TREQ.splice(0,TREQ.length);
+      merged.forEach(function(p){TREQ.push(p);});
+    });
+  };
+
+  // Founder decisions update both the request and any existing Auth profile.
+  window.treqSet=function(id,status){
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
+    if(status!=='approved'&&status!=='rejected')return;
+    var row=(window.TREQ||[]).find(function(x){return x.id===id;});
+    if(!row){toast('Request not found. Refresh the Team Requests page.');return;}
+    client.auth.getSession().then(function(session){
+      var user=session.data&&session.data.session&&session.data.session.user;
+      return client.from('team_access_requests')
+        .update({status:status,reviewed_at:new Date().toISOString(),reviewed_by:user?user.id:null})
+        .eq('id',row.requestId||id)
+        .select('id')
+        .then(function(r){
+          if(r.error)throw r.error;
+          if(row.profileId){
+            return client.from('profiles').update({status:status}).eq('id',row.profileId).eq('role','team');
+          }
+        });
+    }).then(function(r){
+      if(r&&r.error)throw r.error;
+      return window.vfReload();
+    }).then(function(){
+      toast(status==='approved'?'Team request approved. The member can register or sign in with the same email.':'Team request rejected.');
+      go(true);
+    }).catch(function(err){console.error(err);toast('Decision was not saved: '+(err&&err.message?err.message:'Please try again.'));});
+  };
+
+  // Auth-based signup also appears in Team Requests; a pre-approved request activates the profile at signup.
+  window.vfSignup=function(e){
+    e.preventDefault();
+    var f=e.target.elements;
+    var email=(f.email.value||'').trim().toLowerCase();
+    var name=(f.name.value||'').trim();
+    if(!email||!name||!f.password.value){toast('Complete all registration fields.');return;}
+    client.auth.signUp({email:email,password:f.password.value,options:{data:{display_name:name}}}).then(function(r){
+      if(r.error){toast(r.error.message);return;}
+      return client.auth.signOut().then(function(){
+        f.password.value='';
+        toast('Account created. Confirm your email if requested, then sign in. Founder approval is required unless your earlier access request is already approved.');
+      });
+    }).catch(function(err){console.error(err);toast('Registration failed. Please try again.');});
+  };
+})();
+</script>
 </body></html>
