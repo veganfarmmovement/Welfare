@@ -834,7 +834,7 @@ window.donSubmit=window.fsub;return}
 function loadProfile(){return sb.auth.getSession().then(function(r){var s=r.data&&r.data.session;
 if(!s){vfRole=null;vfUser=null;return null}
 return sb.from('profiles').select('role,status,display_name,email').eq('id',s.user.id).single().then(function(q){
-vfUser=q.data||null;vfRole=vfUser&&vfUser.status==='approved'?vfUser.role:null;return vfUser})})}
+vfUser=q.data||null;vfRole=vfUser&&vfUser.status==='approved'?vfUser.role:null;if(vfUser&&vfUser.role==='team'&&(!location.hash||location.hash==='#home'))location.hash='#team';return vfUser})})}
 
 function loadPublic(){if(vfRole==='founder')return Promise.resolve();
 return Promise.all([sb.from('public_donation_feed').select('*').order('created_at',{ascending:true}),sb.from('public_financial_totals').select('*').single()]).then(function(r){
@@ -1840,24 +1840,62 @@ currentUser().then(function(u){
 
   /* Team Member is the approved-member login/account-setup route. */
   function loginPage(){
-    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\'team\')"><label>Email address</label><input id="team-login-email" name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><p style="margin-top:10px"><button type="button" class="btn out sm" onclick="vfForgotPassword(document.getElementById(&quot;team-login-email&quot;).value,\'vf-team-reset-status\',this)">Forgot password?</button></p><p id="vf-team-reset-status" role="status" aria-live="polite" class="mut" style="min-height:24px;margin:8px 0"></p><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Have not requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
+    return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+      '<h1 style="font-size:2.2rem">VEGANFARM Team Member</h1>'+
+      '<p class="mut">Enter your name and registered email address. We will send a secure one-time sign-in link to your inbox. No password is required.</p>'+
+      '<form onsubmit="vfTeamEmailLink(event)">'+
+      '<label>Full name</label><input name="name" autocomplete="name" required minlength="3" maxlength="120">'+
+      '<label>Email address</label><input name="email" type="email" autocomplete="email" required>'+
+      '<p id="vf-team-email-status" role="status" aria-live="polite" style="color:var(--mut);min-height:42px;margin:10px 0"></p>'+
+      '<button class="btn" type="submit">Send secure sign-in link</button></form>'+
+      '<p class="mut" style="margin-top:18px">New to the VEGANFARM Team? You can submit your access request here. Founder approval is required before case submissions are enabled.</p>'+
+      '<a class="btn out sm" href="#veganfarm-team">Request Team access</a>'+
+      '</div></section>';
   }
-  window.vfSignup=function(e){
-    e.preventDefault();
-    var form=e.target,email=(form.elements.email.value||'').trim().toLowerCase(),password=form.elements.password.value;
-    var error=document.getElementById('vf-signup-error'),button=form.querySelector('button');
-    function fail(message){if(error)error.textContent=message;if(button){button.disabled=false;button.textContent='Create Team login';}}
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter the same valid email address used in your Team access request.');return;}
-    if(password.length<8){fail('Use a password with at least 8 characters.');return;}
-    if(button){button.disabled=true;button.textContent='Creating account...';}
-    client.auth.signUp({email:email,password:password,options:{data:{display_name:email.split('@')[0]}}})
-      .then(function(r){
-        if(r.error)throw r.error;
-        return client.auth.signOut().then(function(){
-          form.reset();if(error)error.textContent='Account created. If email confirmation is enabled, confirm your email first. Your Team account will work only after Founder approval.';
-          if(button){button.disabled=false;button.textContent='Create Team login';}
-        });
-      }).catch(function(err){console.error(err);fail(err&&err.message?err.message:'Account setup failed. If this email already has an account, use Sign in.');});
+  window.vfTeamEmailLink=function(event){
+    event.preventDefault();
+    var form=event.target;
+    var name=(form.elements.name.value||'').trim().replace(/\s+/g,' ');
+    var email=(form.elements.email.value||'').trim().toLowerCase();
+    var status=document.getElementById('vf-team-email-status');
+    var button=form.querySelector('button[type="submit"]');
+    function show(message,isError){
+      if(status){status.textContent=message;status.style.color=isError?'#991b1b':'var(--mut)';}
+      else toast(message);
+    }
+    if(name.length<3){show('Enter your full name.',true);return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){show('Enter a valid email address.',true);return;}
+    if(email==='hdedhia22@gmail.com'||email==='veganfarmmovement@gmail.com'){
+      show('This is a Founder email. Please use Founder login.',true);return;
+    }
+    if(button){button.disabled=true;button.textContent='Sending email...';}
+    show('Checking your Team access and preparing your secure sign-in link...',false);
+    var request=client.from('team_access_requests').insert({
+      name:name,email:email,email_normalized:email,status:'pending'
+    }).select('id').maybeSingle().then(function(result){
+      if(!result.error)return;
+      if(result.error.code==='23505')return;
+      throw result.error;
+    });
+    request.then(function(){
+      var redirectTo='https://veganfarmmovement.github.io/Welfare/';
+      return client.auth.signInWithOtp({
+        email:email,
+        options:{emailRedirectTo:redirectTo,shouldCreateUser:true}
+      });
+    }).then(function(result){
+      if(result&&result.error)throw result.error;
+      form.reset();
+      show('A secure sign-in link has been requested. Check your inbox and spam folder. Open the link in this browser to enter the Team portal. Your case-submission access will remain locked until the Founder approves your request.',false);
+    }).catch(function(error){
+      console.error('Team passwordless sign-in failed',error);
+      show('Could not send the sign-in link: '+(error&&error.message?error.message:'Please try again.'),true);
+    }).then(function(){
+      if(button){button.disabled=false;button.textContent='Send secure sign-in link';}
+    });
+  };
+  window.vfSignup=function(){
+    toast('Team sign-in is passwordless. Enter your name and email to receive a secure sign-in link.');
   };
 
   function animalChoices(){
@@ -1919,6 +1957,10 @@ currentUser().then(function(u){
       return teamHome();
     }
     if(window.vfRole==='founder')return '<section class="sec"><div class="wrap"><h1>Founder account</h1><p class="mut">Use the Founder dashboard to review Team requests and rescue submissions.</p><a class="btn" href="#admin">Open Founder dashboard</a></div></section>';
+    if(window.vfUser&&window.vfUser.role==='team'){
+      var denied=window.vfUser.status==='rejected'||window.vfUser.status==='suspended';
+      return '<section class="sec"><div class="wrap" style="max-width:560px"><h1 style="font-size:2.2rem">'+(denied?'Team access not active':'Waiting for Founder approval')+'</h1><p class="note">'+(denied?'Your Team access is currently not active. Contact the Founder if you believe this is incorrect.':'Your email sign-in succeeded, but your Team request is still awaiting Founder approval. You can enter the portal after approval.')+'</p><p class="mut">Signed-in email: '+esc(window.vfUser.email||'')+'</p><button class="btn out sm" onclick="tOut()">Sign out</button></div></section>';
+    }
     return loginPage();
   };
 
