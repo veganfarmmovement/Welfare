@@ -597,8 +597,7 @@ return `<h2>Verify donation submission</h2><div class="row" style="margin-bottom
 function addCase(e){e.preventDefault();const f=new FormData(e.target),v=k=>(f.get(k)||'').trim(),id='VF-'+String(nid++).padStart(4,'0');APP.unshift({id,n:v('n'),loc:v('loc'),hosp:v('hosp'),cond:v('cond'),treat:v('treat'),desc:'',amt:f.get('amt')?+f.get('amt'):null,st:'Awaiting treatment',pub:'Draft',sample:true,by:'Founder',updates:[],urgent:false,docs:null});H('Founder',id,'Case created by the Founder');toast('Case created as a draft');commit()}
 function caseEdit(e){e.preventDefault();const a=APP.find(x=>x.id==csel),f=new FormData(e.target),v=k=>(f.get(k)||'').trim();if(!v('n')){toast('Name is required');return}
 shrink(fileOf(e.target,'photo'),ph=>{a.n=v('n');a.loc=v('loc');a.hosp=v('hosp');a.cond=v('cond');a.treat=v('treat');a.desc=v('desc');a.amt=f.get('amt')?+f.get('amt'):null;a.st=f.get('st');a.urgent=!!f.get('urg');if(ph)a.photo=ph;a.req=null;H('Founder',a.id,'Case details edited by the Founder');if(a.pub=='Published'||a.pub=='Change pending Founder approval'){a.pub='Published';goLive(a)}toast('Case saved');location.hash='admin-cases';commit()})}
-function rmPhoto(id){const a=APP.find(x=>x.id==id);a.photo=null;if(a.live)a.live.photo=null;H('Founder',id,'Photograph removed');commit()}
-function docPub(id,k){const a=APP.find(x=>x.id==id);a.docsPub=a.docsPub||{};a.docsPub[k]=!a.docsPub[k];H('Founder',id,(k=='rep'?'Medical report':'Veterinary bill')+' '+(a.docsPub[k]?'approved for public viewing':'set to private'));commit()}
+function rmPhoto(id){const a=APP.find(x=>x.id==id);a.photo=null;if(a.live)a.live.photo=null;H('Founder',id,'Photograph removed');commit()}function docPub(id,k){const a=APP.find(x=>x.id==id);a.docsPub=a.docsPub||{};a.docsPub[k]=!a.docsPub[k];H('Founder',id,(k=='rep'?'Medical report':'Veterinary bill')+' '+(a.docsPub[k]?'approved for public viewing':'set to private'));commit()}
 Object.assign(A,{
 'admin-cases':()=>`<h2>Cases and animals</h2><p class="mut">Create, edit, publish and close cases. Verified amounts come only from verified donations and cannot be typed in.</p><details class="card" style="margin-bottom:20px"><summary style="padding:14px 18px;cursor:pointer;font-weight:600">Add a case</summary><form class="b" onsubmit="addCase(event)" style="max-width:560px"><label>Animal name *</label><input name="n" required><label>Category *</label><select name="kind"><option>Treatment</option><option>Feeding</option></select><label>Daily feeding cost (₹ per day), Feeding cases only</label><input name="fdaily" type="number" min="1"><label>Number of animals fed, Feeding cases only</label><input name="fn" type="number" min="1"><label>Location</label><input name="loc"><label>Hospital or veterinary clinic</label><input name="hosp"><label>Medical condition</label><input name="cond"><label>Treatment required</label><input name="treat"><label>Fundraising target (₹)</label><input name="amt" type="number" min="1"><br><br><button class="btn sm">Create draft case</button></form></details>${APP.length?`<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">${APP.map(acard).join('')}</div>`:'<p class="note">No rescue cases yet. Cases appear here when the team submits an appeal or you add one.</p>'}`,
 'admin-case-edit':()=>{const a=APP.find(x=>x.id==csel);if(!a)return '<h2>Edit case</h2><p>Choose a case from <a href="#admin-cases">Cases and animals</a>.</p>';const d=a.docs;return `<h2>Edit ${esc(a.n)} <span class="tag">${a.id}</span></h2><form style="max-width:640px" onsubmit="caseEdit(event)"><label>Animal name *</label><input name="n" value="${esc(a.n)}" required><label>Category *</label><select name="kind"><option ${a.kind!='Feeding'?'selected':''}>Treatment</option><option ${a.kind=='Feeding'?'selected':''}>Feeding</option></select><label>Daily feeding cost (₹ per day), Feeding cases only</label><input name="fdaily" type="number" min="1" value="${a.fdaily||''}"><label>Number of animals fed, Feeding cases only</label><input name="fn" type="number" min="1" value="${a.fn||''}"><label>Rescue location</label><input name="loc" value="${esc(a.loc)}"><label>Hospital or veterinary clinic</label><input name="hosp" value="${esc(a.hosp)}"><label>Medical condition</label><input name="cond" value="${esc(a.cond)}"><label>Treatment required</label><input name="treat" value="${esc(a.treat)}"><label>Description of the case</label><textarea name="desc" rows="4">${esc(a.desc)}</textarea><label>Fundraising target (₹)</label><input name="amt" type="number" min="1" value="${a.amt||''}" placeholder="Awaiting information"><label>Recovery status</label><select name="st">${STS.map(x=>`<option ${x==a.st?'selected':''}>${x}</option>`).join('')}</select><label style="font-weight:400"><input type="checkbox" name="urg" style="width:auto" ${a.urgent?'checked':''}> Mark as urgent</label><h3 style="margin-top:24px">Photograph</h3>${a.photo?`<img src="${a.photo}" alt="" style="max-width:220px;border-radius:8px;display:block;margin-bottom:8px"><button type="button" class="btn out sm" onclick="rmPhoto('${a.id}')">Remove photograph</button>`:'<p class="mut">No photograph uploaded.</p>'}<label>Upload or replace photograph</label><input type="file" name="photo" accept="image/*"><div class="row" style="margin-top:20px"><button class="btn">Save case</button><a class="btn out" href="#admin-cases">Cancel</a></div></form><h3 style="margin-top:28px">Documents</h3>${d?tbl(['Document','File','Public'],[['Medical report',esc(d.rep)||'none',d.rep?`<button class="btn out sm" onclick="docPub('${a.id}','rep')">${a.docsPub&&a.docsPub.rep?'Public. Set private':'Private. Approve for public'}</button>`:'-'],['Veterinary bill or estimate',esc(d.bill)||'none',d.bill?`<button class="btn out sm" onclick="docPub('${a.id}','bill')">${a.docsPub&&a.docsPub.bill?'Public. Set private':'Private. Approve for public'}</button>`:'-'],['Rescuer signature',esc(d.sig)||'none',d.sig?(d.sigOk?'Consent given':'Private, no consent'):'-']]):'<p class="mut">No documents uploaded for this case. Preview stores file names only.</p>'}`}});
@@ -868,7 +867,7 @@ window.acctTry=window.teamTry;
 
 var oT2=window.TEAM2;
 window.TEAM2=function(h){
-if(vfRole==='founder'||vfRole==='team'){teamIn=true;acct=true;mygen=tgen;tmeh='sb';tme=(vfUser&&(vfUser.display_name||vfUser.email))||'Team member';return NOTSAVED+oT2(h)}
+if(vfRole==='founder'||vfRole==='team'){teamIn=true;acct=true;mygen=tgen;tmeh='sb';tme=(vfUser&&(vfUser.display_name||vfUser.email))||'Team member';return oT2(h)}
 teamIn=false;
 return shell('<h1 style="font-size:2.2rem">Team member sign in</h1><p class="mut">Use your VEGANFARM team account.</p>'+lf('team')+'<h3 style="margin-top:28px">New here? Request access</h3><form onsubmit="vfSignup(event)"><label for="sn">Name</label><input id="sn" name="name" required><label for="se">Email</label><input id="se" name="email" type="email" required><label for="sp">Password (8+ characters)</label><input id="sp" name="password" type="password" minlength="8" autocomplete="new-password" required><button class="btn" style="margin-top:12px">Request access</button></form><p class="mut">The Founder must approve your account before you can sign in.</p>')};
 window.vfSignup=function(e){e.preventDefault();var f=e.target.elements;if(busy)return;busy=true;
@@ -888,8 +887,7 @@ decide(p.id,{status:'verified',amount:am,category:$('#ct').value,target_label:$(
 window.rejectD=function(){var p=PEND[vs];if(!p)return;decide(p.id,{status:'rejected'},oR)};
 window.hideName=function(id){var d=DONS.find(function(x){return x.id==id});if(!d)return;decide(id,{show_name:d.pub!=='name'},function(){oH(id)})};
 
-/* Honest labelling of sections that are not database-backed yet */
-Object.keys(A).forEach(function(k){if(LIVE.indexOf(k)>-1)return;var f=A[k];A[k]=function(){return NOTSAVED+f.apply(this,arguments)}});
+/* All Founder sections are now backed by Supabase tables or vf_app_state. */
 
 window.vfLoadFounder=loadFounder;
 loadProfile().then(function(){return loadPublic()}).then(function(){return window.vfAfterLogin&&window.vfAfterLogin()});
@@ -987,23 +985,263 @@ window.sPub=function(id){if(needF())return;var s=STORIES.find(function(x){return
 save(function(){return sb.from('stories').update({published:!s.pub}).eq('id',id)},s.pub?'Story unpublished':'Story published')};
 })();
 </script>
-
 <script>
-/* VEGANFARM founder data refresh: reload database records after Auth resolves. */
+/* VEGANFARM persistence and production workflow patch */
 (function(){
-  var client=window.vfSupabase;
-  if(!client)return;
-  var previousAfterLogin=window.vfAfterLogin;
-  window.vfAfterLogin=function(){
-    return Promise.resolve(typeof previousAfterLogin==='function' ? previousAfterLogin.apply(this,arguments) : null)
-      .then(function(){
-        if(window.vfRole==='founder'){
-          founderIn=true;
-          isF=true;
-          return window.vfReload().then(function(){go(true);});
-        }
-      });
+'use strict';
+var sb=window.vfSupabase;
+if(!sb)return;
+var saveTimer=null,restoring=false,baseMore=window.vfLoadFounderMore,basePublicMore=window.vfLoadPublicMore,baseAfterLogin=window.vfAfterLogin;
+var stateId='founder_ui_v1';
+var fmtDate=function(v){return v?new Date(v).toLocaleString('en-IN'):'-'};
+var reportError=function(label,error){console.error(label,error);toast(label+(error&&error.message?': '+error.message:''));};
+var currentUser=function(){return sb.auth.getSession().then(function(r){return r.data&&r.data.session?r.data.session.user:null;});};
+function statePayload(){
+  return {
+    notifications:NOTIF,
+    donationAdjustments:ADJ,
+    teamPermissions:TP,
+    visibility:VIS,
+    eightyG:G,
+    notificationCounter:xid,
+    sharedAccessEnabled:shOn
   };
+}
+function persistFounderState(){
+  if(window.vfRole!=='founder'||restoring)return Promise.resolve();
+  return currentUser().then(function(user){
+    if(!user)return;
+    var settings=Object.keys(SET).map(function(key){return {key:key,value:SET[key],updated_at:new Date().toISOString()};});
+    return Promise.all([
+      sb.from('vf_app_state').upsert({id:stateId,payload:statePayload(),updated_by:user.id,updated_at:new Date().toISOString()},{onConflict:'id'}),
+      sb.from('site_settings').upsert(settings,{onConflict:'key'})
+    ]).then(function(results){
+      var bad=results.find(function(x){return x&&x.error;});
+      if(bad)throw bad.error;
+    });
+  });
+}
+function schedulePersist(){
+  if(window.vfRole!=='founder'||restoring)return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){persistFounderState().catch(function(e){reportError('Could not save dashboard settings',e);});},350);
+}
+var originalCommit=window.commit;
+if(typeof originalCommit==='function'){
+  window.commit=function(){var v=originalCommit.apply(this,arguments);schedulePersist();return v;};
+}
+function restoreFounderState(){
+  return Promise.all([
+    sb.from('vf_app_state').select('payload').eq('id',stateId).maybeSingle(),
+    sb.from('site_settings').select('key,value'),
+    sb.from('ledger_adjustments').select('*').order('created_at',{ascending:true}),
+    sb.from('volunteer_applications').select('*').order('created_at',{ascending:false}),
+    sb.from('contact_messages').select('*').order('created_at',{ascending:false})
+  ]).then(function(r){
+    for(var i=0;i<r.length;i++)if(r[i].error)throw r[i].error;
+    restoring=true;
+    var payload=r[0].data&&r[0].data.payload||{};
+    (r[1].data||[]).forEach(function(x){SET[x.key]=x.value;});
+    if(Array.isArray(payload.notifications)){NOTIF.length=0;payload.notifications.forEach(function(x){NOTIF.push(x);});}
+    if(payload.teamPermissions)Object.assign(TP,payload.teamPermissions);
+    if(payload.visibility)Object.assign(VIS,payload.visibility);
+    if(payload.eightyG)Object.assign(G,payload.eightyG);
+    if(payload.notificationCounter)xid=payload.notificationCounter;
+    if(typeof payload.sharedAccessEnabled==='boolean')shOn=payload.sharedAccessEnabled;
+    ADJ.length=0;
+    var expenseAdj=0;
+    (r[2].data||[]).forEach(function(x){
+      if(x.direction==='expenses')expenseAdj+=+x.amount;
+      else ADJ.push({cat:x.direction==='human_donations'?'Human Welfare':'Animal Welfare',amt:+x.amount,reason:x.reason,dbId:x.id});
+      var ln=LG.length+1,entryAmount=x.direction==='expenses'?-Number(x.amount):Number(x.amount);
+      LG.push([ln,fmtDate(x.created_at),'Adjustment',x.direction.replace('_',' ')+' · '+x.reason,entryAmount]);LGM[ln]={k:'adj',id:x.id};
+    });
+    EXP=(EXPS||[]).filter(function(x){return x.st==='Approved'&&!x.rev;}).reduce(function(a,x){return a+x.a;},0)+expenseAdj;
+    VOL.length=0;
+    (r[3].data||[]).forEach(function(x){var p=x.payload||{};VOL.push(Object.assign({},p,{id:x.id,t:fmtDate(x.created_at),st:x.status==='new'?'New':x.status==='approved'?'Approved':'Declined',name:x.name||p.name||'',email:x.email||p.email||'',phone:x.phone||p.phone||'',city:p.city||'',areas:p.areas||p.interests||'',avail:p.availability||p.avail||'',msg:p.message||p.msg||''}));});
+    MSG.length=0;
+    (r[4].data||[]).forEach(function(x){var p=x.payload||{};MSG.push(Object.assign({},p,{id:x.id,t:fmtDate(x.created_at),st:x.handled?'Handled':'New',name:x.name||p.name||'',email:x.email||p.email||'',phone:x.phone||p.phone||'',msg:p.message||p.msg||''}));});
+    restoring=false;
+  }).catch(function(e){restoring=false;throw e;});
+}
+
+/* Load private case details, uploaded documents and timeline records for the Founder. */
+function loadFounderCaseExtras(){
+  return Promise.all([
+    sb.from('case_private').select('*'),
+    sb.from('case_documents').select('*').order('created_at',{ascending:true}),
+    sb.from('case_updates').select('*').order('created_at',{ascending:true})
+  ]).then(function(r){
+    var bad=r.find(function(x){return x.error;});if(bad)throw bad.error;
+    var privateById={},docsById={},updatesById={};
+    (r[0].data||[]).forEach(function(x){privateById[x.case_id]=x;});
+    (r[1].data||[]).forEach(function(x){(docsById[x.case_id]=docsById[x.case_id]||[]).push(x);});
+    (r[2].data||[]).forEach(function(x){(updatesById[x.case_id]=updatesById[x.case_id]||[]).push([fmtDate(x.created_at),x.note]);});
+    var jobs=[];
+    APP.forEach(function(a){
+      if(!a.dbId)return;
+      var p=privateById[a.dbId];if(p){a.vname=p.finder_name||'';a.vphone=p.finder_phone||'';}
+      a.updates=updatesById[a.dbId]||[];
+      var d=docsById[a.dbId]||[];if(!d.length)return;
+      a.docs={};a.docsPub={};
+      d.forEach(function(row){
+        var key=row.document_type==='medical_report'?'rep':row.document_type==='veterinary_bill'?'bill':'other';
+        jobs.push(sb.storage.from('case-documents').createSignedUrl(row.file_path,3600).then(function(s){
+          if(s.error)throw s.error;
+          a.docs[key]=s.data.signedUrl;a.docsPub[key]=!!row.is_public;
+        }));
+      });
+    });
+    return Promise.all(jobs);
+  });
+}
+window.vfLoadFounderMore=function(){return Promise.resolve(baseMore&&baseMore()).then(restoreFounderState).then(loadFounderCaseExtras);};
+window.vfReload=function(){return Promise.resolve(window.vfLoadFounder&&window.vfLoadFounder()).then(window.vfLoadFounderMore).then(function(){go(true);});};
+window.vfLoadPublicMore=function(){
+  return Promise.resolve(basePublicMore&&basePublicMore()).then(function(){
+    return sb.from('case_documents').select('case_id,document_type,file_path,is_public');
+  }).then(function(r){
+    if(r.error)throw r.error;
+    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
+    return Promise.all(jobs);
+  });
+};
+window.vfAfterLogin=function(){
+  return Promise.resolve(baseAfterLogin&&baseAfterLogin()).then(function(){
+    return sb.from('case_documents').select('case_id,document_type,file_path,is_public');
+  }).then(function(r){
+    if(r.error)throw r.error;
+    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
+    return Promise.all(jobs);
+  });
+};
+
+/* Website editor values are saved to site_settings; media is stored in Supabase Storage. */
+window.imgSet=function(e,key){
+  e.preventDefault();var file=fileOf(e.target,'f');if(!file){toast('Choose an image first');return;}
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)||file.size>5242880){toast('Choose a JPG, PNG or WebP image up to 5 MB');return;}
+  var path='founder/'+key+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+(file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg');
+  sb.storage.from('website-media').upload(path,file,{contentType:file.type}).then(function(r){if(r.error)throw r.error;var u=sb.storage.from('website-media').getPublicUrl(path).data.publicUrl;SET[key]=u;H('Founder','Website content','Image saved: '+key);return persistFounderState();}).then(function(){toast('Image saved to database and storage');go(true);}).catch(function(err){reportError('Image was not saved',err);});
+};
+var oldImgClr=window.imgClr;
+window.imgClr=function(key){SET[key]='';H('Founder','Website content','Image cleared: '+key);commit();};
+
+/* Actions that previously changed only the current tab now update their source tables. */
+window.fSt=function(id,value){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId)return;saveDbCase(a,{status:value},'Recovery status saved');};
+window.setT=function(id){var a=APP.find(function(x){return x.id===id;}),v=+document.getElementById('t-'+id).value;if(!a||!a.dbId||!(v>0)){toast('Enter a valid target');return;}saveDbCase(a,{target_amount:v,extra:Object.assign({},a.extra||{},{req:null})},'Fundraising target saved');};
+window.fUpd=function(id){var a=APP.find(function(x){return x.id===id;}),el=document.getElementById('u-'+id),note=(el&&el.value||'').trim();if(!a||!a.dbId||!note){toast('Write the update first');return;}currentUser().then(function(u){return sb.from('case_updates').insert({case_id:a.dbId,note:note,public_visible:true,created_by:u.id});}).then(function(r){if(r.error)throw r.error;el.value='';return window.vfReload();}).then(function(){toast('Case update saved');go(true);}).catch(function(e){reportError('Update was not saved',e);});};
+window.fUrg=function(id){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId)return;saveDbCase(a,{urgent:!a.urgent},'Urgent status saved');};
+window.useEst=function(id){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId||!(a.est>0))return;saveDbCase(a,{target_amount:a.est},'Founder target saved');};
+window.useReq=function(id){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId||!(a.req>0))return;saveDbCase(a,{target_amount:a.req,extra:Object.assign({},a.extra||{},{req:null})},'Requested target approved and saved');};
+function saveDbCase(a,patch,message){sb.from('rescue_cases').update(patch).eq('id',a.dbId).then(function(r){if(r.error)throw r.error;return window.vfReload();}).then(function(){toast(message);go(true);}).catch(function(e){reportError('Change was not saved',e);});}
+window.rmPhoto=function(id){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId)return;saveDbCase(a,{photo_path:null},'Case photograph removed');};
+window.docPub=function(id,key){var a=APP.find(function(x){return x.id===id;});if(!a||!a.dbId)return;var typ=key==='rep'?'medical_report':'veterinary_bill';sb.from('case_documents').select('id,is_public').eq('case_id',a.dbId).eq('document_type',typ).order('created_at',{ascending:false}).limit(1).then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('Document not found');var row=r.data[0];return sb.from('case_documents').update({is_public:!row.is_public}).eq('id',row.id);}).then(function(r){if(r.error)throw r.error;return window.vfReload();}).then(function(){toast('Document visibility saved');go(true);}).catch(function(e){reportError('Document setting was not saved',e);});};
+
+/* Founder-created cases and team-submitted cases keep all optional documents, not just file names. */
+function uploadCaseDocument(caseId,type,file,userId){
+  if(!file||!file.size)return Promise.resolve(null);
+  if(file.size>10485760)return Promise.reject(new Error('Document exceeds 10 MB'));
+  if(!/^(image\/(jpeg|png)|application\/pdf)$/.test(file.type))return Promise.reject(new Error('Use JPG, PNG or PDF for case documents'));
+  var ext=file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg';
+  var path=caseId+'/'+type+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;
+  return sb.storage.from('case-documents').upload(path,file,{contentType:file.type}).then(function(r){if(r.error)throw r.error;return sb.from('case_documents').insert({case_id:caseId,document_type:type,file_path:path,is_public:false,created_by:userId});}).then(function(r){if(r.error)throw r.error;return path;});
+}
+var oldFounderCaseEdit=window.caseEdit;
+window.caseEdit=function(e){
+  e.preventDefault();if(window.vfRole!=='founder'){toast('Founder sign-in required');return;}
+  var a=APP.find(function(x){return x.id===csel;});if(!a||!a.dbId)return;var f=new FormData(e.target),form=e.target,v=function(k){return String(f.get(k)||'').trim();};
+  if(!v('n')){toast('Animal name is required');return;}
+  currentUser().then(function(user){
+    var photo=fileIn(form,'photo');
+    return up('case-photos',photo).then(function(path){
+      var kind=f.get('kind')==='Feeding'?'Feeding':'Treatment';
+      var row={animal_name:v('n'),kind:kind,location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:f.get('st'),target_amount:f.get('amt')?+f.get('amt'):null,urgent:!!f.get('urg'),extra:{fdaily:kind==='Feeding'?(+f.get('fdaily')||0):0,fn:kind==='Feeding'?(+f.get('fn')||0):0,est:a.est}};
+      if(path)row.photo_path=path;
+      return sb.from('rescue_cases').update(row).eq('id',a.dbId).then(function(r){if(r.error)throw r.error;var jobs=[],rep=fileIn(form,'rep'),bill=fileIn(form,'bill');if(rep)jobs.push(uploadCaseDocument(a.dbId,'medical_report',rep,user.id));if(bill)jobs.push(uploadCaseDocument(a.dbId,'veterinary_bill',bill,user.id));return Promise.all(jobs);});
+    });
+  }).then(function(){return window.vfReload();}).then(function(){toast('Case details and files saved');csel=null;location.hash='admin-cases';go(true);}).catch(function(err){reportError('Case changes were not saved',err);});
+};
+var oldCaseEditor=A['admin-case-edit'];
+A['admin-case-edit']=function(){var html=oldCaseEditor();return html.replace('<div class="row" style="margin-top:20px">','<label>Upload medical report (private until approved)</label><input type="file" name="rep" accept="image/jpeg,image/png,application/pdf"><label>Upload veterinary bill or estimate</label><input type="file" name="bill" accept="image/jpeg,image/png,application/pdf"><div class="row" style="margin-top:20px">');};
+
+window.tNew=function(e){
+  e.preventDefault();if(window.vfRole!=='team'){toast('Team member sign-in required');return;}if(!TP.submit){toast('Case submissions are disabled by the Founder');return;}
+  var f=new FormData(e.target),form=e.target,v=function(k){return String(f.get(k)||'').trim();};
+  if(!v('n')||!v('loc')||!v('vphone')||v('vphone').replace(/\D/g,'').length<10){toast('Complete the animal name, rescue location and valid contact number');return;}
+  if(!fileIn(form,'photo')){toast('Animal photograph is required');return;}
+  var btn=form.querySelector('button[type=submit],button:not([type])');if(btn)btn.disabled=true;
+  currentUser().then(function(user){
+    if(!user)throw new Error('Your session has expired. Sign in again.');
+    return up('case-photos',fileIn(form,'photo')).then(function(photo){
+      return sb.from('rescue_cases').insert({animal_name:v('n'),location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:'Awaiting treatment',publication:'pending_review',photo_path:photo,submitted_by:user.id,extra:{est:f.get('amt')?+f.get('amt'):null}}).select('id').single();
+    }).then(function(res){
+      if(res.error)throw res.error;var caseId=res.data.id;
+      var jobs=[sb.from('case_private').insert({case_id:caseId,finder_name:v('vname'),finder_phone:v('vphone')})];
+      var rep=fileIn(form,'rep'),bill=fileIn(form,'bill');
+      if(rep)jobs.push(uploadCaseDocument(caseId,'medical_report',rep,user.id));
+      if(bill)jobs.push(uploadCaseDocument(caseId,'veterinary_bill',bill,user.id));
+      return Promise.all(jobs);
+    });
+  }).then(function(results){
+    var bad=results&&results.find&&results.find(function(x){return x&&x.error;});if(bad)throw bad.error;
+    return window.vfAfterLogin();
+  }).then(function(){if(btn)btn.disabled=false;form.reset();toast('Rescue case and attachments saved. Awaiting Founder review.');location.hash='team-manage';go(true);})
+   .catch(function(err){if(btn)btn.disabled=false;reportError('Case was not fully saved',err);});
+};
+window.tSave=function(e){
+  e.preventDefault();if(window.vfRole!=='team'){toast('Team member sign-in required');return;}if(!TP.edit){toast('Case editing is disabled by the Founder');return;}
+  var a=APP.find(function(x){return x.id===tsel;});if(!a||!a.dbId)return;var f=new FormData(e.target),form=e.target,v=function(k){return String(f.get(k)||'').trim();};
+  var extra=Object.assign({},a.extra||{},{est:a.est,req:f.get('req')?+f.get('req'):null});
+  currentUser().then(function(user){if(!user)throw new Error('Session expired');return up('case-photos',fileIn(form,'photo')).then(function(photo){var p={animal_name:v('n')||a.n,location:v('loc'),hospital:v('hosp'),condition:v('cond'),description:v('desc'),treatment:v('treat'),status:f.get('st')||a.st,extra:extra};if(photo)p.photo_path=photo;return sb.from('rescue_cases').update(p).eq('id',a.dbId).eq('submitted_by',user.id).in('publication',['draft','pending_review']).select('id').then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('This case can no longer be edited');var jobs=[],rep=fileIn(form,'rep'),bill=fileIn(form,'bill');if(rep)jobs.push(uploadCaseDocument(a.dbId,'medical_report',rep,user.id));if(bill)jobs.push(uploadCaseDocument(a.dbId,'veterinary_bill',bill,user.id));return Promise.all(jobs);});});}).then(function(){return window.vfAfterLogin();}).then(function(){toast('Case details and attachments saved');location.hash='team-manage';go(true);}).catch(function(err){reportError('Case changes were not saved',err);});
+};
+
+/* Donation review and donor-name controls persist notification decisions as well as payments. */
+window.verifyD=function(){  if(window.vfRole!=='founder')return;var p=PEND[vs],amount=+document.getElementById('am').value,category=document.getElementById('ct').value,target=document.getElementById('al').value,show=document.getElementById('pd').value==='name';
+  if(!p||!(amount>0)){toast('Enter a valid amount');return;}
+  sb.from('donations').update({status:'verified',amount:amount,category:category,target_label:target,show_name:show}).eq('id',p.id).eq('status','pending').select('id').then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('Donation was already updated or is unavailable');var d={id:p.id,n:p.n,a:amount,cat:category,tg:target,pub:show?'name':'anon'};var text=ntext(d);NOTIF.unshift({id:'N-'+(xid++),t:text,w:now(),hide:false,did:p.id});H('Founder',p.id,'Verified donation '+inr(amount)+' and allocated to '+target);return persistFounderState();}).then(function(){return window.vfReload();}).then(function(){toast('Payment verified and saved');go(true);}).catch(function(err){reportError('Payment verification failed',err);});
+};
+window.hideName=function(id){var d=DONS.find(function(x){return x.id===id;});if(!d)return;var value=d.pub!=='name';sb.from('donations').update({show_name:value}).eq('id',id).then(function(r){if(r.error)throw r.error;NOTIF.forEach(function(n){if(n.did===id){var copy=Object.assign({},d,{pub:value?'name':'anon'});n.t=ntext(copy);}});return persistFounderState();}).then(function(){return window.vfReload();}).then(function(){toast('Donor display preference saved');go(true);}).catch(function(err){reportError('Donor display preference was not saved',err);});};
+
+/* Authenticated Team Portal replaces the former browser-only shared-code portal. */
+window.TEAM2=function(h){
+  if(window.vfRole!=='team'&&window.vfRole!=='founder')return '<section class="sec"><div class="wrap"><p class="note">Sign in with your individual VEGANFARM team account.</p></div></section>';
+  teamIn=true;acct=true;
+  if(h==='team-manage')return '<section class="sec"><div class="wrap"><h1 style="font-size:2.2rem">My rescue cases</h1><p class="mut">Only your own submissions are shown. The Founder controls publication and fundraising targets.</p>'+tbl(['Case ID','Animal','Status','Location','Action'],APP.filter(function(a){return a.src==='team'||a.submitted_by;}).map(function(a){return [esc(a.id),esc(a.n),pt(a.pub),esc(a.loc),['Draft','Pending Founder review','Corrections requested'].includes(a.pub)?'<button class="btn out sm" onclick="tsel=\''+esc(a.id)+'\';location.hash=\'team-edit\'">Edit</button>':'Locked'];}))+'<a class="btn" href="#team-new">Submit another case</a></div></section>';
+  if(h==='team-edit'){
+    var a=APP.find(function(x){return x.id===tsel;});if(!a)return '<section class="sec"><div class="wrap"><p>No editable case selected.</p><a href="#team-manage">Back to my cases</a></div></section>';
+    return '<section class="sec"><div class="wrap"><h1 style="font-size:2.2rem">Edit '+esc(a.n)+'</h1><form style="max-width:640px" onsubmit="tSave(event)"><label>Animal name *</label><input name="n" value="'+esc(a.n)+'" required><label>Rescue location *</label><input name="loc" value="'+esc(a.loc)+'" required><label>Hospital or veterinary clinic</label><input name="hosp" value="'+esc(a.hosp)+'"><label>Medical condition</label><input name="cond" value="'+esc(a.cond)+'"><label>Description</label><textarea name="desc" rows="4">'+esc(a.desc)+'</textarea><label>Treatment required</label><input name="treat" value="'+esc(a.treat)+'"><label>Request a target change (Founder approval required)</label><input name="req" type="number" min="1" placeholder="Optional"><label>Treatment status</label><select name="st">'+STS.map(function(x){return '<option '+(x===a.st?'selected':'')+'>'+x+'</option>';}).join('')+'</select><label>Replace animal photograph</label><input type="file" name="photo" accept="image/jpeg,image/png"><label>Medical report</label><input type="file" name="rep" accept="image/jpeg,image/png,application/pdf"><label>Veterinary bill or estimate</label><input type="file" name="bill" accept="image/jpeg,image/png,application/pdf"><p class="mut">Your updates remain pending Founder review. You cannot publish or set fundraising targets.</p><button class="btn">Save case changes</button> <a class="btn out" href="#team-manage">Cancel</a></form></div></section>';
+  }
+  return '<section class="sec"><div class="wrap"><h1 style="font-size:2.2rem">Submit a rescue case</h1>'+NEWF()+'<p><a href="#team-manage">View my submissions</a></p></div></section>';
+};
+
+/* Founder controls now show Auth users and their database approval state. */
+A['admin-team']=function(){
+  return '<h2>Team accounts</h2><p class="mut">Approve or reject individual accounts. Team members can submit and edit only their own pending rescue cases; they cannot access finance or Founder settings.</p>'+tbl(['Name','Email','Status','Decision'],TREQ.map(function(m){return [esc(m.name),esc(m.email),m.status, m.status==='pending'?'<button class="btn sm" onclick="treqSet(\''+m.id+'\',\'approved\')">Approve</button> <button class="btn out sm" onclick="treqSet(\''+m.id+'\',\'rejected\')">Reject</button>':m.status==='approved'?'<button class="btn out sm" onclick="treqSet(\''+m.id+'\',\'rejected\')">Suspend</button>':'<button class="btn sm" onclick="treqSet(\''+m.id+'\',\'approved\')">Approve</button>'];}))+'<p class="mut">New registrations appear here automatically after signing up.</p>';
+};
+window.setApp=function(k,id,st){
+  if(window.vfRole!=='founder')return;
+  var table=k==='vol'?'volunteer_applications':'contact_messages';
+  var patch=k==='vol'?{status:st==='Approved'?'approved':'rejected'}:{handled:true};
+  sb.from(table).update(patch).eq('id',id).then(function(r){if(r.error)throw r.error;return window.vfReload();}).then(function(){toast('Record updated');go(true);}).catch(function(e){reportError('Application change was not saved',e);});
+};
+A['admin-apps']=function(){return '<h2>Applications and messages</h2><p class="mut">Applicant contact details are private to the Founder.</p><h3>Volunteer applications</h3>'+tbl(['Name','Email','Phone','City','Interests','Availability','Message','Status','Decision'],VOL.map(function(x){return [esc(x.name),esc(x.email),esc(x.phone),esc(x.city),esc(x.areas),esc(x.avail),esc(x.msg),x.st,x.st==='New'?'<button class="btn sm" onclick="setApp(\'vol\',\''+x.id+'\',\'Approved\')">Approve</button> <button class="btn out sm" onclick="setApp(\'vol\',\''+x.id+'\',\'Declined\')">Reject</button>':'-'];}))+'<h3 style="margin-top:26px">Contact messages</h3>'+tbl(['Name','Email','Phone','Message','Status','Action'],MSG.map(function(x){return [esc(x.name),esc(x.email),esc(x.phone),esc(x.msg),x.st,x.st==='New'?'<button class="btn out sm" onclick="setApp(\'msg\',\''+x.id+'\',\'Handled\')">Mark handled</button>':'Handled'];}));};
+A['admin-security']=function(){return '<h2>Account security</h2><p>Founder access uses your Supabase email and password. Passwords are managed by Supabase Auth and are never stored in this website.</p><p><a class="btn out" href="https://supabase.com/dashboard/project/isijlklxfdqhrlpjxadj/auth/users" target="_blank" rel="noopener">Manage Founder accounts</a></p><button class="btn" onclick="lockF()">Sign out and lock dashboard</button>';};
+A['admin-80g']=function(){var ok=G.no&&G.f&&G.t&&G.ca;return '<h2>80G settings</h2><p class="mut">Stored in Supabase. Enable the public notice only after Trust CA verification.</p><label>80G approval number</label><input id="vf80no" value="'+esc(G.no)+'"><label>Valid from</label><input type="date" id="vf80from" value="'+esc(G.f)+'"><label>Valid until</label><input type="date" id="vf80to" value="'+esc(G.t)+'"><label><input type="checkbox" id="vf80ca" '+(G.ca?'checked':'')+' style="width:auto"> Verified by the Trust CA</label><label><input type="checkbox" id="vf80on" '+(G.on?'checked':'')+' '+(!ok?'disabled':'')+' style="width:auto"> Show 80G information on donation page</label><button class="btn" onclick="save80G()">Save 80G settings</button>';};
+window.save80G=function(){G.no=document.getElementById('vf80no').value.trim();G.f=document.getElementById('vf80from').value;G.t=document.getElementById('vf80to').value;G.ca=document.getElementById('vf80ca').checked;G.on=document.getElementById('vf80on').checked;if(G.on&&!(G.no&&G.f&&G.t&&G.ca)){toast('Complete all details and CA verification before enabling');return;}H('Founder','80G settings','Updated 80G settings');commit();persistFounderState().then(function(){toast('80G settings saved');}).catch(function(e){reportError('80G settings were not saved',e);});};
+A['admin-notifs']=function(){return '<h2>Notification history</h2>'+tbl(['When','Notification','Visibility','Action'],NOTIF.map(function(n){return [esc(n.w),esc(n.t),n.hide?'Hidden':'Shown','<button class="btn out sm" onclick="togN(\''+n.id+'\')">'+(n.hide?'Show':'Hide')+'</button>'];}));};
+A['admin-ledger']=function(){return '<h2>Financial ledger</h2><p class="mut">Entries are backed by verified donations, approved expenses and append-only correction records.</p>'+tbl(['#','Date','Type','Record','Amount'],LG.map(function(x){return [x[0],esc(x[1]),esc(x[2]),esc(x[3]),(x[4]<0?'−':'')+inr(Math.abs(x[4]))];}))+'<h3 style="margin-top:24px">Record a ledger adjustment</h3><form class="card" style="max-width:560px" onsubmit="addLedgerAdjustment(event)"><div class="b"><label>Adjust</label><select name="direction"><option value="animal_donations">Animal Welfare donations</option><option value="human_donations">Human Welfare donations</option><option value="expenses">Approved expenses</option></select><label>Adjustment amount (₹; negative to reduce)</label><input name="amount" type="number" step="0.01" required><label>Reason</label><input name="reason" required><button class="btn">Save adjustment</button></div></form>';};
+window.addLedgerAdjustment=function(e){e.preventDefault();if(window.vfRole!=='founder')return;var f=new FormData(e.target),amount=+f.get('amount'),reason=String(f.get('reason')||'').trim();if(!amount||!reason){toast('Enter an amount and reason');return;}currentUser().then(function(u){return sb.from('ledger_adjustments').insert({direction:f.get('direction'),amount:amount,reason:reason,created_by:u.id});}).then(function(r){if(r.error)throw r.error;return window.vfReload();}).then(function(){toast('Ledger adjustment saved');go(true);}).catch(function(e){reportError('Ledger adjustment was not saved',e);});};
+
+/* Public pages never display sample finance rows. */
+P.stories=function(){var live=STORIES.filter(function(x){return x.pub;});return head('Our Past Work','Verified activities published by the Founder.')+S(live.length?'<div class="grid">'+live.map(function(x){return '<article class="card">'+(x.photo?'<img src="'+esc(x.photo)+'" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover">':'')+'<div class="b"><h3>'+esc(x.t)+'</h3><p class="mut">'+esc(x.w)+'</p><p>'+esc(x.b)+'</p></div></article>';}).join('')+'</div>':'<p class="note">No activities have been published yet.</p>');};
+P.transparency=function(){return head('Financial transparency','Only verified donations and approved expenses are displayed.')+S(finStats+ '<h3 style="margin-top:28px">Recent verified donations</h3>'+tbl(['Date','Donor','Amount','Category'],DONS.filter(function(d){return !d.rev;}).slice().reverse().map(function(d){return [esc(d.when||d.t||'-'),d.pub==='name'?esc(d.n):'Anonymous',inr(d.a),esc(d.cat)];})));};
+
+/* Apply settings immediately on load and persist every Founder dashboard commit. */
+currentUser().then(function(u){
+  if(window.vfRole==='founder')return restoreFounderState();
+  return sb.from('site_settings').select('key,value').then(function(r){if(r.error)throw r.error;(r.data||[]).forEach(function(x){SET[x.key]=x.value;});});
+}).then(function(){go(true);}).catch(function(e){console.warn('VEGANFARM settings load issue',e);});
 })();
+
 </script>
 </body></html>
