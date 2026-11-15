@@ -858,16 +858,56 @@ var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><labe
 window.PINSCR=function(){
 if(vfRole==='founder'){founderIn=true;isF=true;setTimeout(function(){window.vfReload().then(function(){go(true)})});return shell('<p class="note">Loading dashboard…</p>')}
 return shell('<h1 style="font-size:2.2rem">Founder access</h1><p class="mut">Sign in with your Founder account. Access is checked by the database, not by this page.</p>'+lf('founder'))};
-window.vfLogin=function(e,kind){e.preventDefault();var f=e.target,err=function(m){var p=document.getElementById('perr');if(p)p.textContent=m;else toast(m)};
-if(busy)return;busy=true;err('');
-sb.auth.signInWithPassword({email:f.elements.email.value.trim(),password:f.elements.password.value}).then(function(r){
-if(r.error){busy=false;return err('Incorrect email or password.')}
-return loadProfile().then(function(p){busy=false;
-if(!p)return err('No profile found for this account.');
-if(p.status==='pending')return sb.auth.signOut().then(function(){vfRole=null;err('Your account is waiting for Founder approval.')});
-if(p.status!=='approved'||(kind==='founder'&&p.role!=='founder'))return sb.auth.signOut().then(function(){vfRole=null;err(kind==='founder'?'This account is not the Founder account.':'This account has no access.')});
-(window.vfAfterLogin?window.vfAfterLogin():Promise.resolve()).then(function(){go(true)})})},function(){busy=false;err('Network problem. Please try again.')})};
-window.lockF=function(){founderIn=false;sb.auth.signOut().then(function(){vfRole=null;vfUser=null;location.hash='home';loadPublic()})};
+window.vfLogin=function(e,kind){
+  e.preventDefault();
+  var form=e.target;
+  var message=function(text){var p=document.getElementById('perr');if(p)p.textContent=text;else toast(text);};
+  var button=form.querySelector('button:not([type="button"])');
+  if(busy)return;
+  busy=true;
+  message('');
+  if(button){button.disabled=true;button.textContent='Signing in...';}
+  var email=(form.elements.email.value||'').trim().toLowerCase();
+  var password=form.elements.password.value||'';
+
+  sb.auth.signInWithPassword({email:email,password:password})
+    .then(function(result){
+      if(result.error)throw new Error('Invalid email or password. Use Forgot password? if you cannot access this account.');
+      return loadProfile();
+    })
+    .then(function(profile){
+      if(!profile)throw new Error('The account profile could not be loaded. Contact the Founder.');
+      if(profile.status!=='approved'){
+        return sb.auth.signOut().then(function(){
+          vfRole=null;vfUser=null;
+          throw new Error(profile.status==='pending'?'This account is waiting for Founder approval.':'This account does not have active access.');
+        });
+      }
+      if(kind==='founder'&&profile.role!=='founder'){
+        return sb.auth.signOut().then(function(){
+          vfRole=null;vfUser=null;
+          throw new Error('This is not a Founder account. Use Team Member login instead.');
+        });
+      }
+      if(kind==='team'&&profile.role!=='team'){
+        return sb.auth.signOut().then(function(){
+          vfRole=null;vfUser=null;
+          throw new Error('This is a Founder account. Use Founder login instead.');
+        });
+      }
+      return Promise.resolve(window.vfAfterLogin?window.vfAfterLogin():null).then(function(){
+        busy=false;
+        if(button){button.disabled=false;button.textContent='Sign in';}
+        go(true);
+      });
+    })
+    .catch(function(error){
+      busy=false;
+      if(button){button.disabled=false;button.textContent='Sign in';}
+      message(error&&error.message?error.message:'Sign-in failed. Check your connection and try again.');
+      console.error('VEGANFARM sign-in failed',error);
+    });
+};window.lockF=function(){founderIn=false;sb.auth.signOut().then(function(){vfRole=null;vfUser=null;location.hash='home';loadPublic()})};
 window.pinTry=function(e){e.preventDefault()};
 window.teamTry=function(e){e.preventDefault();toast('Shared access codes are disabled. Sign in with your team account.')};
 window.acctTry=window.teamTry;
@@ -2043,12 +2083,14 @@ currentUser().then(function(u){
   window.vfForgotPassword=function(value){
     var email=String(value||'').trim().toLowerCase();
     if(!email){toast('Enter your account email address first.');return;}
-    client.auth.resetPasswordForEmail(email).then(function(result){
-      if(result.error){toast('Could not send the reset email: '+result.error.message);return;}
+    var redirectTo=window.location.origin+window.location.pathname;
+    toast('Requesting a password-reset email...');
+    client.auth.resetPasswordForEmail(email,{redirectTo:redirectTo}).then(function(result){
+      if(result.error){toast('Password reset could not be requested: '+result.error.message);return;}
       toast('Password reset email requested. Check your inbox and spam folder.');
     }).catch(function(error){
       console.error('Password reset request failed',error);
-      toast('Could not request a password reset. Please try again.');
+      toast('Password reset could not be requested. Please try again.');
     });
   };
   window.vfUpdatePassword=function(event){
@@ -2066,7 +2108,7 @@ currentUser().then(function(u){
     }).then(function(){
       window.vfRole=null;window.vfUser=null;
       toast('Password updated. Sign in using your new password.');
-      location.hash='admin';
+      location.hash='password-updated';
     }).catch(function(error){
       console.error('Password update failed',error);
       toast('Password was not updated: '+(error&&error.message?error.message:'Please reopen the reset email and try again.'));
@@ -2085,6 +2127,13 @@ currentUser().then(function(u){
       '</div></section>';
   };
 
+  P['password-updated']=function(){
+    return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+      '<h1 style="font-size:2.2rem">Password updated</h1>'+
+      '<p class="mut">Your password has been changed. Choose the correct login page below.</p>'+
+      '<div class="row"><a class="btn" href="#admin">Founder login</a><a class="btn out" href="#team">Team Member login</a></div>'+
+      '</div></section>';
+  };
   window.vfShowPasswordReset=function(){
     location.hash='reset-password';
     if(typeof go==='function')go(true);
