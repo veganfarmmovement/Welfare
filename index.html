@@ -1269,13 +1269,13 @@ currentUser().then(function(u){
   window.vfSaveTeamRequest=function(e){
     e.preventDefault();
     var form=e.target;
-    var name=(form.elements.name.value||'').trim().replace(/\\s+/g,' ');
+    var name=(form.elements.name.value||'').trim().replace(/\s+/g,' ');
     var email=(form.elements.email.value||'').trim().toLowerCase();
     var error=document.getElementById('vf-req-error');
     var button=form.querySelector('button[type="submit"],button:not([type])');
     function fail(message){if(error)error.textContent=message;if(button){button.disabled=false;button.textContent='Submit access request';}}
     if(name.length<3){fail('Enter your full name.');return;}
-    if(!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(email)){fail('Enter a valid email address.');return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter a valid email address.');return;}
     if(button){button.disabled=true;button.textContent='Submitting…';}
     client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).select('id').single().then(function(r){
       if(r.error){
