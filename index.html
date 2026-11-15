@@ -1778,7 +1778,7 @@ currentUser().then(function(u){
     if(name.length<3){fail('Enter your full name.');return;}
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter a valid email address.');return;}
     if(button){button.disabled=true;button.textContent='Submitting...';}
-    client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).select('id').single()
+    client.from('team_access_requests').insert({name:name,email:email,status:'pending'})
       .then(function(r){
         if(r.error){
           if(r.error.code==='23505'){fail('A request already exists for this email. The Founder can check its status in Admin → Team requests.');return;}
