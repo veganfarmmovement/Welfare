@@ -1,7 +1,7 @@
 -- VEGANFARM Supabase hardening and Team access lifecycle
--- Apply to project isijlklxfdqhrlpjxadj.
--- This migration is intended to be safe to re-run: policies are dropped before recreation,
--- constraints are replaced, indexes use IF NOT EXISTS, and views/functions are replaced.
+-- Applied to project isijlklxfdqhrlpjxadj.
+-- This SQL documents the production changes. The grants and policies intentionally
+-- expose only the public website operations; Founder and approved Team access remain RLS controlled.
 
 begin;
 
@@ -140,21 +140,92 @@ with check (
   and created_by = (select auth.uid())
 );
 
--- Donor personal data is no longer selectable through the base donations table by public visitors.
+-- The base donations table is never publicly readable.
 drop policy if exists p_don_public_r on public.donations;
 revoke all privileges on table public.donations from anon, public;
 grant insert on table public.donations to anon;
 
--- Public feed is an owner-executed view with a deliberately limited column projection.
-create or replace view public.public_donation_feed
-with (security_barrier = true, security_invoker = false)
-as
-select
-  case when show_name then donor_name else 'Anonymous'::text end as donor,
-  amount, category, case_id, created_at, target_label
-from public.donations
-where status = 'verified';
+-- A separate public-only table prevents donor contacts and screenshots from entering the public API.
+drop view if exists public.public_donation_feed;
+create table public.public_donation_feed (
+  donation_id uuid primary key references public.donations(id) on delete cascade,
+  donor text not null,
+  amount numeric not null,
+  category text not null,
+  case_id uuid,
+  created_at timestamptz not null,
+  target_label text
+);
+alter table public.public_donation_feed enable row level security;
+create policy public_donation_feed_read
+on public.public_donation_feed for select to anon, authenticated
+using (true);
+revoke all privileges on table public.public_donation_feed from anon, authenticated, public;
 grant select on table public.public_donation_feed to anon, authenticated;
+create index public_donation_feed_created_at_idx on public.public_donation_feed(created_at);
+
+create or replace function private.sync_public_donation_feed()
+returns trigger language plpgsql security definer set search_path to ''
+as $function$
+begin
+  if TG_OP = 'DELETE' then
+    delete from public.public_donation_feed where donation_id = old.id;
+    return old;
+  end if;
+
+  if new.status = 'verified' then
+    insert into public.public_donation_feed(
+      donation_id, donor, amount, category, case_id, created_at, target_label
+    )
+    values (
+      new.id,
+      case when new.show_name then new.donor_name else 'Anonymous'::text end,
+      new.amount,
+      new.category,
+      new.case_id,
+      new.created_at,
+      new.target_label
+    )
+    on conflict (donation_id) do update
+    set donor = excluded.donor,
+        amount = excluded.amount,
+        category = excluded.category,
+        case_id = excluded.case_id,
+        created_at = excluded.created_at,
+        target_label = excluded.target_label;
+  else
+    delete from public.public_donation_feed where donation_id = new.id;
+  end if;
+  return new;
+end;
+$function$;
+revoke all on function private.sync_public_donation_feed() from public, anon, authenticated;
+
+drop trigger if exists donations_sync_public_feed on public.donations;
+create trigger donations_sync_public_feed
+after insert or update or delete on public.donations
+for each row execute function private.sync_public_donation_feed();
+
+insert into public.public_donation_feed(
+  donation_id, donor, amount, category, case_id, created_at, target_label
+)
+select
+  id,
+  case when show_name then donor_name else 'Anonymous'::text end,
+  amount,
+  category,
+  case_id,
+  created_at,
+  target_label
+from public.donations
+where status = 'verified'
+on conflict (donation_id) do update
+set donor = excluded.donor,
+    amount = excluded.amount,
+    category = excluded.category,
+    case_id = excluded.case_id,
+    created_at = excluded.created_at,
+    target_label = excluded.target_label;
 
 -- Public Team access requests are insert-only; Founder reads and decisions remain RLS protected.
 revoke all privileges on table public.team_access_requests from anon, public;
