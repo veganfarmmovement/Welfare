@@ -2281,8 +2281,8 @@ currentUser().then(function(u){
       '<div class="card" style="margin:18px 0"><div class="b">'+
       '<h2>Case submissions</h2><p class="mut">Choose the correct form. Submitted cases remain pending until the Founder reviews and approves them.</p>'+
       '<div class="row" style="flex-wrap:wrap">'+
-      '<button class="btn" type="button" onclick="showTeamCaseForm(\\'Feeding\\')">Feeding Form</button>'+
-      '<button class="btn out" type="button" onclick="showTeamCaseForm(\\'Treatment\\')">Treatment Form</button></div>'+
+      '<button class="btn" type="button" onclick="showTeamCaseForm(\'Feeding\')">Feeding Form</button>'+
+      '<button class="btn out" type="button" onclick="showTeamCaseForm(\'Treatment\')">Treatment Form</button></div>'+
       '<div id="vf-team-case-form" style="margin-top:22px"><p class="note">Select Feeding Form or Treatment Form to begin.</p></div>'+
       '</div></div></div></section>';
   }
@@ -2350,7 +2350,7 @@ currentUser().then(function(u){
       var target=document.getElementById('vf-team-case-form');
       if(target){
         target.innerHTML='<div class="note" role="status"><b>Case '+escapeHtml(data.case_code||'submitted')+' received.</b> Your '+escapeHtml(kind)+' submission has been saved and sent to Founder → Rescue Appeals for review. It will not be published until the Founder approves it.</div>'+
-          '<div class="row" style="margin-top:16px"><button class="btn" type="button" onclick="showTeamCaseForm(\\'Feeding\\')">Submit another Feeding case</button><button class="btn out" type="button" onclick="showTeamCaseForm(\\'Treatment\\')">Submit another Treatment case</button></div>';
+          '<div class="row" style="margin-top:16px"><button class="btn" type="button" onclick="showTeamCaseForm(\'Feeding\')">Submit another Feeding case</button><button class="btn out" type="button" onclick="showTeamCaseForm(\'Treatment\')">Submit another Treatment case</button></div>';
       }
       if(typeof toast==='function')toast(kind+' case sent to Founder for approval.');
     }catch(error){
