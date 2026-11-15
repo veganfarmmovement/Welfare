@@ -1295,7 +1295,7 @@ currentUser().then(function(u){
       return client.from('team_access_requests').select('*').order('submitted_at',{ascending:false});
     }).then(function(result){
       if(result.error)throw result.error;
-      var profiles=(window.TREQ||[]).slice();
+      var profiles=TREQ.slice();
       var merged=(result.data||[]).map(function(req){
         var profile=profiles.find(function(p){return String(p.email||'').toLowerCase()===String(req.email||'').toLowerCase();});
         return {
@@ -1328,7 +1328,7 @@ currentUser().then(function(u){
   window.treqSet=function(id,status){
     if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
     if(status!=='approved'&&status!=='rejected')return;
-    var row=(window.TREQ||[]).find(function(x){return x.id===id;});
+    var row=TREQ.find(function(x){return x.id===id;});
     if(!row){toast('Request not found. Refresh the Team Requests page.');return;}
     client.auth.getSession().then(function(session){
       var user=session.data&&session.data.session&&session.data.session.user;
