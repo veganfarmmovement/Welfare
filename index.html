@@ -1818,11 +1818,12 @@ currentUser().then(function(u){
       '<label>Animal type *</label><select name="animal_type" required>'+animalChoices()+'</select>'+
       '<label>Rescue / service location *</label><input name="loc" required>'+
       '<label>Upload animal or feeding photograph *</label><input name="photo" type="file" accept="image/jpeg,image/png" required>'+
-      '<label>Additional details *</label><textarea name="desc" rows="4" required placeholder="Explain the situation and the support required."></textarea>'+
-      '<h3 style="margin-top:22px">Your contact details (visible only to the Founder)</h3>'+
+      '<label>Additional details *</label><textarea name="desc" rows="4" required placeholder="Explain the situation and the support required."></textarea>';
+  }
+  function contactFields(){
+    return '<h3 style="margin-top:22px">Your contact details (visible only to the Founder)</h3>'+
       '<label>Your full name *</label><input name="vname" required>'+
-      '<label>Contact number *</label><input name="vphone" type="tel" pattern="[0-9+ ()\\-]{10,}" required>'+
-      '';
+      '<label>Contact number *</label><input name="vphone" type="tel" pattern="[0-9+ ()\\-]{10,}" required>';
   }
   function feedingForm(){
     return '<form style="max-width:680px" onsubmit="tNew(event,\'Feeding\')"><h3>Feeding support details</h3>'+
@@ -1832,7 +1833,7 @@ currentUser().then(function(u){
       '<label>Feeding frequency *</label><select name="frequency" required><option value="">Select frequency</option><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Weekly</option><option>Emergency / one-time</option></select>'+
       '<label>Daily feeding cost (₹) *</label><input name="fdaily" type="number" min="1" step="0.01" required>'+
       '<p class="mut">The Founder will set the official campaign target after reviewing the request. Estimated monthly feeding cost is calculated from the daily cost.</p>'+
-      '<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Feeding case for Founder review</button></form>';
+      contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Feeding case for Founder review</button></form>';
   }
   function treatmentForm(){
     return '<form style="max-width:680px" onsubmit="tNew(event,\'Treatment\')"><h3>Treatment support details</h3>'+
@@ -1844,7 +1845,7 @@ currentUser().then(function(u){
       '<label>Medical report (optional)</label><input name="rep" type="file" accept="image/jpeg,image/png,application/pdf">'+
       '<label>Veterinary bill / estimate (optional)</label><input name="bill" type="file" accept="image/jpeg,image/png,application/pdf">'+
       '<p class="mut">The Founder will verify the medical details and set the official fundraising target before publication.</p>'+
-      '<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Treatment case for Founder review</button></form>';
+      contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Treatment case for Founder review</button></form>';
   }
   function teamHome(){
     var who=(window.vfUser&&(window.vfUser.display_name||window.vfUser.email))||'Approved Team member';
