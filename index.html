@@ -2371,4 +2371,33 @@ currentUser().then(function(u){
 })();
 </script>
 
+
+<script>
+/* VEGANFARM: retire individual Team accounts; shared code only. */
+(function () {
+  'use strict';
+  var sharedCodePortal = window.TEAM2;
+  function renderTeamCodePortal() {
+    return typeof sharedCodePortal === 'function'
+      ? sharedCodePortal()
+      : '<section class="sec"><div class="wrap"><p class="note">The VEGANFARM Team portal is unavailable. Refresh and try again.</p></div></section>';
+  }
+
+  // All Team-related routes now lead to the shared-code page only.
+  window.TEAM2 = renderTeamCodePortal;
+  if (typeof P !== 'undefined') P['veganfarm-team'] = renderTeamCodePortal;
+
+  // Retire the previous individual-account and access-request flows.
+  window.vfSignup = function (event) {
+    if (event && event.preventDefault) event.preventDefault();
+    if (typeof toast === 'function') toast('Individual Team accounts are disabled. Use the shared VEGANFARM Team access code.');
+  };
+  window.vfSaveTeamRequest = function (event) {
+    if (event && event.preventDefault) event.preventDefault();
+    if (typeof toast === 'function') toast('Individual Team access requests are disabled. Use the shared VEGANFARM Team access code.');
+  };
+  window.teamTry = window.acctTry = window.vfSignup;
+})();
+</script>
+
 </body></html>
