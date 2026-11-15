@@ -120,7 +120,7 @@ footer{background:#132b1b;color:#eef5ee;border:0}footer a{color:#eef5ee}
 <section id="wa" class="wa" hidden></section><footer><div class="wrap two"><div><b style="font-size:1.1rem">VEGANFARM Movement</b><p>VEGANFARM Movement — An animal welfare and humanitarian initiative of Niswarth Seva 1008 Charitable Trust. Donations are received through the Trust.</p><p>Founder: Harshit Dedhia, Founder &amp; Movement Lead</p></div>
 <div><p id="fcon"></p><p class="mut" style="font-size:12px">Website version 2</p>
 <p><a href="#policy-privacy">Privacy</a> · <a href="#policy-donation">Donation</a> · <a href="#policy-refund">Refund</a> · <a href="#policy-terms">Terms</a> · <a href="#policy-financial">Financial transparency</a> · <a href="#policy-volunteer">Volunteer</a></p>
-<p id="socf"></p><p><a href="#admin">Founder dashboard</a> · <a href="#veganfarm-team">Veganfarm Team</a> · <a href="#team">TEAM MEMBER</a></p></div></div></footer>
+<p id="socf"></p><p><a href="#admin">Founder dashboard</a> · <a href="#veganfarm-team">Veganfarm Team</a> · <a href="#team">VEGANFARM TEAM</a></p></div></div></footer>
 <div id="nf" aria-live="polite"></div><div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -1309,7 +1309,7 @@ currentUser().then(function(u){
   }
   function teamRequestPage(){
     if(requestComplete){
-      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request received</h1><p class="note">Your access request for <b>'+escTeam(requestEmail)+'</b> is saved. The Founder can review it in Founder Dashboard → Team → Team Requests.</p><p>After approval, open the Team Member page and request a secure one-time sign-in link using this same email address. No password is required.</p><a class="btn" href="#team">Open Team Member login</a></div></section>';
+      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request received</h1><p class="note">Your access request for <b>'+escTeam(requestEmail)+'</b> is saved. The Founder can review it in Founder Dashboard → Team → Team Requests.</p><p>After approval, open the Team Member page and request a secure one-time sign-in link using this same email address. No password is required.</p><a class="btn" href="#team">Open VEGANFARM Team access</a></div></section>';
     }
     return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request VEGANFARM Team access</h1><p class="mut">Submit your name and email. The Founder will review your request before team access is granted.</p><form onsubmit="vfSaveTeamRequest(event)"><label for="vf-req-name">Full name</label><input id="vf-req-name" name="name" autocomplete="name" required minlength="3"><label for="vf-req-email">Email address</label><input id="vf-req-email" name="email" type="email" autocomplete="email" required><p id="vf-req-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Submit access request</button></form><p class="mut" style="margin-top:18px">Already approved? <a href="#team">Open the Team Member login and register with your email and password.</a></p></div></section>';
   }
@@ -2136,8 +2136,8 @@ currentUser().then(function(u){
       else actions='<button class="btn sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'reopen\')">Return to review</button>';
       return [esc(a.id),esc(a.n),caseDetail(a),applicant||'—',photo+(docs?'<br>'+docs:''),esc(a.loc||'—'),targetInput,cash(received),remaining===null?'—':cash(remaining),esc(a.pub)+(a.note?'<br><span class="mut">'+esc(a.note)+'</span>':''),actions];
     });
-    return '<h2>Rescue case submissions</h2><p class="mut">Feeding and Treatment submissions from approved Team members appear here. Review the different form details, set the official fundraising target, then approve, request corrections or reject.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){go(true);})">Refresh submissions</button></div><h3>Team submissions ('+items.length+')</h3>'+
-      (items.length?tbl(['Case ID','Animal / group','Form and submitted details','Rescuer contact','Photo / documents','Location','Fundraising target','Verified raised','Remaining','Status','Founder decision'],rows):'<p class="note">No Team rescue cases have been submitted yet. A Founder-approved Team member must sign in and submit a Feeding or Treatment form.</p>');
+    return '<h2>Rescue case submissions</h2><p class="mut">Feeding and Treatment submissions from the VEGANFARM Team appear here. Review each case, set the official fundraising target, then approve, request corrections or reject.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){go(true);})">Refresh submissions</button></div><h3>Team submissions ('+items.length+')</h3>'+
+      (items.length?tbl(['Case ID','Animal / group','Form and submitted details','Rescuer contact','Photo / documents','Location','Fundraising target','Verified raised','Remaining','Status','Founder decision'],rows):'<p class="note">No cases have been submitted yet. Open VEGANFARM Team with the shared access code and submit a Feeding or Treatment form.</p>');
   };
 
   /* Add the request page to the main navigation without replacing existing routes. */
@@ -2236,7 +2236,7 @@ currentUser().then(function(u){
     return '<section class="sec"><div class="wrap" style="max-width:480px">'+
       '<h1 style="font-size:2.2rem">Password updated</h1>'+
       '<p class="mut">Your password has been changed. Choose the correct login page below.</p>'+
-      '<div class="row"><a class="btn" href="#admin">Founder login</a><a class="btn out" href="#team">Team Member login</a></div>'+
+      '<div class="row"><a class="btn" href="#admin">Founder login</a><a class="btn out" href="#team">VEGANFARM Team access</a></div>'+
       '</div></section>';
   };
   window.vfShowPasswordReset=function(){
