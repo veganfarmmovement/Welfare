@@ -1593,7 +1593,7 @@ currentUser().then(function(u){
       '<h1 style="font-size:2.2rem">VEGANFARM Team Portal</h1>'+
       '<p class="mut">Only Founder-approved Team accounts can submit rescue cases.</p>'+
       '<h3>Team member sign in</h3>'+
-      '<form onsubmit="vfLogin(event,\\'team\\')">'+
+      '<form onsubmit="vfLogin(event,\'team\')">'+
       '<label>Email address</label><input name="email" type="email" autocomplete="username" required>'+
       '<label>Password</label><input name="password" type="password" autocomplete="current-password" required>'+
       '<p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p>'+
@@ -1664,15 +1664,15 @@ currentUser().then(function(u){
       var applicant=[a.vname,a.vphone].filter(Boolean).map(escHtml).join('<br>');
       var actions='';
       if(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested'){
-        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'approve\\')">Approve &amp; Publish</button> '+
-          '<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'correct\\')">Request corrections</button> '+
-          '<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reject\\')">Reject</button>';
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'approve\')">Approve &amp; Publish</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'correct\')">Request corrections</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'reject\')">Reject</button>';
       }else if(a.pub==='Rejected'){
-        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reopen\\')">Reopen</button>';
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'reopen\')">Reopen</button>';
       }else if(a.pub==='Published'){
-        actions='<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'unpublish\\')">Unpublish</button>';
+        actions='<button class="btn out sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'unpublish\')">Unpublish</button>';
       }else{
-        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reopen\\')">Return to review</button>';
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+escHtml(a.id)+'\',\'reopen\')">Return to review</button>';
       }
       return [escHtml(a.id),escHtml(a.n),applicant||'—',photo+(docs?'<br>'+docs:''),escHtml(a.loc),
         targetInput,money(received),remaining===null?'—':money(remaining),
@@ -1680,7 +1680,7 @@ currentUser().then(function(u){
     });
     return '<h2>Rescue case submissions</h2>'+
       '<p class="mut">Only approved Team accounts can submit cases. Every submission is stored in Supabase and waits here for Founder approval. Published cases become visible on the public website.</p>'+
-      '<div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){location.hash=\\'admin-appeals\\';go(true);})">Refresh submissions</button></div>'+
+      '<div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){location.hash=\'admin-appeals\';go(true);})">Refresh submissions</button></div>'+
       '<h3>Team submissions ('+submissions.length+')</h3>'+
       (submissions.length?tbl(['Case ID','Animal','Rescuer','Photo / documents','Location','Fundraising target','Verified raised','Remaining','Status','Founder decision'],rows):
        '<div class="note">No team rescue submissions are saved yet. An approved Team member must sign in through the Team Portal and submit a case. After submission, refresh this page.</div>');
