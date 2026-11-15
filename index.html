@@ -868,7 +868,7 @@ window.acctTry=window.teamTry;
 
 var oT2=window.TEAM2;
 window.TEAM2=function(h){
-if(vfRole==='founder'||vfRole==='team'){teamIn=true;acct=true;mygen=tgen;tmeh='sb';tme=(vfUser&&(vfUser.display_name||vfUser.email))||'Team member';return oT2(h)}
+if(vfRole==='founder'||vfRole==='team'){teamIn=true;acct=true;mygen=tgen;tmeh='sb';tme=(vfUser&&(vfUser.display_name||vfUser.email))||'Team member';return NOTSAVED+oT2(h)}
 teamIn=false;
 return shell('<h1 style="font-size:2.2rem">Team member sign in</h1><p class="mut">Use your VEGANFARM team account.</p>'+lf('team')+'<h3 style="margin-top:28px">New here? Request access</h3><form onsubmit="vfSignup(event)"><label for="sn">Name</label><input id="sn" name="name" required><label for="se">Email</label><input id="se" name="email" type="email" required><label for="sp">Password (8+ characters)</label><input id="sp" name="password" type="password" minlength="8" autocomplete="new-password" required><button class="btn" style="margin-top:12px">Request access</button></form><p class="mut">The Founder must approve your account before you can sign in.</p>')};
 window.vfSignup=function(e){e.preventDefault();var f=e.target.elements;if(busy)return;busy=true;
@@ -888,7 +888,8 @@ decide(p.id,{status:'verified',amount:am,category:$('#ct').value,target_label:$(
 window.rejectD=function(){var p=PEND[vs];if(!p)return;decide(p.id,{status:'rejected'},oR)};
 window.hideName=function(id){var d=DONS.find(function(x){return x.id==id});if(!d)return;decide(id,{show_name:d.pub!=='name'},function(){oH(id)})};
 
-/* All Founder sections are now backed by Supabase tables or vf_app_state. */
+/* Honest labelling of sections that are not database-backed yet */
+Object.keys(A).forEach(function(k){if(LIVE.indexOf(k)>-1)return;var f=A[k];A[k]=function(){return NOTSAVED+f.apply(this,arguments)}});
 
 window.vfLoadFounder=loadFounder;
 loadProfile().then(function(){return loadPublic()}).then(function(){return window.vfAfterLogin&&window.vfAfterLogin()});
@@ -986,15 +987,23 @@ window.sPub=function(id){if(needF())return;var s=STORIES.find(function(x){return
 save(function(){return sb.from('stories').update({published:!s.pub}).eq('id',id)},s.pub?'Story unpublished':'Story published')};
 })();
 </script>
+
 <script>
-/* VEGANFARM persistence and production workflow patch */
+/* VEGANFARM founder data refresh: reload database records after Auth resolves. */
 (function(){
-'use strict';
-var sb=window.vfSupabase;
-if(!sb)return;
-var saveTimer=null,restoring=false,baseMore=window.vfLoadFounderMore,basePublicMore=window.vfLoadPublicMore,baseAfterLogin=window.vfAfterLogin;
-var stateId='founder_ui_v1';
-var fmtDate=function(v){return v?new Date(v).toLocaleString('en-IN'):'-'};
-var reportError=function(label,error){console.error(label,error);toast(label+(error&&error.message?': '+error.message:''));};
-var currentUser=function(){return sb.auth.getSession().then(function(r){return r.data&&r.data.session?r.data.session.user:null;});};
-function statePayload(){
+  var client=window.vfSupabase;
+  if(!client)return;
+  var previousAfterLogin=window.vfAfterLogin;
+  window.vfAfterLogin=function(){
+    return Promise.resolve(typeof previousAfterLogin==='function' ? previousAfterLogin.apply(this,arguments) : null)
+      .then(function(){
+        if(window.vfRole==='founder'){
+          founderIn=true;
+          isF=true;
+          return window.vfReload().then(function(){go(true);});
+        }
+      });
+  };
+})();
+</script>
+</body></html>
