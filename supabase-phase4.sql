@@ -1,16 +1,16 @@
--- VEGANFARM Supabase hardening and Team access lifecycle
--- Applied to project isijlklxfdqhrlpjxadj.
--- This SQL documents the production changes. The grants and policies intentionally
--- expose only the public website operations; Founder and approved Team access remain RLS controlled.
+-- VEGANFARM Supabase Phase 4: production access hardening and Team lifecycle
+-- Apply using Supabase migration system. Safe to re-run against the live schema.
 
 begin;
 
+-- Team request lifecycle includes a reversible suspension state.
 alter table public.team_access_requests
   drop constraint if exists team_access_requests_status_check;
 alter table public.team_access_requests
   add constraint team_access_requests_status_check
   check (status = any (array['pending','approved','rejected','suspended']::text[]));
 
+-- Role predicates: stable, security-definer and no implicit search path.
 create or replace function private.is_founder()
 returns boolean language sql stable security definer set search_path to ''
 as $function$
@@ -29,6 +29,7 @@ as $function$
   );
 $function$;
 
+-- Auth signup picks up the Founder-approved Team request and mirrors its status.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path to ''
 as $function$
@@ -85,6 +86,7 @@ begin
 end;
 $function$;
 
+-- Keep profile, rescue-case, private contact and document policies aligned with the app.
 drop policy if exists p_prof_self on public.profiles;
 create policy p_prof_self on public.profiles for select to authenticated
 using ((id = (select auth.uid())) or (select private.is_founder()));
@@ -140,14 +142,14 @@ with check (
   and created_by = (select auth.uid())
 );
 
--- The base donations table is never publicly readable.
+-- A separate public projection is used for donations. The underlying donor table is
+-- not exposed to anonymous SELECT, protecting phone numbers, UPI references and file paths.
 drop policy if exists p_don_public_r on public.donations;
 revoke all privileges on table public.donations from anon, public;
-grant insert on table public.donations to anon;
+grant insert on table public.donations to anon, authenticated;
 
--- A separate public-only table prevents donor contacts and screenshots from entering the public API.
 drop view if exists public.public_donation_feed;
-create table public.public_donation_feed (
+create table if not exists public.public_donation_feed (
   donation_id uuid primary key references public.donations(id) on delete cascade,
   donor text not null,
   amount numeric not null,
@@ -157,12 +159,13 @@ create table public.public_donation_feed (
   target_label text
 );
 alter table public.public_donation_feed enable row level security;
-create policy public_donation_feed_read
-on public.public_donation_feed for select to anon, authenticated
-using (true);
+drop policy if exists public_donation_feed_read on public.public_donation_feed;
+create policy public_donation_feed_read on public.public_donation_feed
+for select to anon, authenticated using (true);
 revoke all privileges on table public.public_donation_feed from anon, authenticated, public;
 grant select on table public.public_donation_feed to anon, authenticated;
-create index public_donation_feed_created_at_idx on public.public_donation_feed(created_at);
+create index if not exists public_donation_feed_created_at_idx
+  on public.public_donation_feed(created_at);
 
 create or replace function private.sync_public_donation_feed()
 returns trigger language plpgsql security definer set search_path to ''
@@ -172,7 +175,6 @@ begin
     delete from public.public_donation_feed where donation_id = old.id;
     return old;
   end if;
-
   if new.status = 'verified' then
     insert into public.public_donation_feed(
       donation_id, donor, amount, category, case_id, created_at, target_label
@@ -180,11 +182,7 @@ begin
     values (
       new.id,
       case when new.show_name then new.donor_name else 'Anonymous'::text end,
-      new.amount,
-      new.category,
-      new.case_id,
-      new.created_at,
-      new.target_label
+      new.amount, new.category, new.case_id, new.created_at, new.target_label
     )
     on conflict (donation_id) do update
     set donor = excluded.donor,
@@ -209,14 +207,9 @@ for each row execute function private.sync_public_donation_feed();
 insert into public.public_donation_feed(
   donation_id, donor, amount, category, case_id, created_at, target_label
 )
-select
-  id,
-  case when show_name then donor_name else 'Anonymous'::text end,
-  amount,
-  category,
-  case_id,
-  created_at,
-  target_label
+select id,
+       case when show_name then donor_name else 'Anonymous'::text end,
+       amount, category, case_id, created_at, target_label
 from public.donations
 where status = 'verified'
 on conflict (donation_id) do update
@@ -227,11 +220,11 @@ set donor = excluded.donor,
     created_at = excluded.created_at,
     target_label = excluded.target_label;
 
--- Public Team access requests are insert-only; Founder reads and decisions remain RLS protected.
+-- Anonymous requests are write-only. Founder review remains RLS protected.
 revoke all privileges on table public.team_access_requests from anon, public;
-grant insert on table public.team_access_requests to anon;
+grant insert on table public.team_access_requests to anon, authenticated;
 
--- Restrict anonymous access to only the public page operations that the live site uses.
+-- Public visitor permissions: only the operations the public site actually needs.
 revoke all privileges on table public.profiles from anon, public;
 revoke all privileges on table public.audit_log from anon, public;
 revoke all privileges on table public.case_private from anon, public;
@@ -255,16 +248,16 @@ grant select on table public.case_documents to anon;
 revoke all privileges on table public.public_financial_totals from anon, public;
 grant select on table public.public_financial_totals to anon;
 revoke all privileges on table public.contact_messages from anon, public;
-grant insert on table public.contact_messages to anon;
+grant insert on table public.contact_messages to anon, authenticated;
 revoke all privileges on table public.volunteer_applications from anon, public;
-grant insert on table public.volunteer_applications to anon;
+grant insert on table public.volunteer_applications to anon, authenticated;
 
--- A legacy bucket named "Welfare private" was public but empty; make it private.
+-- Private legacy bucket had no objects at audit time; keep it private if still empty.
 update storage.buckets b set public = false
 where b.id = 'Welfare private'
   and not exists (select 1 from storage.objects o where o.bucket_id = b.id);
 
--- Index foreign keys reported without indexes by the Supabase advisor.
+-- Foreign-key indexes identified by the Supabase advisor.
 create index if not exists case_documents_case_id_idx on public.case_documents(case_id);
 create index if not exists case_documents_created_by_idx on public.case_documents(created_by);
 create index if not exists case_updates_case_id_idx on public.case_updates(case_id);
