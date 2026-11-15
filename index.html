@@ -351,7 +351,7 @@ function popN(t){const c=document.getElementById('nf');if(!c)return;const d=docu
 const socHtml=()=>`<span class="row" style="gap:16px"><a href="${esc(SET.ig)}" target="_blank" rel="noopener" aria-label="VEGANFARM on Instagram" title="Instagram"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a><a href="${esc(SET.fb)}" target="_blank" rel="noopener" aria-label="VEGANFARM on Facebook" title="Facebook"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M15.5 21v-7h2.3l.4-2.8h-2.7V9.6c0-.8.3-1.4 1.4-1.4h1.4V5.7c-.3 0-1.1-.1-2.1-.1-2.1 0-3.5 1.3-3.5 3.6v2h-2.4V14h2.4v7"/></svg></a></span>`;
 function tick(){const t=$('#tick'),an=$('#ann'),h=(location.hash||'#home').slice(1),adm=/^(admin|team)/.test(h),l=NOTIF.filter(n=>!n.hide);t.hidden=adm||!l.length;if(!t.hidden)t.textContent='Live · '+l[ti%l.length].t;an.hidden=adm||!SET.announce;if(!an.hidden)an.textContent=SET.announce;$('#socf').innerHTML=socHtml()}
 setInterval(()=>{ti++;tick()},5000);
-function buildMenu(){const h=(location.hash||'#home').slice(1),m=[['home','Home'],['about','About'],['cases','Rescue Cases'],['impact','Impact'],['projects','Projects'],['transparency','Transparency']],mo=[['education','Education'],['stories','Our Past Work'],['volunteer','Volunteer'],['contact','Contact'],['team','TEAM MEMBER']];const l=x=>`<a class="l ${h==x[0]||(x[0]=='cases'&&h.startsWith('case-'))||(x[0]=='team'&&h.startsWith('team'))?'on':''}" href="#${x[0]}">${x[1]}</a>`;$('#menu').innerHTML=m.map(l).join('')+'<a class="l mobonly" href="#donate">Donate</a>'+`<details class="more"${window.innerWidth<=980?' open':''}><summary>More</summary><div class="mp">${mo.map(l).join('')}</div></details>`}
+function buildMenu(){const h=(location.hash||'#home').slice(1),m=[['home','Home'],['about','About'],['cases','Rescue Cases'],['impact','Impact'],['projects','Projects'],['transparency','Transparency']],mo=[['education','Education'],['stories','Our Past Work'],['volunteer','Volunteer'],['contact','Contact'],['team','VEGANFARM TEAM']];const l=x=>`<a class="l ${h==x[0]||(x[0]=='cases'&&h.startsWith('case-'))||(x[0]=='team'&&h.startsWith('team'))?'on':''}" href="#${x[0]}">${x[1]}</a>`;$('#menu').innerHTML=m.map(l).join('')+'<a class="l mobonly" href="#donate">Donate</a>'+`<details class="more"${window.innerWidth<=980?' open':''}><summary>More</summary><div class="mp">${mo.map(l).join('')}</div></details>`}
 function togMenu(){const m=$('#menu'),o=m.classList.toggle('open');$('#mb').setAttribute('aria-expanded',o)}
 function navReset(){buildMenu();const m=$('#menu');if(m.classList&&m.classList.remove)m.classList.remove('open')}
 /* campaigns */
@@ -580,10 +580,10 @@ P.transparency=(f=>()=>f().replace('Only Founder-verified donations and approved
 const MONTHLY=()=>{const m={},key=ts=>new Date(ts).toLocaleString('en-IN',{month:'short',year:'numeric'});DONS.filter(d=>!d.rev&&d.ts).forEach(d=>{const k=key(d.ts);(m[k]=m[k]||[0,0])[0]+=d.a});EXPS.filter(e=>e.st=='Approved'&&!e.rev&&e.ts).forEach(e=>{const k=key(e.ts);(m[k]=m[k]||[0,0])[1]+=e.a});const k=Object.keys(m);return tbl(['Month','Verified donations','Approved expenses'],k.length?k.map(x=>[x,inr(m[x][0]),inr(m[x][1])]):[['Awaiting first report','-','-']])};
 /* founder: overview, finance */
 const kp=(l,v,r)=>`<a class="kpi" href="#${r}"><small>${l}</small><b>${v}</b></a>`;
-const SIDEG=[['Overview',[['admin','Overview']]],['Finance',[['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-ledger','Ledger'],['admin-finance','Financial reports'],['admin-feeding','Feeding log']]],['Rescue appeals',[['admin-appeals','Appeal submissions'],['admin-cases','Cases and animals'],['admin-history','Case history']]],['Team',[['admin-treq','Team requests'],['admin-team','Team and access'],['admin-roles','Role permissions']]],['Website',[['admin-content','Website editor'],['admin-stories','Our Past Work'],['admin-apps','Volunteer applications & messages'],['admin-notifs','Notifications']]],['System',[['admin-audit','Audit history'],['admin-80g','80G settings'],['admin-security','Security']]]];
+const SIDEG=[['Overview',[['admin','Overview']]],['Finance',[['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-ledger','Ledger'],['admin-finance','Financial reports'],['admin-feeding','Feeding log']]],['Rescue appeals',[['admin-appeals','Appeal submissions'],['admin-cases','Cases and animals'],['admin-history','Case history']]],['Website',[['admin-content','Website editor'],['admin-stories','Our Past Work'],['admin-apps','Volunteer applications & messages'],['admin-notifs','Notifications']]],['System',[['admin-audit','Audit history'],['admin-80g','80G settings'],['admin-security','Security']]]];
 const SIDE=h=>SIDEG.map(g=>`<div class="sg">${g[0]}</div>`+g[1].map(x=>`<a class="${h==x[0]?'on':''}" href="#${x[0]}">${x[1]}</a>`).join('')).join('');
 Object.assign(A,{
-admin:()=>{const pa=APP.filter(a=>/Pending|Change|Correct/.test(a.pub)).length,na=VOL.filter(x=>x.st=='New').length+MSG.filter(x=>x.st=='New').length;return `<h2>Founder dashboard</h2><p class="mut">Control of finances, appeals, the team and the public website.</p><h3>Finance</h3><div class="kpis">${kp('Total verified donations',inr(DT()),'admin-donations')}${kp('Animal Welfare donations',inr(AWT()),'admin-donations')}${kp('Human Welfare donations',inr(HWT()),'admin-donations')}${kp('Approved expenses',inr(EXP),'admin-expenses')}${kp('Available balance',inr(BAL()),'admin-finance')}</div><h3 style="margin-top:32px">Needs your attention</h3><div class="kpis">${kp('Pending donation verification',PEND.length,'admin-donations')}${kp('Pending appeals',pa,'admin-appeals')}${kp('Pending expenses',EXPS.filter(x=>x.st=='Pending').length,'admin-expenses')}${kp('New applications and messages',na,'admin-apps')}${kp('Team requests pending',TREQ.filter(x=>x.status=='pending').length,'admin-treq')}</div><h3 style="margin-top:32px">Campaigns</h3><div class="kpis">${kp('Active rescue campaigns',cases.length,'admin-cases')}${kp('Urgent campaigns',cases.filter(c=>c.urgent).length,'admin-cases')}${kp('Fully funded',cases.filter(fund).length,'admin-cases')}</div><h3 style="margin-top:32px">Recent activity</h3>${tbl(['When','Who','Record','Activity'],HIST.slice(0,8).map(x=>[esc(x[0]),esc(x[1]),esc(x[2]),esc(x[3])]))}`},
+admin:()=>{const pa=APP.filter(a=>/Pending|Change|Correct/.test(a.pub)).length,na=VOL.filter(x=>x.st=='New').length+MSG.filter(x=>x.st=='New').length;return `<h2>Founder dashboard</h2><p class="mut">Control of finances, rescue appeals and the public website.</p><h3>Finance</h3><div class="kpis">${kp('Total verified donations',inr(DT()),'admin-donations')}${kp('Animal Welfare donations',inr(AWT()),'admin-donations')}${kp('Human Welfare donations',inr(HWT()),'admin-donations')}${kp('Approved expenses',inr(EXP),'admin-expenses')}${kp('Available balance',inr(BAL()),'admin-finance')}</div><h3 style="margin-top:32px">Needs your attention</h3><div class="kpis">${kp('Pending donation verification',PEND.length,'admin-donations')}${kp('Pending appeals',pa,'admin-appeals')}${kp('Pending expenses',EXPS.filter(x=>x.st=='Pending').length,'admin-expenses')}${kp('New applications and messages',na,'admin-apps')}</div><h3 style="margin-top:32px">Campaigns</h3><div class="kpis">${kp('Active rescue campaigns',cases.length,'admin-cases')}${kp('Urgent campaigns',cases.filter(c=>c.urgent).length,'admin-cases')}${kp('Fully funded',cases.filter(fund).length,'admin-cases')}</div><h3 style="margin-top:32px">Recent activity</h3>${tbl(['When','Who','Record','Activity'],HIST.slice(0,8).map(x=>[esc(x[0]),esc(x[1]),esc(x[2]),esc(x[3])]))}`},
 'admin-finance':()=>{const seen={},rows=[...APP.map(a=>[a.id,a.n]),['General animal welfare fund','General animal welfare fund'],['General humanitarian fund','General humanitarian fund'],...PROJ.filter(p=>p[4]).map(p=>[p[0],p[0]])].filter(x=>!seen[x[0]]&&(seen[x[0]]=1)).map(x=>[esc(x[1]),inr(alloc(x[0])),inr(EXPS.filter(e=>e.st=='Approved'&&!e.rev&&e.proj==x[0]).reduce((s,e)=>s+e.a,0))]);
 return `<h2>Financial reports</h2><p class="mut">Calculated only from Founder-verified donations and approved expenses.</p>${tbl(['Item','Amount'],[['Opening balance',inr(0)],['Verified donations: Animal Welfare',inr(AWT())],['Verified donations: Human Welfare',inr(HWT())],['Approved refunds received',inr(0)],['Approved expenses',inr(EXP)],['Refunds paid',inr(0)],['<b>Available balance</b>','<b>'+inr(BAL())+'</b>']])}<h3 style="margin-top:28px">By category</h3>${tbl(['Category','Verified donations','Contributions'],[['Animal Welfare',inr(AWT()),cnt('Animal Welfare')],['Human Welfare',inr(HWT()),cnt('Human Welfare')]])}<h3 style="margin-top:28px">By case and project</h3>${tbl(['Case or project','Verified donations','Approved expenses'],rows)}<h3 style="margin-top:28px">Monthly</h3>${MONTHLY()}<p class="mut" style="margin-top:12px">Public view: <a href="#transparency">Financial transparency page</a>. Ledger corrections: <a href="#admin-ledger">Ledger</a>.</p>`}});
 /* founder: donations (edit and verify) */
@@ -753,7 +753,7 @@ Object.assign(A,{
 
 const teamWho=(k,fb)=>{const r=TREQ.find(x=>x.eh==k);return r&&r.name?esc(r.name)+'<br><span class="mut">'+esc(r.email)+'</span>':esc(fb)||'Team member'};
 function go(keep){const h=(location.hash||'#home').slice(1);const adm=h.startsWith('admin'),tm=h.startsWith('team');if(!adm)founderIn=false;
-$('#menu').innerHTML=[['home','Home'],['about','About'],['cases','Rescue cases'],['impact','Impact'],['projects','Projects'],['education','Education'],['stories','Our Past Work'],['volunteer','Volunteer'],['transparency','Transparency'],['contact','Contact'],['team','TEAM MEMBER']].map(x=>`<a class="l ${h==x[0]?'on':''}" href="#${x[0]}">${x[1]}</a>`).join('');
+$('#menu').innerHTML=[['home','Home'],['about','About'],['cases','Rescue cases'],['impact','Impact'],['projects','Projects'],['education','Education'],['stories','Our Past Work'],['volunteer','Volunteer'],['transparency','Transparency'],['contact','Contact'],['team','VEGANFARM TEAM']].map(x=>`<a class="l ${h==x[0]?'on':''}" href="#${x[0]}">${x[1]}</a>`).join('');
 if(adm&&!founderIn){$('#app').innerHTML=PINSCR()}else if(adm){$('#app').innerHTML=`<div class="adm"><div class="side"><div class="sg" style="padding-top:4px">Founder dashboard</div><div style="padding:0 12px 6px"><button class="btn out sm" onclick="lockF()">Lock dashboard</button></div>${SIDE(h)}</div><div class="main">${(A[h]||A.admin)()}</div></div>`}
 else if(tm)$('#app').innerHTML=typeof window.TEAM2==='function'?window.TEAM2(h):'<section class="sec"><div class="wrap"><p class="note">Loading the secure Team portal…</p></div></section>';else $('#app').innerHTML=(P[h]||(h.startsWith('case-')?CASEP3:P.home))(h);if(!keep)scrollTo(0,0);tick();navReset()}
 addEventListener('hashchange',()=>go());go();
@@ -2245,6 +2245,128 @@ currentUser().then(function(u){
   };
   if(window.vfRecoveryPending || location.hash==='#reset-password'){
     window.vfShowPasswordReset();
+  }
+})();
+</script>
+
+
+<script>
+/* VEGANFARM shared-code Team portal: case submission only. Code verification happens server-side. */
+(function(){
+  'use strict';
+  var GATE_KEY='vf_team_gate_session_v1';
+  var client=window.vfSupabase;
+
+  function gateToken(){try{return sessionStorage.getItem(GATE_KEY)||'';}catch(_e){return '';}}
+  function setGateToken(value){try{if(value)sessionStorage.setItem(GATE_KEY,value);else sessionStorage.removeItem(GATE_KEY);}catch(_e){}}
+  function escapeHtml(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+
+  function gatePage(){
+    if(!client)return '<section class="sec"><div class="wrap" style="max-width:480px"><h1>VEGANFARM Team</h1><p class="note">The secure service is unavailable. Refresh this page and try again.</p></div></section>';
+    if(!gateToken()){
+      return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+        '<h1 style="font-size:2.2rem">VEGANFARM Team</h1>'+
+        '<p class="mut">Enter the Team access code to open the case-submission forms. Access is limited to Feeding and Treatment case submissions.</p>'+
+        '<form onsubmit="vfTeamUnlock(event)">'+
+        '<label for="vf-team-code">Team access code</label>'+
+        '<input id="vf-team-code" name="code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required>'+
+        '<p id="vf-team-gate-status" role="status" aria-live="polite" class="mut" style="min-height:26px;margin:10px 0"></p>'+
+        '<button class="btn" type="submit">Unlock case forms</button></form>'+
+        '</div></section>';
+    }
+    return '<section class="sec"><div class="wrap" style="max-width:920px">'+
+      '<div class="row" style="justify-content:space-between;align-items:center;gap:12px">'+
+      '<div><h1 style="font-size:2.1rem">VEGANFARM Team</h1><p class="mut">Case submission access. Every submission goes to the Founder for review.</p></div>'+
+      '<button class="btn out sm" type="button" onclick="vfTeamLogout()">Lock portal</button></div>'+
+      '<div class="card" style="margin:18px 0"><div class="b">'+
+      '<h2>Case submissions</h2><p class="mut">Choose the correct form. Submitted cases remain pending until the Founder reviews and approves them.</p>'+
+      '<div class="row" style="flex-wrap:wrap">'+
+      '<button class="btn" type="button" onclick="showTeamCaseForm(\\'Feeding\\')">Feeding Form</button>'+
+      '<button class="btn out" type="button" onclick="showTeamCaseForm(\\'Treatment\\')">Treatment Form</button></div>'+
+      '<div id="vf-team-case-form" style="margin-top:22px"><p class="note">Select Feeding Form or Treatment Form to begin.</p></div>'+
+      '</div></div></div></section>';
+  }
+
+  window.TEAM2=function(){return gatePage();};
+  if(typeof P!=='undefined')P['veganfarm-team']=function(){return gatePage();};
+
+  window.vfTeamUnlock=async function(event){
+    event.preventDefault();
+    var form=event.target,button=form.querySelector('button[type="submit"]');
+    var status=document.getElementById('vf-team-gate-status');
+    var code=String(form.elements.code.value||'').trim();
+    if(!code){if(status)status.textContent='Enter the Team access code.';return;}
+    if(button){button.disabled=true;button.textContent='Verifying…';}
+    if(status)status.textContent='Verifying access securely…';
+    try{
+      var result=await client.functions.invoke('veganfarm-team-gate',{body:{action:'verify',code:code}});
+      if(result.error)throw result.error;
+      if(!result.data||result.data.ok!==true||!result.data.token)throw new Error('The access code could not be verified.');
+      setGateToken(result.data.token);
+      form.reset();
+      if(typeof go==='function')go(true);
+    }catch(error){
+      console.error('VEGANFARM Team code verification failed',error);
+      if(status)status.textContent='Access denied. Check the code and try again, or wait before retrying.';
+    }finally{
+      if(button){button.disabled=false;button.textContent='Unlock case forms';}
+    }
+  };
+
+  window.vfTeamLogout=function(){setGateToken('');if(typeof go==='function')go(true);};
+
+  async function edgeError(error){
+    try{
+      var response=error&&error.context;
+      if(response&&typeof response.clone==='function'){
+        var body=await response.clone().json();
+        if(body&&body.error)return String(body.error);
+      }
+    }catch(_e){}
+    return error&&error.message?error.message:'The case could not be submitted. Please try again.';
+  }
+
+  window.tNew=async function(event,forcedKind){
+    event.preventDefault();
+    var token=gateToken();
+    if(!token){if(typeof go==='function')go(true);return;}
+    var form=event.target;
+    var kind=forcedKind==='Feeding'?'Feeding':forcedKind==='Treatment'?'Treatment':'';
+    var status=document.getElementById('vf-case-error');
+    var button=form.querySelector('button[type="submit"]');
+    function showError(message){if(status)status.textContent=message;else if(typeof toast==='function')toast(message);}
+    if(!kind){showError('Choose a Feeding or Treatment form.');return;}
+    var fd=new FormData(form);
+    fd.set('action','submit_case');
+    fd.set('kind',kind);
+    fd.set('token',token);
+    if(button){button.disabled=true;button.textContent='Submitting securely…';}
+    showError('Sending your case to the Founder for review…');
+    try{
+      var result=await client.functions.invoke('veganfarm-team-gate',{body:fd});
+      if(result.error)throw result.error;
+      var data=result.data||{};
+      if(data.ok!==true)throw new Error(data.error||'Case submission failed.');
+      var target=document.getElementById('vf-team-case-form');
+      if(target){
+        target.innerHTML='<div class="note" role="status"><b>Case '+escapeHtml(data.case_code||'submitted')+' received.</b> Your '+escapeHtml(kind)+' submission has been saved and sent to Founder → Rescue Appeals for review. It will not be published until the Founder approves it.</div>'+
+          '<div class="row" style="margin-top:16px"><button class="btn" type="button" onclick="showTeamCaseForm(\\'Feeding\\')">Submit another Feeding case</button><button class="btn out" type="button" onclick="showTeamCaseForm(\\'Treatment\\')">Submit another Treatment case</button></div>';
+      }
+      if(typeof toast==='function')toast(kind+' case sent to Founder for approval.');
+    }catch(error){
+      console.error('VEGANFARM Team case submission failed',error);
+      var message=await edgeError(error);
+      if(/access has expired/i.test(message)){setGateToken('');if(typeof go==='function')go(true);}
+      else showError(message);
+    }finally{
+      if(button){button.disabled=false;button.textContent='Submit '+kind+' case for Founder review';}
+    }
+  };
+
+  if(typeof A!=='undefined'){
+    A['admin-treq']=function(){return '<h2>Team access</h2><p class="note">VEGANFARM Team uses a shared, server-verified access code. Individual Team Member accounts and access requests are not used. Review all submissions under Founder → Rescue Appeals.</p>';};
+    A['admin-team']=A['admin-treq'];
+    A['admin-roles']=A['admin-treq'];
   }
 })();
 </script>
