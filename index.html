@@ -922,7 +922,7 @@ sb.from('expenses').select('*').order('created_at',{ascending:true}),
 sb.from('profiles').select('*').eq('role','team').order('created_at',{ascending:false}),
 sb.from('stories').select('*').order('created_at',{ascending:false})]).then(function(r){
 var bad=r.filter(function(x){return x.error})[0];if(bad){console.error(bad.error);toast('Could not load some data: '+bad.error.message);return}
-APP.length=0;r[0].data.forEach(function(c){var a=mapCase(c);APP.push(a);if(a.pub==='Published')goLive(a)});syncCases();
+var approvedTeamIds={};(r[2].data||[]).forEach(function(p){approvedTeamIds[p.id]=true;});APP.length=0;r[0].data.forEach(function(c){var a=mapCase(c);a.src=approvedTeamIds[c.submitted_by]?'team':'founder';APP.push(a);if(a.pub==='Published')goLive(a)});syncCases();
 EXPS.length=0;r[1].data.forEach(function(x){EXPS.push({id:x.id,cat:x.category||'',proj:x.project||'',a:+x.amount,desc:x.description||'',rec:x.receipt_path?'Receipt on file':'',rpath:x.receipt_path,st:{approved:'Approved',rejected:'Rejected',reversed:'Reversed'}[x.status]||'Pending',dt:Date.parse((x.expense_date||String(x.created_at).slice(0,10))+'T12:00:00'),ts:Date.parse(x.created_at)})});
 TREQ.length=0;r[2].data.forEach(function(p){TREQ.push({id:p.id,name:p.display_name||'',email:p.email||'',eh:p.id,status:p.status==='approved'?'approved':p.status==='pending'?'pending':'rejected',ts:Date.parse(p.created_at),date:fmt(p.created_at)})});
 STORIES.length=0;r[3].data.forEach(function(s){STORIES.push({id:s.id,t:s.title,b:s.body||'',w:fmt(s.created_at),pub:!!s.published,photo:s.photo_path?sb.storage.from('story-photos').getPublicUrl(s.photo_path).data.publicUrl:''})});
@@ -1609,6 +1609,7 @@ currentUser().then(function(u){
       '<p class="mut" style="margin-top:16px">Already requested access? Once approved, sign in with the same email and password. If you created your account after the request was approved, the approval is applied automatically.</p>'+
       '</div></section>';
   };
+  P['veganfarm-team']=function(){return window.TEAM2('team');};
 
   // Explicitly require an official fundraising target before publication.
   window.vfReviewCase=function(id,decision){
