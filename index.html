@@ -1503,6 +1503,74 @@ currentUser().then(function(u){
       '<h3 style="margin-top:28px">Contact messages ('+MSG.length+')</h3>'+
       (MSG.length?tbl(['Received','Name','Email','Message details','Status','Action'],messageRows):'<p class="note">No contact messages yet.</p>');
   };
+
+  // Founder approval workflow for rescue cases: every decision is confirmed by the database.
+  window.vfReviewCase=function(id,decision){
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
+    var a=APP.find(function(x){return x.id===id;});
+    if(!a||!a.dbId){toast('Case record not found. Refresh the Founder dashboard.');return;}
+    var patch;
+    if(decision==='approve')patch={publication:'published',review_note:null};
+    else if(decision==='correct')patch={publication:'pending_review',review_note:'Founder requested corrections. Please update the case details and resubmit for review.'};
+    else if(decision==='reject')patch={publication:'rejected',review_note:'Rejected by the Founder.'};
+    else if(decision==='reopen')patch={publication:'pending_review',review_note:null};
+    else if(decision==='unpublish')patch={publication:'unpublished',review_note:null};
+    else if(decision==='archive')patch={publication:'archived'};
+    else {toast('Unknown review action.');return;}
+    client.from('rescue_cases').update(patch).eq('id',a.dbId).select('id,publication').maybeSingle()
+      .then(function(result){
+        if(result.error)throw result.error;
+        if(!result.data)throw new Error('No database row was updated. Check Founder permissions and refresh the page.');
+        return window.vfReload();
+      })
+      .then(function(){
+        var messages={approve:'Case approved and published on the live website.',correct:'Corrections requested. The case remains unpublished.',reject:'Case rejected and saved.',reopen:'Case returned to pending review.',unpublish:'Case unpublished.',archive:'Case archived.'};
+        toast(messages[decision]);go(true);
+      })
+      .catch(function(error){
+        console.error('Rescue case review failed',error);
+        toast('Decision not saved: '+(error&&error.message?error.message:'Please try again.'));
+      });
+  };
+
+  // Keep older case-card controls connected to the same verified Founder review action.
+  window.decide=function(id,action){
+    var map={publish:'approve',approve:'approve',correct:'correct',reject:'reject',unpublish:'unpublish',restore:'reopen',archive:'archive'};
+    if(!map[action]){toast('This action is not supported.');return;}
+    window.vfReviewCase(id,map[action]);
+  };
+
+  // Dedicated review queue with explicit Approve & Publish / Request Corrections / Reject actions.
+  A['admin-appeals']=function(){
+    var submitted=APP.filter(function(a){return a.src==='team';});
+    var rows=submitted.map(function(a){
+      var media=a.photo?'<a href="'+safe(a.photo)+'" target="_blank" rel="noopener"><img src="'+safe(a.photo)+'" alt="Animal photograph" style="height:58px;max-width:82px;object-fit:cover;border-radius:6px"></a>':'Photo not available';
+      var docs=a.docs?[
+        a.docs.rep?'<a href="'+safe(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
+        a.docs.bill?'<a href="'+safe(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+      ].filter(Boolean).join(' · '):'';
+      var applicant=[a.vname,a.vphone].filter(Boolean).map(safe).join('<br>');
+      var actions='';
+      if(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested'){
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'approve\')">Approve &amp; Publish</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'correct\')">Request Corrections</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'reject\')">Reject</button>';
+      }else if(a.pub==='Rejected'){
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'reopen\')">Reopen for Review</button>';
+      }else if(a.pub==='Published'){
+        actions='<button class="btn out sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'unpublish\')">Unpublish</button>';
+      }else{
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+safe(a.id)+'\',\'reopen\')">Return to Review</button>';
+      }
+      return [safe(a.id),safe(a.n),applicant||'—',media+(docs?'<br>'+docs:''),safe(a.loc),pt(a.pub)+(a.note?'<br><span class="mut">'+safe(a.note)+'</span>':''),actions];
+    });
+    return '<h2>Rescue case submissions</h2>'+
+      '<p class="mut">Every team-submitted rescue case is stored in Supabase and appears here for Founder review. Approving a case publishes it on the public rescue-campaign page. Team members cannot approve or publish cases.</p>'+
+      '<h3>Submitted cases ('+submitted.length+')</h3>'+
+      (submitted.length?tbl(['Case ID','Animal','Rescuer details','Photo / documents','Location','Review status','Founder decision'],rows):
+      '<div class="note">No rescue cases have reached the database yet. Once a signed-in, approved team member submits a case successfully, it will appear here automatically.</div>');
+  };
+
 })();
 </script>
 </body></html>
