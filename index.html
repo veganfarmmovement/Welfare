@@ -1872,7 +1872,7 @@ currentUser().then(function(u){
     show('Checking your Team access and preparing your secure sign-in link...',false);
     var request=client.from('team_access_requests').insert({
       name:name,email:email,status:'pending'
-    }).select('id').maybeSingle().then(function(result){
+    }).then(function(result){
       if(!result.error)return;
       if(result.error.code==='23505')return;
       throw result.error;
