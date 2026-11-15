@@ -264,7 +264,7 @@ function setCat(v){dcat=v;$('#tg').innerHTML=tOpts(v);$('#ex').textContent=v=='H
 function donSubmit(e){e.preventDefault();const f=new FormData(e.target),ref=(f.get('ref')||'').trim();
 if(ref&&(PEND.some(p=>p.ref==ref)||DONS.some(d=>d.ref==ref)||ref=='UPI-0002')){toast('That transaction reference was already submitted. Duplicates are blocked.');return}
 const p={id:'D-'+(++did),n:f.get('name'),c:f.get('contact'),a:+f.get('amt'),cat:f.get('cat'),tg:f.get('tg'),ref,pub:f.get('pub')};const fin=s=>{p.shot=s;PEND.push(p);dsub=p;NT.unshift(['Just now','New donor submission '+p.id+' ('+p.cat+') is pending Founder verification.']);go()};const fl=e.target.elements['shot'].files[0];if(fl&&fl.type.startsWith('image/')){const r=new FileReader();r.onload=()=>fin(r.result);r.readAsDataURL(fl)}else fin(null)}
-P.donate=()=>head('Donate','No account needed. Donations are received through Niswarth Seva 1008 Charitable Trust for the stated VEGANFARM initiative.')+S(`${DSTAT()}<ol class="mut"><li>Choose a category and a case or project.</li><li>Enter your details.</li><li>Scan the official Trust QR code and pay.</li><li>Submit your payment reference.</li><li>The Founder verifies it, then it appears in the totals.</li></ol><div class="two"><form onsubmit="donSubmit(event)"><h3>1. Choose a category</h3>${['Animal Welfare|Animal Welfare Donation|Medical assistance, rescue treatment, surgery, veterinary support.','Human Welfare|Human Welfare Donation|Education support, stationery drives, community assistance.'].map(x=>{const a=x.split('|');return `<label class="card" style="cursor:pointer;margin:0 0 10px"><div class="b"><input type="radio" name="cat" value="${a[0]}" ${dcat==a[0]?'checked':''} onchange="setCat(this.value)" style="width:auto"> <b>${a[1]}</b><div class="mut" style="font-weight:400">${a[2]}</div></div></label>`}).join('')}<label>Specific case or project (optional)</label><select name="tg" id="tg">${tOpts(dcat,dtg)}</select><h3 style="margin-top:24px">2. Your details</h3><label>Donor name *</label><input name="name" required><label>Contact number *</label><input name="contact" type="tel" required><label>Donation amount (₹) *</label><input name="amt" type="number" min="1" required><label>UPI transaction reference (optional)</label><input name="ref"><label>Payment screenshot (optional)</label><input type="file" name="shot" accept="image/*"><label>Public display</label><label style="font-weight:400"><input type="radio" name="pub" value="name" style="width:auto"> Show my approved name publicly</label><label style="font-weight:400"><input type="radio" name="pub" value="anon" checked style="width:auto"> Show me as Anonymous</label><p class="mut">Privacy: your contact number, UPI reference and screenshot are never shown publicly. They are visible only to the Founder, who verifies your payment. Only your approved display name or Anonymous is ever shown.</p><button class="btn">Submit donation details</button></form><div><div class="card"><div class="b"><h3>Pay by UPI</h3><p>Recipient: <b>Niswarth Seva 1008 Charitable Trust</b><br>UPI ID: <b>${esc(SET.upi)}</b></p><img src="${SET.qr||QR}" alt="Official UPI QR code of Niswarth Seva 1008 Charitable Trust, UPI ID niswarthseva1008@oksbi" style="width:100%;max-width:300px;border-radius:10px;display:block"><p style="margin-top:12px">Donations are received through Niswarth Seva 1008 Charitable Trust for the stated VEGANFARM <span id="ex">${dcat=='Human Welfare'?'humanitarian':'animal welfare'}</span> initiative.</p>${SET.donInfo?`<p>${esc(SET.donInfo)}</p>`:''}<p class="mut">A screenshot alone is not proof of payment. WhatsApp ${esc(SET.wa)} · ${esc(SET.email)}</p></div></div>${G.on?'<div style="margin-top:16px">'+G80N+'</div>':''}</div></div>`);
+P.donate=()=>head('Donate','No account needed. Donations are received through Niswarth Seva 1008 Charitable Trust for the stated VEGANFARM initiative.')+S(`${DSTAT()}<ol class="mut"><li>Choose a category and a case or project.</li><li>Enter your details.</li><li>Scan the official Trust QR code and pay.</li><li>Submit your payment reference.</li><li>The Founder verifies it, then it appears in the totals.</li></ol><div class="two"><form onsubmit="donSubmit(event)"><h3>1. Choose a category</h3>${['Animal Welfare|Animal Welfare Donation|Medical assistance, rescue treatment, surgery, veterinary support.','Human Welfare|Human Welfare Donation|Education support, stationery drives, community assistance.'].map(x=>{const a=x.split('|');return `<label class="card" style="cursor:pointer;margin:0 0 10px"><div class="b"><input type="radio" name="cat" value="${a[0]}" ${dcat==a[0]?'checked':''} onchange="setCat(this.value)" style="width:auto"> <b>${a[1]}</b><div class="mut" style="font-weight:400">${a[2]}</div></div></label>`}).join('')}<label>Specific case or project (optional)</label><select name="tg" id="tg">${tOpts(dcat,dtg)}</select><h3 style="margin-top:24px">2. Your details</h3><label>Donor name *</label><input name="name" required><label>Contact number *</label><input name="contact" type="tel" required><label>Donation amount (₹) *</label><input name="amt" type="number" min="1" required><label>UPI transaction reference (optional)</label><input name="ref"><label>Payment screenshot (optional)</label><input type="file" name="shot" accept="image/jpeg,image/png,application/pdf"><label>Public display</label><label style="font-weight:400"><input type="radio" name="pub" value="name" style="width:auto"> Show my approved name publicly</label><label style="font-weight:400"><input type="radio" name="pub" value="anon" checked style="width:auto"> Show me as Anonymous</label><p class="mut">Privacy: your contact number, UPI reference and screenshot are never shown publicly. They are visible only to the Founder, who verifies your payment. Only your approved display name or Anonymous is ever shown.</p><button class="btn">Submit donation details</button></form><div><div class="card"><div class="b"><h3>Pay by UPI</h3><p>Recipient: <b>Niswarth Seva 1008 Charitable Trust</b><br>UPI ID: <b>${esc(SET.upi)}</b></p><img src="${SET.qr||QR}" alt="Official UPI QR code of Niswarth Seva 1008 Charitable Trust, UPI ID niswarthseva1008@oksbi" style="width:100%;max-width:300px;border-radius:10px;display:block"><p style="margin-top:12px">Donations are received through Niswarth Seva 1008 Charitable Trust for the stated VEGANFARM <span id="ex">${dcat=='Human Welfare'?'humanitarian':'animal welfare'}</span> initiative.</p>${SET.donInfo?`<p>${esc(SET.donInfo)}</p>`:''}<p class="mut">A screenshot alone is not proof of payment. WhatsApp ${esc(SET.wa)} · ${esc(SET.email)}</p></div></div>${G.on?'<div style="margin-top:16px">'+G80N+'</div>':''}</div></div>`);
 P.transparency=()=>head('Financial transparency','Only Founder-verified donations and approved expenses are counted. Pending submissions never are.')+S(`${sampleNote}${TOT()}<h3 style="margin-top:32px">Project-wise summary</h3>${tbl(['Project','Category','Verified','Approved spend'],[['Animal Medical Assistance','Animal Welfare',inr(AWT()),inr(0)],['Aashram Education Support','Human Welfare',inr(alloc('Aashram Education Support')),inr(0)],['Education & Stationery Drive','Human Welfare',inr(alloc('Education & Stationery Drive')),inr(0)],['Community Donation Drive','Human Welfare',inr(alloc('Community Donation Drive')),inr(0)],['General humanitarian fund','Human Welfare',inr(alloc('General humanitarian fund')),inr(0)]])}<h3 style="margin-top:32px">Recent verified donations</h3>${tbl(['Supporter','Amount','Category','Date and time'],feedRows().map(r=>[esc(r[0]),inr(r[1]),r[2],r[3]]))}<h3 style="margin-top:32px">Monthly reports</h3>${MONTHLY()}`);
 const CASEP=h=>{const c=cases.find(x=>'case-'+x.id==h);if(!c)return P.home();const g=c.got||0;return head(c.name,'Dog · '+(c.loc||'Awaiting information'))+S(`<div class="two"><div>${img('Photo placeholder')}</div><div><span class="tag d">SAMPLE</span> <span class="tag">${c.status}</span><p style="margin-top:12px"><b>Hospital or clinic:</b> ${c.hosp||NA}<br><b>Medical condition:</b> ${c.cond||NA}<br><b>Treatment required:</b> ${c.treat||NA}<br><b>Fundraising target:</b> ${c.target?inr(c.target):NA}<br><b>Verified amount:</b> ${inr(g)}<br><b>Remaining:</b> ${c.target?inr(Math.max(0,c.target-g)):NA}</p><img src="${SET.qr||QR}" alt="Official UPI QR code of Niswarth Seva 1008 Charitable Trust" style="width:100%;max-width:240px;border-radius:10px;display:block;margin:12px 0"><p class="mut">Scan the official Trust QR code, then submit your payment reference on the Donate page.</p><a class="btn" href="#donate" onclick="dcat='Animal Welfare'">Support this case</a></div></div>`)};
 /* founder: donations */
@@ -847,7 +847,7 @@ PEND.forEach(function(p){if(p.spath)sb.storage.from('donation-screenshots').crea
 })}
 
 var shell=function(inner){return '<section class="sec"><div class="wrap" style="max-width:420px">'+inner+'</div></section>'};
-var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p class="mut">You will stay signed in on this device until you sign out or clear browser data.</p><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form>'};
+var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p class="mut">You will stay signed in on this device until you sign out or clear browser data.</p><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button type="button" class="btn out sm" onclick="vfForgotPassword(document.getElementById('vfe').value)">Forgot password?</button> <button class="btn">Sign in</button></form>'};
 window.PINSCR=function(){
 if(vfRole==='founder'){founderIn=true;isF=true;setTimeout(function(){window.vfReload().then(function(){go(true)})});return shell('<p class="note">Loading dashboard…</p>')}
 return shell('<h1 style="font-size:2.2rem">Founder access</h1><p class="mut">Sign in with your Founder account. Access is checked by the database, not by this page.</p>'+lf('founder'))};
@@ -1790,7 +1790,7 @@ currentUser().then(function(u){
 
   /* Team Member is the approved-member login/account-setup route. */
   function loginPage(){
-    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\'team\')"><label>Email address</label><input name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Have not requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
+    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\'team\')"><label>Email address</label><input id="team-login-email" name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><p style="margin-top:10px"><button type="button" class="btn out sm" onclick="vfForgotPassword(document.getElementById('team-login-email').value)">Forgot password?</button></p><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Have not requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
   }
   window.vfSignup=function(e){
     e.preventDefault();
@@ -2024,6 +2024,66 @@ currentUser().then(function(u){
     };
     window.go(true);
   }
+})();
+</script>
+
+
+<script>
+/* Password recovery for Founder and approved Team accounts. */
+(function(){
+  var client=window.vfSupabase;
+  if(!client)return;
+  window.vfForgotPassword=function(value){
+    var email=String(value||'').trim().toLowerCase();
+    if(!email){toast('Enter your account email address first.');return;}
+    client.auth.resetPasswordForEmail(email).then(function(result){
+      if(result.error){toast('Could not send the reset email: '+result.error.message);return;}
+      toast('Password reset email requested. Check your inbox and spam folder.');
+    }).catch(function(error){
+      console.error('Password reset request failed',error);
+      toast('Could not request a password reset. Please try again.');
+    });
+  };
+  window.vfUpdatePassword=function(event){
+    event.preventDefault();
+    var form=event.target;
+    var password=form.elements.password.value;
+    var confirmation=form.elements.confirm.value;
+    if(password.length<8){toast('Use a password with at least 8 characters.');return;}
+    if(password!==confirmation){toast('The passwords do not match.');return;}
+    var button=form.querySelector('button[type="submit"]');
+    if(button){button.disabled=true;button.textContent='Saving...';}
+    client.auth.updateUser({password:password}).then(function(result){
+      if(result.error)throw result.error;
+      return client.auth.signOut();
+    }).then(function(){
+      window.vfRole=null;window.vfUser=null;
+      toast('Password updated. Sign in using your new password.');
+      location.hash='admin';
+    }).catch(function(error){
+      console.error('Password update failed',error);
+      toast('Password was not updated: '+(error&&error.message?error.message:'Please reopen the reset email and try again.'));
+      if(button){button.disabled=false;button.textContent='Save new password';}
+    });
+  };
+  P['reset-password']=function(){
+    return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+      '<h1 style="font-size:2.2rem">Set a new password</h1>'+
+      '<p class="mut">Open this page from the password-reset email, then enter your new password.</p>'+
+      '<form onsubmit="vfUpdatePassword(event)">'+
+      '<label>New password</label><input name="password" type="password" minlength="8" autocomplete="new-password" required>'+
+      '<label>Confirm new password</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required>'+
+      '<button class="btn" type="submit">Save new password</button></form>'+
+      '<p class="mut" style="margin-top:16px"><a href="#admin">Return to Founder login</a></p>'+
+      '</div></section>';
+  };
+  client.auth.onAuthStateChange(function(event){
+    if(event==='PASSWORD_RECOVERY'){
+      location.hash='reset-password';
+      if(typeof go==='function')go(true);
+    }
+  });
+  if(location.hash==='#reset-password' && typeof go==='function')go(true);
 })();
 </script>
 
