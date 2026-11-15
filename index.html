@@ -1343,8 +1343,10 @@ currentUser().then(function(u){
     }).then(function(result){
       if(result.error)throw result.error;
       var profiles=TREQ.slice();
-      var merged=(result.data||[]).filter(function(req){var em=String(req.email||'').toLowerCase();return em!=='hdedhia22@gmail.com'&&em!=='veganfarmmovement@gmail.com';}).map(function(req){
-        var profile=profiles.find(function(p){return String(p.email||'').toLowerCase()===String(req.email||'').toLowerCase();});
+      var merged=(result.data||[]).map(function(req){
+        var requestEmail=String(req.email||'').toLowerCase();
+        var isFounderEmail=requestEmail==='hdedhia22@gmail.com'||requestEmail==='veganfarmmovement@gmail.com';
+        var profile=profiles.find(function(p){return String(p.email||'').toLowerCase()===requestEmail;});
         return {
           id:req.id,
           requestId:req.id,
@@ -1353,6 +1355,7 @@ currentUser().then(function(u){
           email:req.email,
           eh:req.email_normalized,
           status:req.status,
+          internalRequest:isFounderEmail,
           ts:Date.parse(req.submitted_at),
           date:new Date(req.submitted_at).toLocaleString('en-IN')
         };
@@ -1997,27 +2000,43 @@ currentUser().then(function(u){
   if(oldAfterLogin)window.vfAfterLogin=function(){return Promise.resolve(oldAfterLogin()).then(enrichLoadedCases);};
 
   /* The actual Founder Team Requests tab reads the persistent request table. */
+  window.vfRefreshTeamRequests=function(button){
+    if(button){button.disabled=true;button.textContent='Refreshing...';}
+    return Promise.resolve(window.vfReload()).then(function(){
+      toast('Team access information refreshed.');
+    }).catch(function(error){
+      if(button){button.disabled=false;button.textContent='Refresh Team requests';}
+      toast('Could not refresh Team access information: '+(error&&error.message?error.message:'Please try again.'));
+      console.error('Team access refresh failed',error);
+    });
+  };
   A['admin-treq']=function(){
-    var rows=(TREQ||[]).filter(function(m){
-      var em=String(m.email||'').toLowerCase();
-      return em!=='hdedhia22@gmail.com'&&em!=='veganfarmmovement@gmail.com';
-    }).map(function(m){
+    var all=TREQ||[];
+    var teamRequests=all.filter(function(m){return !m.internalRequest;});
+    var founderRequests=all.filter(function(m){return !!m.internalRequest;});
+    var rows=teamRequests.map(function(m){
       var action=m.status==='pending'
-        ?'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button> <button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Reject</button>'
+        ?'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Approve</button> <button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'rejected\\')">Reject</button>'
         :m.status==='approved'
-          ?'<button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Suspend</button>'
-          :'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button>';
+          ?'<button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'rejected\\')">Suspend</button>'
+          :'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Approve</button>';
       return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">'+esc(m.status)+'</span>',action];
     });
-    return '<h2>VEGANFARM Team access requests</h2><p class="mut">Requests submitted on the VEGANFARM Team page appear here. Approve a request before the person creates or uses their Team Member login.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){go(true);})">Refresh Team requests</button></div>'+
-      (rows.length?tbl(['Name','Email','Requested','Status','Founder decision'],rows):'<p class="note">No Team access requests have been submitted yet.</p>');
+    var internalRows=founderRequests.map(function(m){
+      return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">Not a Team account</span>','Founder email requests are shown for transparency and cannot be approved as Team access.'];
+    });
+    return '<h2>VEGANFARM Team access requests</h2><p class="mut">Requests submitted on the VEGANFARM Team page appear here. Approve a request before the person creates or uses their Team Member login.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="vfRefreshTeamRequests(this)">Refresh Team requests</button></div>'+
+      (rows.length?tbl(['Name','Email','Requested','Status','Founder decision'],rows):'<p class="note">No eligible Team access requests have been submitted yet. Ask each Team member to submit their own name and email on the VEGANFARM Team page.</p>')+
+      (internalRows.length?'<h3 style="margin-top:24px">Founder-email submissions</h3><p class="mut">These entries use a Founder account email. They are not treated as Team access requests, so they cannot change Founder permissions.</p>'+tbl(['Name','Email','Submitted','Classification','Details'],internalRows):'');
   };
   A['admin-team']=function(){
-    var rows=(TREQ||[]).filter(function(m){return m.profileId||m.requestId===null;}).map(function(m){
+    var rows=(TREQ||[]).filter(function(m){return !m.internalRequest&&(m.profileId||m.requestId===null);}).map(function(m){
       return [esc(m.name||'—'),esc(m.email||'—'),'<span class="tag">'+esc(m.status)+'</span>'];
     });
-    return '<h2>Team member accounts</h2><p class="mut">Approved people can sign in through the Team Member page. Use Team requests to approve or suspend access.</p>'+
-      (rows.length?tbl(['Name','Email','Access status'],rows):'<p class="note">No Team member accounts have been created yet.</p>');
+    var approvedWaiting=(TREQ||[]).filter(function(m){return !m.internalRequest&&m.requestId&&m.status==='approved'&&!m.profileId;}).length;
+    return '<h2>Team member accounts</h2><p class="mut">This list contains actual Team-role Auth accounts. Founder accounts and requests without a registered login are kept separate.</p>'+
+      (rows.length?tbl(['Name','Email','Access status'],rows):'<p class="note">No Team member accounts have been created yet. After a request is approved, the person must create a Team Member login using the same email address. Their account will appear here after registration.</p>')+
+      (approvedWaiting?'<p class="note">'+approvedWaiting+' approved request(s) are waiting for the member to create their Team Member login.</p>':'');
   };
 
   function caseDetail(a){
