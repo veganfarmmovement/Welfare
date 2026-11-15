@@ -1309,7 +1309,7 @@ currentUser().then(function(u){
   }
   function teamRequestPage(){
     if(requestComplete){
-      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request received</h1><p class="note">Your access request for <b>'+escTeam(requestEmail)+'</b> is saved. The Founder can review it in Founder Dashboard → Team → Team Requests.</p><p>After the Founder approves your request, use the Team Member page to create your email/password account with the same email address.</p><a class="btn" href="#team">Open Team Member login</a></div></section>';
+      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request received</h1><p class="note">Your access request for <b>'+escTeam(requestEmail)+'</b> is saved. The Founder can review it in Founder Dashboard → Team → Team Requests.</p><p>After approval, open the Team Member page and request a secure one-time sign-in link using this same email address. No password is required.</p><a class="btn" href="#team">Open Team Member login</a></div></section>';
     }
     return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request VEGANFARM Team access</h1><p class="mut">Submit your name and email. The Founder will review your request before team access is granted.</p><form onsubmit="vfSaveTeamRequest(event)"><label for="vf-req-name">Full name</label><input id="vf-req-name" name="name" autocomplete="name" required minlength="3"><label for="vf-req-email">Email address</label><input id="vf-req-email" name="email" type="email" autocomplete="email" required><p id="vf-req-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Submit access request</button></form><p class="mut" style="margin-top:18px">Already approved? <a href="#team">Open the Team Member login and register with your email and password.</a></p></div></section>';
   }
@@ -1324,7 +1324,7 @@ currentUser().then(function(u){
     if(name.length<3){fail('Enter your full name.');return;}
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter a valid email address.');return;}
     if(button){button.disabled=true;button.textContent='Submitting…';}
-    client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).select('id').single().then(function(r){
+    client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).then(function(r){
       if(r.error){
         if(r.error.code==='23505'){fail('A request already exists for this email. Contact the Founder to check its status.');return;}
         fail('Your request could not be saved: '+r.error.message);return;
@@ -1377,9 +1377,10 @@ currentUser().then(function(u){
   // Founder decisions update both the request and any existing Auth profile.
   window.treqSet=function(id,status){
     if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
-    if(status!=='approved'&&status!=='rejected')return;
+    if(status!=='approved'&&status!=='rejected'&&status!=='suspended')return;
     var row=TREQ.find(function(x){return x.id===id;});
     if(!row){toast('Request not found. Refresh the Team Requests page.');return;}
+    if(row.internalRequest){toast('Founder email submissions cannot be changed as Team access.');return;}
     client.auth.getSession().then(function(session){
       var user=session.data&&session.data.session&&session.data.session.user;
       return client.from('team_access_requests')
@@ -1396,11 +1397,15 @@ currentUser().then(function(u){
       if(r&&r.error)throw r.error;
       return window.vfReload();
     }).then(function(){
-      toast(status==='approved'?'Team request approved. The member can register or sign in with the same email.':'Team request rejected.');
+      var message=status==='approved'
+        ?'Team access approved or reinstated. The member can sign in using a secure email link.'
+        :status==='suspended'
+          ?'Team access suspended. The member can no longer use the portal.'
+          :'Team access rejected. The member cannot use the portal.';
+      toast(message);
       go(true);
     }).catch(function(err){console.error(err);toast('Decision was not saved: '+(err&&err.message?err.message:'Please try again.'));});
   };
-
   // Auth-based signup also appears in Team Requests; a pre-approved request activates the profile at signup.
   window.vfSignup=function(e){
     e.preventDefault();
@@ -1787,8 +1792,21 @@ currentUser().then(function(u){
       .on('postgres_changes',{event:'*',schema:'public',table:'team_access_requests'},function(){
         if(window.vfRole==='founder'&&location.hash==='#admin-treq')window.vfReload().then(function(){go(true);}).catch(function(err){console.error(err);});
       })
-      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},function(){
-        if(!window.vfRole){client.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return client.from('profiles').select('role,status').eq('id',s.user.id).maybeSingle().then(function(p){if(p.data&&p.data.status==='approved'&&p.data.role==='team'){window.location.reload();}});}).catch(function(err){console.error(err);});}
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},function(payload){
+        client.auth.getSession().then(function(r){
+          var session=r.data&&r.data.session;
+          if(!session)return;
+          var changedId=payload&&payload.new&&payload.new.id;
+          if(changedId&&changedId!==session.user.id)return;
+          return client.from('profiles').select('role,status,display_name,email').eq('id',session.user.id).maybeSingle().then(function(p){
+            if(p.error)throw p.error;
+            var previous=window.vfUser||null,next=p.data||null;
+            var accessChanged=!previous||!next||previous.role!==next.role||previous.status!==next.status;
+            window.vfUser=next;
+            window.vfRole=next&&next.status==='approved'?next.role:null;
+            if(accessChanged)window.location.reload();
+          });
+        }).catch(function(err){console.error('Team access refresh failed',err);});
       }).subscribe();
   }catch(error){console.warn('Live case notifications unavailable; use Refresh submissions.',error);}
 })();
@@ -1815,7 +1833,7 @@ currentUser().then(function(u){
   /* Public-facing request page: name and email only. */
   P['veganfarm-team']=function(){
     if(requestSent){
-      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request submitted</h1><p class="note">Your VEGANFARM Team access request for <b>'+esc(requestAddress)+'</b> has been sent to the Founder for review.</p><p>After approval, open the Team Member page and create your login using this same email address.</p><a class="btn" href="#team">Open Team Member</a></div></section>';
+      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request submitted</h1><p class="note">Your VEGANFARM Team access request for <b>'+esc(requestAddress)+'</b> has been sent to the Founder for review.</p><p>After approval, open the Team Member page and request a secure one-time sign-in link using this same email address. No password is required.</p><a class="btn" href="#team">Open Team Member</a></div></section>';
     }
     return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Join VEGANFARM Team</h1><p class="mut">Submit your name and email address. The Founder must approve your request before you can access the Team Member portal.</p><form onsubmit="vfSubmitTeamRequest(event)"><label for="vf-request-name">Full name</label><input id="vf-request-name" name="name" autocomplete="name" required minlength="3"><label for="vf-request-email">Email address</label><input id="vf-request-email" name="email" type="email" autocomplete="email" required><p id="vf-request-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Submit access request</button></form><p class="mut" style="margin-top:18px">Already approved? <a href="#team">Open Team Member login.</a></p></div></section>';
   };
@@ -2058,17 +2076,19 @@ currentUser().then(function(u){
     var founderRequests=all.filter(function(m){return !!m.internalRequest;});
     var rows=teamRequests.map(function(m){
       var action=m.status==='pending'
-        ?'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button> <button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Reject</button>'
+        ?'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Approve</button> <button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'rejected\\')">Reject</button>'
         :m.status==='approved'
-          ?'<button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Suspend</button>'
-          :'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button>';
+          ?'<button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'suspended\\')">Suspend</button>'
+          :m.status==='suspended'
+            ?'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Reinstate</button>'
+            :'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Reapprove</button>';
       return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">'+esc(m.status)+'</span>',action];
     });
     var internalRows=founderRequests.map(function(m){
       return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">Not a Team account</span>','Founder email requests are shown for transparency and cannot be approved as Team access.'];
     });
-    return '<h2>VEGANFARM Team access requests</h2><p class="mut">Requests submitted on the VEGANFARM Team page appear here. Approve a request before the person creates or uses their Team Member login.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="vfRefreshTeamRequests(this)">Refresh Team requests</button></div>'+
-      (rows.length?tbl(['Name','Email','Requested','Status','Founder decision'],rows):'<p class="note">No eligible Team access requests have been submitted yet. Ask each Team member to submit their own name and email on the VEGANFARM Team page.</p>')+
+    return '<h2>VEGANFARM Team access requests</h2><p class="mut">Requests submitted on the VEGANFARM Team page appear here. Approve a request to enable that email address for the passwordless Team Member portal.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="vfRefreshTeamRequests(this)">Refresh Team requests</button></div>'+
+      (rows.length?tbl(['Name','Email','Requested','Status','Founder decision'],rows):'<p class="note">No eligible Team access requests have been submitted yet. Ask each Team member to submit their own name and email. After approval, they sign in using a secure email link.</p>')+
       (internalRows.length?'<h3 style="margin-top:24px">Founder-email submissions</h3><p class="mut">These entries use a Founder account email. They are not treated as Team access requests, so they cannot change Founder permissions.</p>'+tbl(['Name','Email','Submitted','Classification','Details'],internalRows):'');
   };
   A['admin-team']=function(){
@@ -2077,8 +2097,8 @@ currentUser().then(function(u){
     });
     var approvedWaiting=(TREQ||[]).filter(function(m){return !m.internalRequest&&m.requestId&&m.status==='approved'&&!m.profileId;}).length;
     return '<h2>Team member accounts</h2><p class="mut">This list contains actual Team-role Auth accounts. Founder accounts and requests without a registered login are kept separate.</p>'+
-      (rows.length?tbl(['Name','Email','Access status'],rows):'<p class="note">No Team member accounts have been created yet. After a request is approved, the person must create a Team Member login using the same email address. Their account will appear here after registration.</p>')+
-      (approvedWaiting?'<p class="note">'+approvedWaiting+' approved request(s) are waiting for the member to create their Team Member login.</p>':'');
+      (rows.length?tbl(['Name','Email','Access status'],rows):'<p class="note">No Team member accounts have been created yet. After approval, the member signs in from the Team Member page using the same email address and a secure one-time link. Their account appears here after the first successful sign-in.</p>')+
+      (approvedWaiting?'<p class="note">'+approvedWaiting+' approved request(s) are waiting for the member to complete their first secure email sign-in.</p>':'');
   };
 
   function caseDetail(a){
