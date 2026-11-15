@@ -2076,12 +2076,12 @@ currentUser().then(function(u){
     var founderRequests=all.filter(function(m){return !!m.internalRequest;});
     var rows=teamRequests.map(function(m){
       var action=m.status==='pending'
-        ?'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Approve</button> <button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'rejected\\')">Reject</button>'
+        ?'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button> <button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Reject</button>'
         :m.status==='approved'
-          ?'<button class="btn out sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'suspended\\')">Suspend</button>'
+          ?'<button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'suspended\')">Suspend</button>'
           :m.status==='suspended'
-            ?'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Reinstate</button>'
-            :'<button class="btn sm" onclick="treqSet(\\''+esc(m.id)+'\\',\\'approved\\')">Reapprove</button>';
+            ?'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Reinstate</button>'
+            :'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Reapprove</button>';
       return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">'+esc(m.status)+'</span>',action];
     });
     var internalRows=founderRequests.map(function(m){
