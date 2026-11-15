@@ -1296,7 +1296,7 @@ currentUser().then(function(u){
     }).then(function(result){
       if(result.error)throw result.error;
       var profiles=TREQ.slice();
-      var merged=(result.data||[]).map(function(req){
+      var merged=(result.data||[]).filter(function(req){var em=String(req.email||'').toLowerCase();return em!=='hdedhia22@gmail.com'&&em!=='veganfarmmovement@gmail.com';}).map(function(req){
         var profile=profiles.find(function(p){return String(p.email||'').toLowerCase()===String(req.email||'').toLowerCase();});
         return {
           id:req.id,
@@ -1729,6 +1729,15 @@ currentUser().then(function(u){
         if(window.vfRole==='founder'&&location.hash==='#admin-appeals'){
           window.vfReload().then(function(){go(true);}).catch(function(err){console.error(err);});
         }
+      })
+      .on('postgres_changes',{event:'*',schema:'public',table:'donations'},function(){
+        if(window.vfRole==='founder')window.vfReload().then(function(){go(true);}).catch(function(err){console.error(err);});
+      })
+      .on('postgres_changes',{event:'*',schema:'public',table:'team_access_requests'},function(){
+        if(window.vfRole==='founder'&&location.hash==='#admin-treq')window.vfReload().then(function(){go(true);}).catch(function(err){console.error(err);});
+      })
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'profiles'},function(){
+        if(!window.vfRole){client.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(!s)return;return client.from('profiles').select('role,status').eq('id',s.user.id).maybeSingle().then(function(p){if(p.data&&p.data.status==='approved'&&p.data.role==='team'){window.location.reload();}});}).catch(function(err){console.error(err);});}
       }).subscribe();
   }catch(error){console.warn('Live case notifications unavailable; use Refresh submissions.',error);}
 })();
