@@ -148,7 +148,20 @@ drop policy if exists p_don_public_r on public.donations;
 revoke all privileges on table public.donations from anon, public;
 grant insert on table public.donations to anon, authenticated;
 
-drop view if exists public.public_donation_feed;
+do $migration$
+begin
+  if exists (
+    select 1 from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public'
+      and c.relname = 'public_donation_feed'
+      and c.relkind = 'v'
+  ) then
+    execute 'drop view public.public_donation_feed';
+  end if;
+end;
+$migration$;
+
 create table if not exists public.public_donation_feed (
   donation_id uuid primary key references public.donations(id) on delete cascade,
   donor text not null,
