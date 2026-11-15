@@ -1198,7 +1198,7 @@ window.tSave=function(e){
 /* Donation review and donor-name controls persist notification decisions as well as payments. */
 window.verifyD=function(){  if(window.vfRole!=='founder')return;var p=PEND[vs],amount=+document.getElementById('am').value,category=document.getElementById('ct').value,target=document.getElementById('al').value,show=document.getElementById('pd').value==='name';
   if(!p||!(amount>0)){toast('Enter a valid amount');return;}
-  sb.from('donations').update({status:'verified',amount:amount,category:category,target_label:target,show_name:show}).eq('id',p.id).eq('status','pending').select('id').then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('Donation was already updated or is unavailable');var d={id:p.id,n:p.n,a:amount,cat:category,tg:target,pub:show?'name':'anon'};var text=ntext(d);NOTIF.unshift({id:'N-'+(xid++),t:text,w:now(),hide:false,did:p.id});H('Founder',p.id,'Verified donation '+inr(amount)+' and allocated to '+target);return persistFounderState();}).then(function(){return window.vfReload();}).then(function(){toast('Payment verified and saved');go(true);}).catch(function(err){reportError('Payment verification failed',err);});
+  sb.from('rescue_cases').select('id').eq('case_code',target).eq('publication','published').maybeSingle().then(function(caseRow){if(caseRow.error)throw caseRow.error;var patch={status:'verified',amount:amount,category:category,target_label:target,show_name:show,case_id:caseRow.data?caseRow.data.id:null};return sb.from('donations').update(patch).eq('id',p.id).eq('status','pending').select('id');}).then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('Donation was already updated or is unavailable');var d={id:p.id,n:p.n,a:amount,cat:category,tg:target,pub:show?'name':'anon'};var text=ntext(d);NOTIF.unshift({id:'N-'+(xid++),t:text,w:now(),hide:false,did:p.id});H('Founder',p.id,'Verified donation '+inr(amount)+' and allocated to '+target);return persistFounderState();}).then(function(){return window.vfReload();}).then(function(){toast('Payment verified and saved');go(true);}).catch(function(err){reportError('Payment verification failed',err);});
 };
 window.hideName=function(id){var d=DONS.find(function(x){return x.id===id;});if(!d)return;var value=d.pub!=='name';sb.from('donations').update({show_name:value}).eq('id',id).then(function(r){if(r.error)throw r.error;NOTIF.forEach(function(n){if(n.did===id){var copy=Object.assign({},d,{pub:value?'name':'anon'});n.t=ntext(copy);}});return persistFounderState();}).then(function(){return window.vfReload();}).then(function(){toast('Donor display preference saved');go(true);}).catch(function(err){reportError('Donor display preference was not saved',err);});};
 
@@ -1571,6 +1571,165 @@ currentUser().then(function(u){
       '<div class="note">No rescue cases have reached the database yet. Once a signed-in, approved team member submits a case successfully, it will appear here automatically.</div>');
   };
 
+</script>
+<script>
+/* VEGANFARM end-to-end team access, rescue review and live fundraising tracker */
+(function(){
+  'use strict';
+  var client=window.vfSupabase;
+  if(!client)return;
+  function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+  function money(v){return '₹'+Number(v||0).toLocaleString('en-IN',{maximumFractionDigits:2});}
+  function raisedFor(code){
+    return (DONS||[]).filter(function(d){return !d.rev&&String(d.tg||'')===String(code);})
+      .reduce(function(sum,d){return sum+Number(d.a||0);},0);
+  }
+
+  // Restore Team sign-in and registration. The previous override accidentally hid both forms.
+  var signedTeamPortal=window.TEAM2;
+  window.TEAM2=function(h){
+    if(window.vfRole==='team'||window.vfRole==='founder')return signedTeamPortal(h);
+    return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+      '<h1 style="font-size:2.2rem">VEGANFARM Team Portal</h1>'+
+      '<p class="mut">Only Founder-approved Team accounts can submit rescue cases.</p>'+
+      '<h3>Team member sign in</h3>'+
+      '<form onsubmit="vfLogin(event,\\'team\\')">'+
+      '<label>Email address</label><input name="email" type="email" autocomplete="username" required>'+
+      '<label>Password</label><input name="password" type="password" autocomplete="current-password" required>'+
+      '<p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p>'+
+      '<button class="btn">Sign in</button></form>'+
+      '<h3 style="margin-top:28px">New Team member? Create an account</h3>'+
+      '<p class="mut">Creating an account sends an access request to the Founder. You cannot submit cases until the Founder approves it.</p>'+
+      '<form onsubmit="vfSignup(event)">'+
+      '<label>Full name</label><input name="name" autocomplete="name" required minlength="3">'+
+      '<label>Email address</label><input name="email" type="email" autocomplete="email" required>'+
+      '<label>Password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required>'+
+      '<button class="btn" style="margin-top:12px">Create account / Request approval</button></form>'+
+      '<p class="mut" style="margin-top:16px">Already requested access? Once approved, sign in with the same email and password. If you created your account after the request was approved, the approval is applied automatically.</p>'+
+      '</div></section>';
+  };
+
+  // Explicitly require an official fundraising target before publication.
+  window.vfReviewCase=function(id,decision){
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
+    var a=APP.find(function(x){return String(x.id)===String(id);});
+    if(!a||!a.dbId){toast('Case record not found. Refresh the Founder dashboard.');return;}
+    var patch={};
+    if(decision==='approve'){
+      var field=document.getElementById('vf-case-target-'+id);
+      var target=field&&String(field.value||'').trim()!==''?Number(field.value):Number(a.amt||a.est||0);
+      if(!(target>0)){toast('Enter the official fundraising target before publishing this case.');if(field)field.focus();return;}
+      patch={publication:'published',target_amount:target,review_note:null};
+    }else if(decision==='correct'){
+      patch={publication:'pending_review',review_note:'Founder requested corrections. Please update the case details and submit again.'};
+    }else if(decision==='reject'){
+      patch={publication:'rejected',review_note:'Rejected by the Founder.'};
+    }else if(decision==='reopen'){
+      patch={publication:'pending_review',review_note:null};
+    }else if(decision==='unpublish'){
+      patch={publication:'unpublished',review_note:null};
+    }else if(decision==='archive'){
+      patch={publication:'archived'};
+    }else{toast('Unknown review action.');return;}
+    client.from('rescue_cases').update(patch).eq('id',a.dbId).select('id,publication,target_amount').maybeSingle()
+      .then(function(result){
+        if(result.error)throw result.error;
+        if(!result.data)throw new Error('No case row was updated. Refresh and check Founder permissions.');
+        return window.vfReload();
+      })
+      .then(function(){
+        var messages={approve:'Case approved and published. Fundraising target saved.',correct:'Correction request saved. Case remains unpublished.',reject:'Case rejected and saved.',reopen:'Case returned to Founder review.',unpublish:'Case unpublished.',archive:'Case archived.'};
+        toast(messages[decision]);go(true);
+      })
+      .catch(function(error){console.error('Case decision failed',error);toast('Decision not saved: '+(error&&error.message?error.message:'Please try again.'));});
+  };
+  window.decide=function(id,action){
+    var map={publish:'approve',approve:'approve',correct:'correct',reject:'reject',unpublish:'unpublish',restore:'reopen',archive:'archive'};
+    if(map[action])window.vfReviewCase(id,map[action]);else toast('Unsupported case action.');
+  };
+
+  // Founder review queue: all team-submitted records, with target, verified raised and remaining.
+  A['admin-appeals']=function(){
+    var submissions=APP.filter(function(a){return a.src==='team';});
+    var rows=submissions.map(function(a){
+      var received=raisedFor(a.id),goal=Number(a.amt||0),remaining=goal>0?Math.max(0,goal-received):null;
+      var targetInput=(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested')
+        ?'<input id="vf-case-target-'+escHtml(a.id)+'" type="number" min="1" step="0.01" value="'+escHtml(a.amt||a.est||'')+'" placeholder="Set target (₹)" style="max-width:150px">'
+        :(goal>0?money(goal):'Not set');
+      var photo=a.photo?'<a href="'+escHtml(a.photo)+'" target="_blank" rel="noopener"><img src="'+escHtml(a.photo)+'" alt="Animal photo" style="height:54px;max-width:76px;object-fit:cover;border-radius:6px"></a>':'No photo';
+      var docs=a.docs?[
+        a.docs.rep?'<a href="'+escHtml(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
+        a.docs.bill?'<a href="'+escHtml(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+      ].filter(Boolean).join(' · '):'';
+      var applicant=[a.vname,a.vphone].filter(Boolean).map(escHtml).join('<br>');
+      var actions='';
+      if(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested'){
+        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'approve\\')">Approve &amp; Publish</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'correct\\')">Request corrections</button> '+
+          '<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reject\\')">Reject</button>';
+      }else if(a.pub==='Rejected'){
+        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reopen\\')">Reopen</button>';
+      }else if(a.pub==='Published'){
+        actions='<button class="btn out sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'unpublish\\')">Unpublish</button>';
+      }else{
+        actions='<button class="btn sm" onclick="vfReviewCase(\\''+escHtml(a.id)+'\\',\\'reopen\\')">Return to review</button>';
+      }
+      return [escHtml(a.id),escHtml(a.n),applicant||'—',photo+(docs?'<br>'+docs:''),escHtml(a.loc),
+        targetInput,money(received),remaining===null?'—':money(remaining),
+        escHtml(a.pub)+(a.note?'<br><span class="mut">'+escHtml(a.note)+'</span>':''),actions];
+    });
+    return '<h2>Rescue case submissions</h2>'+
+      '<p class="mut">Only approved Team accounts can submit cases. Every submission is stored in Supabase and waits here for Founder approval. Published cases become visible on the public website.</p>'+
+      '<div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){location.hash=\\'admin-appeals\\';go(true);})">Refresh submissions</button></div>'+
+      '<h3>Team submissions ('+submissions.length+')</h3>'+
+      (submissions.length?tbl(['Case ID','Animal','Rescuer','Photo / documents','Location','Fundraising target','Verified raised','Remaining','Status','Founder decision'],rows):
+       '<div class="note">No team rescue submissions are saved yet. An approved Team member must sign in through the Team Portal and submit a case. After submission, refresh this page.</div>');
+  };
+
+  // The Cases page also displays the actual fundraising ledger per published campaign.
+  var previousCasesView=A['admin-cases'];
+  A['admin-cases']=function(){
+    var base=previousCasesView();
+    var live=APP.filter(function(a){return a.pub==='Published';});
+    var rows=live.map(function(a){
+      var goal=Number(a.amt||0),received=raisedFor(a.id);
+      return [escHtml(a.id),escHtml(a.n),money(goal),money(received),goal>0?money(Math.max(0,goal-received)):'Target not set',
+        '<a class="btn out sm" href="#case-'+escHtml(a.id)+'">Public case</a>'];
+    });
+    return base+'<h3 style="margin-top:28px">Live campaign fundraising</h3>'+
+      (live.length?tbl(['Case ID','Animal','Target to raise','Verified received','Remaining','Public page'],rows):
+       '<p class="note">No rescue cases have been approved and published yet.</p>');
+  };
+
+  // Add a consolidated live fundraising summary to the Founder dashboard.
+  var previousDashboard=A.admin;
+  A.admin=function(){
+    var base=previousDashboard();
+    var live=APP.filter(function(a){return a.pub==='Published';});
+    var totalTarget=live.reduce(function(s,a){return s+Number(a.amt||0);},0);
+    var totalReceived=live.reduce(function(s,a){return s+raisedFor(a.id);},0);
+    var rows=live.map(function(a){
+      var goal=Number(a.amt||0),received=raisedFor(a.id);
+      return [escHtml(a.n),money(goal),money(received),money(Math.max(0,goal-received))];
+    });
+    return base+'<h3 style="margin-top:28px">Live rescue fundraising</h3>'+
+      '<div class="kpis"><div class="kpi"><small>Total targets</small><b>'+money(totalTarget)+'</b></div>'+
+      '<div class="kpi"><small>Verified raised</small><b>'+money(totalReceived)+'</b></div>'+
+      '<div class="kpi"><small>Remaining</small><b>'+money(Math.max(0,totalTarget-totalReceived))+'</b></div></div>'+
+      (live.length?tbl(['Animal','Target','Verified received','Remaining'],rows):
+       '<p class="note">No approved rescue campaigns are live yet.</p>');
+  };
+
+  // Refresh the case queue whenever the Founder opens it and attempt live database notifications.
+  var liveChannel=null;
+  try{
+    liveChannel=client.channel('vf-rescue-cases-founder-live')
+      .on('postgres_changes',{event:'*',schema:'public',table:'rescue_cases'},function(){
+        if(window.vfRole==='founder'&&location.hash==='#admin-appeals'){
+          window.vfReload().then(function(){go(true);}).catch(function(err){console.error(err);});
+        }
+      }).subscribe();
+  }catch(error){console.warn('Live case notifications unavailable; use Refresh submissions.',error);}
 })();
 </script>
 </body></html>
