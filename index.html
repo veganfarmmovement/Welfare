@@ -131,7 +131,7 @@ var SUPABASE_PUBLISHABLE_KEY='sb_publishable_pfzx6EONVzzemRZ6jegG_Q_qvEqgMjS';
 window.vfSupabase=null;
 try{
 if(window.supabase&&typeof window.supabase.createClient==='function'){
-window.vfSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+window.vfSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 }else{console.warn('Supabase library did not load; the site is running in sample mode.')}
 }catch(err){window.vfSupabase=null;console.warn('Supabase initialisation failed:',err)}
 })();
@@ -573,7 +573,7 @@ P.transparency=(f=>()=>f().replace('Only Founder-verified donations and approved
 const MONTHLY=()=>{const m={},key=ts=>new Date(ts).toLocaleString('en-IN',{month:'short',year:'numeric'});DONS.filter(d=>!d.rev&&d.ts).forEach(d=>{const k=key(d.ts);(m[k]=m[k]||[0,0])[0]+=d.a});EXPS.filter(e=>e.st=='Approved'&&!e.rev&&e.ts).forEach(e=>{const k=key(e.ts);(m[k]=m[k]||[0,0])[1]+=e.a});const k=Object.keys(m);return tbl(['Month','Verified donations','Approved expenses'],k.length?k.map(x=>[x,inr(m[x][0]),inr(m[x][1])]):[['Awaiting first report','-','-']])};
 /* founder: overview, finance */
 const kp=(l,v,r)=>`<a class="kpi" href="#${r}"><small>${l}</small><b>${v}</b></a>`;
-const SIDEG=[['Overview',[['admin','Overview']]],['Finance',[['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-ledger','Ledger'],['admin-finance','Financial reports'],['admin-feeding','Feeding log']]],['Rescue appeals',[['admin-appeals','Appeal submissions'],['admin-cases','Cases and animals'],['admin-history','Case history']]],['Team',[['admin-treq','Team requests'],['admin-team','Team and access'],['admin-roles','Role permissions']]],['Website',[['admin-content','Website editor'],['admin-stories','Our Past Work'],['admin-apps','Applications and messages'],['admin-notifs','Notifications']]],['System',[['admin-audit','Audit history'],['admin-80g','80G settings'],['admin-security','Security']]]];
+const SIDEG=[['Overview',[['admin','Overview']]],['Finance',[['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-ledger','Ledger'],['admin-finance','Financial reports'],['admin-feeding','Feeding log']]],['Rescue appeals',[['admin-appeals','Appeal submissions'],['admin-cases','Cases and animals'],['admin-history','Case history']]],['Team',[['admin-treq','Team requests'],['admin-team','Team and access'],['admin-roles','Role permissions']]],['Website',[['admin-content','Website editor'],['admin-stories','Our Past Work'],['admin-apps','Volunteer applications & messages'],['admin-notifs','Notifications']]],['System',[['admin-audit','Audit history'],['admin-80g','80G settings'],['admin-security','Security']]]];
 const SIDE=h=>SIDEG.map(g=>`<div class="sg">${g[0]}</div>`+g[1].map(x=>`<a class="${h==x[0]?'on':''}" href="#${x[0]}">${x[1]}</a>`).join('')).join('');
 Object.assign(A,{
 admin:()=>{const pa=APP.filter(a=>/Pending|Change|Correct/.test(a.pub)).length,na=VOL.filter(x=>x.st=='New').length+MSG.filter(x=>x.st=='New').length;return `<h2>Founder dashboard</h2><p class="mut">Control of finances, appeals, the team and the public website.</p><h3>Finance</h3><div class="kpis">${kp('Total verified donations',inr(DT()),'admin-donations')}${kp('Animal Welfare donations',inr(AWT()),'admin-donations')}${kp('Human Welfare donations',inr(HWT()),'admin-donations')}${kp('Approved expenses',inr(EXP),'admin-expenses')}${kp('Available balance',inr(BAL()),'admin-finance')}</div><h3 style="margin-top:32px">Needs your attention</h3><div class="kpis">${kp('Pending donation verification',PEND.length,'admin-donations')}${kp('Pending appeals',pa,'admin-appeals')}${kp('Pending expenses',EXPS.filter(x=>x.st=='Pending').length,'admin-expenses')}${kp('New applications and messages',na,'admin-apps')}${kp('Team requests pending',TREQ.filter(x=>x.status=='pending').length,'admin-treq')}</div><h3 style="margin-top:32px">Campaigns</h3><div class="kpis">${kp('Active rescue campaigns',cases.length,'admin-cases')}${kp('Urgent campaigns',cases.filter(c=>c.urgent).length,'admin-cases')}${kp('Fully funded',cases.filter(fund).length,'admin-cases')}</div><h3 style="margin-top:32px">Recent activity</h3>${tbl(['When','Who','Record','Activity'],HIST.slice(0,8).map(x=>[esc(x[0]),esc(x[1]),esc(x[2]),esc(x[3])]))}`},
@@ -847,7 +847,7 @@ PEND.forEach(function(p){if(p.spath)sb.storage.from('donation-screenshots').crea
 })}
 
 var shell=function(inner){return '<section class="sec"><div class="wrap" style="max-width:420px">'+inner+'</div></section>'};
-var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form>'};
+var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p class="mut">You will stay signed in on this device until you sign out or clear browser data.</p><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form>'};
 window.PINSCR=function(){
 if(vfRole==='founder'){founderIn=true;isF=true;setTimeout(function(){window.vfReload().then(function(){go(true)})});return shell('<p class="note">Loading dashboard…</p>')}
 return shell('<h1 style="font-size:2.2rem">Founder access</h1><p class="mut">Sign in with your Founder account. Access is checked by the database, not by this page.</p>'+lf('founder'))};
@@ -1365,6 +1365,143 @@ currentUser().then(function(u){
         toast('Account created. Confirm your email if requested, then sign in. Founder approval is required unless your earlier access request is already approved.');
       });
     }).catch(function(err){console.error(err);toast('Registration failed. Please try again.');});
+  };
+})();
+</script>
+
+<script>
+<!-- VEGANFARM persistent volunteer records and Founder decisions -->
+(function(){
+  'use strict';
+  var client=window.vfSupabase;
+  if(!client)return;
+  var priorFounderLoad=window.vfLoadFounderMore;
+
+  function safe(v){
+    return String(v==null?'':v).replace(/[&<>"']/g,function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+  function details(payload){
+    if(!payload||typeof payload!=='object')return '<span class="mut">No extra details supplied</span>';
+    var rows=[];
+    Object.keys(payload).forEach(function(key){
+      var value=payload[key];
+      if(value==null||value==='')return;
+      if(Array.isArray(value))value=value.join(', ');
+      else if(typeof value==='object')value=JSON.stringify(value);
+      rows.push('<div><b>'+safe(key.replace(/_/g,' '))+':</b> '+safe(value)+'</div>');
+    });
+    return rows.join('')||'<span class="mut">No extra details supplied</span>';
+  }
+  function statusLabel(value){
+    return value==='approved'?'Approved':value==='rejected'?'Rejected':'New';
+  }
+
+  // Load all volunteer applications and contact messages from Supabase every time the Founder dashboard refreshes.
+  window.vfLoadFounderMore=function(){
+    return Promise.resolve(priorFounderLoad&&priorFounderLoad()).then(function(){
+      return Promise.all([
+        client.from('volunteer_applications').select('*').order('created_at',{ascending:false}),
+        client.from('contact_messages').select('*').order('created_at',{ascending:false})
+      ]);
+    }).then(function(results){
+      var bad=results.find(function(x){return x.error;});
+      if(bad)throw bad.error;
+
+      VOL.length=0;
+      (results[0].data||[]).forEach(function(row){
+        var payload=row.payload||{};
+        VOL.push({
+          id:row.id,
+          t:new Date(row.created_at).toLocaleString('en-IN'),
+          name:row.name||payload.name||'',
+          email:row.email||payload.email||'',
+          phone:row.phone||payload.phone||'',
+          city:payload.city||'',
+          areas:payload.areas||'',
+          avail:payload.avail||payload.availability||'',
+          msg:payload.msg||payload.message||'',
+          payload:payload,
+          st:statusLabel(row.status),
+          dbStatus:row.status,
+          reviewed_at:row.reviewed_at,
+          review_note:row.review_note
+        });
+      });
+
+      MSG.length=0;
+      (results[1].data||[]).forEach(function(row){
+        var payload=row.payload||{};
+        MSG.push({
+          id:row.id,
+          t:new Date(row.created_at).toLocaleString('en-IN'),
+          name:row.name||payload.name||'',
+          email:row.email||payload.email||'',
+          phone:row.phone||payload.phone||'',
+          msg:payload.msg||payload.message||'',
+          payload:payload,
+          st:row.handled?'Handled':'New'
+        });
+      });
+    });
+  };
+
+  // The Founder can approve or reject a volunteer at any time. The full application remains in the database.
+  window.vfSetVolunteerStatus=function(id,status){
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
+    if(status!=='approved'&&status!=='rejected')return;
+    client.from('volunteer_applications')
+      .update({status:status})
+      .eq('id',id)
+      .select('id,status,reviewed_at,reviewed_by')
+      .then(function(result){
+        if(result.error)throw result.error;
+        if(!result.data||!result.data.length)throw new Error('Volunteer record not found or permission denied.');
+        return window.vfReload();
+      })
+      .then(function(){
+        toast(status==='approved'?'Volunteer application approved and saved.':'Volunteer application rejected and saved.');
+        go(true);
+      })
+      .catch(function(error){
+        console.error('Volunteer decision failed',error);
+        toast('Decision not saved: '+(error&&error.message?error.message:'Please try again.'));
+      });
+  };
+
+  // The separate contact-message action is persisted as well.
+  window.vfSetMessageHandled=function(id,handled){
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return;}
+    client.from('contact_messages').update({handled:!!handled}).eq('id',id).select('id')
+      .then(function(result){
+        if(result.error)throw result.error;
+        if(!result.data||!result.data.length)throw new Error('Message not found or permission denied.');
+        return window.vfReload();
+      })
+      .then(function(){toast(handled?'Message marked as handled.':'Message reopened.');go(true);})
+      .catch(function(error){console.error(error);toast('Could not update message: '+(error&&error.message?error.message:'Please try again.'));});
+  };
+
+  // Replace the browser-only application view with full saved records and persistent actions.
+  A['admin-apps']=function(){
+    var volunteerRows=VOL.map(function(v){
+      var actions='<button class="btn sm" onclick="vfSetVolunteerStatus(\''+v.id+'\',\'approved\')">Approve</button> '+
+        '<button class="btn out sm" onclick="vfSetVolunteerStatus(\''+v.id+'\',\'rejected\')">Reject</button>';
+      return [safe(v.id),safe(v.t),safe(v.name),safe(v.email),safe(v.phone),details(v.payload),pt(v.st),actions];
+    });
+    var messageRows=MSG.map(function(m){
+      var action=m.st==='Handled'
+        ?'<button class="btn out sm" onclick="vfSetMessageHandled(\''+m.id+'\',false)">Reopen</button>'
+        :'<button class="btn sm" onclick="vfSetMessageHandled(\''+m.id+'\',true)">Mark handled</button>';
+      return [safe(m.t),safe(m.name),safe(m.email),details(m.payload),pt(m.st),action];
+    });
+    return '<h2>Volunteer applications & messages</h2>'+
+      '<p class="mut">All submissions are stored in Supabase. Volunteer records remain saved after approval or rejection. You can change a decision at any time.</p>'+
+      '<h3>Volunteer applications ('+VOL.length+')</h3>'+
+      (VOL.length?tbl(['Application ID','Received','Name','Email','Phone','All submitted details','Status','Founder decision'],volunteerRows):'<p class="note">No volunteer applications yet. New submissions from the public Volunteer form will appear here.</p>')+
+      '<h3 style="margin-top:28px">Contact messages ('+MSG.length+')</h3>'+
+      (MSG.length?tbl(['Received','Name','Email','Message details','Status','Action'],messageRows):'<p class="note">No contact messages yet.</p>');
   };
 })();
 </script>
