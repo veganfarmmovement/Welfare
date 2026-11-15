@@ -755,7 +755,7 @@ const teamWho=(k,fb)=>{const r=TREQ.find(x=>x.eh==k);return r&&r.name?esc(r.name
 function go(keep){const h=(location.hash||'#home').slice(1);const adm=h.startsWith('admin'),tm=h.startsWith('team');if(!adm)founderIn=false;
 $('#menu').innerHTML=[['home','Home'],['about','About'],['cases','Rescue cases'],['impact','Impact'],['projects','Projects'],['education','Education'],['stories','Our Past Work'],['volunteer','Volunteer'],['transparency','Transparency'],['contact','Contact'],['team','TEAM MEMBER']].map(x=>`<a class="l ${h==x[0]?'on':''}" href="#${x[0]}">${x[1]}</a>`).join('');
 if(adm&&!founderIn){$('#app').innerHTML=PINSCR()}else if(adm){$('#app').innerHTML=`<div class="adm"><div class="side"><div class="sg" style="padding-top:4px">Founder dashboard</div><div style="padding:0 12px 6px"><button class="btn out sm" onclick="lockF()">Lock dashboard</button></div>${SIDE(h)}</div><div class="main">${(A[h]||A.admin)()}</div></div>`}
-else if(tm)$('#app').innerHTML=TEAM2(h);else $('#app').innerHTML=(P[h]||(h.startsWith('case-')?CASEP3:P.home))(h);if(!keep)scrollTo(0,0);tick();navReset()}
+else if(tm)$('#app').innerHTML=typeof window.TEAM2==='function'?window.TEAM2(h):'<section class="sec"><div class="wrap"><p class="note">Loading the secure Team portal…</p></div></section>';else $('#app').innerHTML=(P[h]||(h.startsWith('case-')?CASEP3:P.home))(h);if(!keep)scrollTo(0,0);tick();navReset()}
 addEventListener('hashchange',()=>go());go();
 </script>
 <script>
