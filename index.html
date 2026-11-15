@@ -132,6 +132,13 @@ window.vfSupabase=null;
 try{
 if(window.supabase&&typeof window.supabase.createClient==='function'){
 window.vfSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+window.vfRecoveryPending=false;
+window.vfSupabase.auth.onAuthStateChange(function(event){
+  if(event==='PASSWORD_RECOVERY'){
+    window.vfRecoveryPending=true;
+    if(typeof window.vfShowPasswordReset==='function')window.vfShowPasswordReset();
+  }
+});
 }else{console.warn('Supabase library did not load; the site is running in sample mode.')}
 }catch(err){window.vfSupabase=null;console.warn('Supabase initialisation failed:',err)}
 })();
@@ -2077,13 +2084,14 @@ currentUser().then(function(u){
       '<p class="mut" style="margin-top:16px"><a href="#admin">Return to Founder login</a></p>'+
       '</div></section>';
   };
-  client.auth.onAuthStateChange(function(event){
-    if(event==='PASSWORD_RECOVERY'){
-      location.hash='reset-password';
-      if(typeof go==='function')go(true);
-    }
-  });
-  if(location.hash==='#reset-password' && typeof go==='function')go(true);
+
+  window.vfShowPasswordReset=function(){
+    location.hash='reset-password';
+    if(typeof go==='function')go(true);
+  };
+  if(window.vfRecoveryPending || location.hash==='#reset-password'){
+    window.vfShowPasswordReset();
+  }
 })();
 </script>
 
