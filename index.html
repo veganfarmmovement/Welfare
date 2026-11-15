@@ -854,7 +854,7 @@ PEND.forEach(function(p){if(p.spath)sb.storage.from('donation-screenshots').crea
 })}
 
 var shell=function(inner){return '<section class="sec"><div class="wrap" style="max-width:420px">'+inner+'</div></section>'};
-var lf=function(kind){return '<form onsubmit="vfLogin(event,\''+kind+'\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p class="mut">You will stay signed in on this device until you sign out or clear browser data.</p><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button type="button" class="btn out sm" onclick="vfForgotPassword(this.form.elements.email.value)">Forgot password?</button> <button class="btn">Sign in</button></form>'};
+var lf=function(kind){return '<form onsubmit="vfLogin(event,\\''+kind+'\\')"><label for="vfe">Email</label><input id="vfe" name="email" type="email" autocomplete="username" required><label for="vfp">Password</label><input id="vfp" name="password" type="password" autocomplete="current-password" required><p class="mut">You will stay signed in on this device until you sign out or clear browser data.</p><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button type="button" class="btn out sm" onclick="vfForgotPassword(this.form.elements.email.value,\\'vf-founder-reset-status\\',this)">Forgot password?</button> <button class="btn">Sign in</button><p id="vf-founder-reset-status" role="status" aria-live="polite" class="mut" style="min-height:24px;margin:10px 0 0"></p></form>'};
 window.PINSCR=function(){
 if(vfRole==='founder'){founderIn=true;isF=true;setTimeout(function(){window.vfReload().then(function(){go(true)})});return shell('<p class="note">Loading dashboard…</p>')}
 return shell('<h1 style="font-size:2.2rem">Founder access</h1><p class="mut">Sign in with your Founder account. Access is checked by the database, not by this page.</p>'+lf('founder'))};
@@ -1840,7 +1840,7 @@ currentUser().then(function(u){
 
   /* Team Member is the approved-member login/account-setup route. */
   function loginPage(){
-    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\'team\')"><label>Email address</label><input id="team-login-email" name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><p style="margin-top:10px"><button type="button" class="btn out sm" onclick="vfForgotPassword(document.getElementById(&quot;team-login-email&quot;).value)">Forgot password?</button></p><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Have not requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
+    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\\'team\\')"><label>Email address</label><input id="team-login-email" name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><p style="margin-top:10px"><button type="button" class="btn out sm" onclick="vfForgotPassword(document.getElementById(&quot;team-login-email&quot;).value,\\'vf-team-reset-status\\',this)">Forgot password?</button></p><p id="vf-team-reset-status" role="status" aria-live="polite" class="mut" style="min-height:24px;margin:8px 0"></p><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Have not requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
   }
   window.vfSignup=function(e){
     e.preventDefault();
@@ -2099,17 +2099,28 @@ currentUser().then(function(u){
 (function(){
   var client=window.vfSupabase;
   if(!client)return;
-  window.vfForgotPassword=function(value){
+  window.vfForgotPassword=function(value,statusId,button){
     var email=String(value||'').trim().toLowerCase();
-    if(!email){toast('Enter your account email address first.');return;}
-    var redirectTo=window.location.origin+window.location.pathname;
-    toast('Requesting a password-reset email...');
-    client.auth.resetPasswordForEmail(email,{redirectTo:redirectTo}).then(function(result){
-      if(result.error){toast('Password reset could not be requested: '+result.error.message);return;}
-      toast('Password reset email requested. Check your inbox and spam folder.');
+    var status=statusId?document.getElementById(statusId):null;
+    function show(message,isError){
+      if(status){status.textContent=message;status.style.color=isError?'#991b1b':'var(--mut)';}
+      else toast(message);
+    }
+    if(!email){show('Enter the email address for your VEGANFARM account first.',true);return Promise.resolve();}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){show('Enter a valid email address.',true);return Promise.resolve();}
+    var productionUrl='https://veganfarmmovement.github.io/Welfare/';
+    var isLocal=window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1';
+    var redirectTo=isLocal?productionUrl:(window.location.origin+window.location.pathname);
+    if(button){button.disabled=true;button.textContent='Sending reset email...';}
+    show('Sending password-reset instructions...',false);
+    return client.auth.resetPasswordForEmail(email,{redirectTo:redirectTo}).then(function(result){
+      if(result.error)throw result.error;
+      show('If this email belongs to a VEGANFARM account, a reset email has been requested. Check your inbox and spam folder. Open the link on the VEGANFARM website.',false);
     }).catch(function(error){
       console.error('Password reset request failed',error);
-      toast('Password reset could not be requested. Please try again.');
+      show('Could not request a reset email: '+(error&&error.message?error.message:'Please try again.'),true);
+    }).then(function(){
+      if(button){button.disabled=false;button.textContent='Forgot password?';}
     });
   };
   window.vfUpdatePassword=function(event){
@@ -2117,20 +2128,33 @@ currentUser().then(function(u){
     var form=event.target;
     var password=form.elements.password.value;
     var confirmation=form.elements.confirm.value;
-    if(password.length<8){toast('Use a password with at least 8 characters.');return;}
-    if(password!==confirmation){toast('The passwords do not match.');return;}
+    var status=document.getElementById('vf-reset-status');
     var button=form.querySelector('button[type="submit"]');
-    if(button){button.disabled=true;button.textContent='Saving...';}
-    client.auth.updateUser({password:password}).then(function(result){
-      if(result.error)throw result.error;
-      return client.auth.signOut();
+    function show(message,isError){
+      if(status){status.textContent=message;status.style.color=isError?'#991b1b':'var(--mut)';}
+      else toast(message);
+    }
+    if(password.length<8){show('Use a password with at least 8 characters.',true);return;}
+    if(password!==confirmation){show('The passwords do not match.',true);return;}
+    if(button){button.disabled=true;button.textContent='Saving new password...';}
+    show('Checking the recovery link...',false);
+    client.auth.getSession().then(function(sessionResult){
+      if(sessionResult.error)throw sessionResult.error;
+      var session=sessionResult.data&&sessionResult.data.session;
+      if(!session)throw new Error('This reset link is invalid or expired. Return to login and request a fresh password-reset email.');
+      return client.auth.updateUser({password:password});
+    }).then(function(result){
+      if(result&&result.error)throw result.error;
+      return client.auth.signOut().then(function(signOutResult){
+        if(signOutResult&&signOutResult.error)console.warn('Password changed, but sign-out returned an error:',signOutResult.error);
+      });
     }).then(function(){
-      window.vfRole=null;window.vfUser=null;
-      toast('Password updated. Sign in using your new password.');
+      window.vfRole=null;window.vfUser=null;window.vfRecoveryPending=false;
+      show('Your password has been changed. Choose your login page.',false);
       location.hash='password-updated';
     }).catch(function(error){
       console.error('Password update failed',error);
-      toast('Password was not updated: '+(error&&error.message?error.message:'Please reopen the reset email and try again.'));
+      show(error&&error.message?error.message:'Password was not updated. Reopen the reset email and try again.',true);
       if(button){button.disabled=false;button.textContent='Save new password';}
     });
   };
@@ -2141,7 +2165,7 @@ currentUser().then(function(u){
       '<form onsubmit="vfUpdatePassword(event)">'+
       '<label>New password</label><input name="password" type="password" minlength="8" autocomplete="new-password" required>'+
       '<label>Confirm new password</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required>'+
-      '<button class="btn" type="submit">Save new password</button></form>'+
+      '<p id="vf-reset-status" role="status" aria-live="polite" class="mut" style="min-height:24px;margin:10px 0"></p><button class="btn" type="submit">Save new password</button></form>'+
       '<p class="mut" style="margin-top:16px"><a href="#admin">Return to Founder login</a></p>'+
       '</div></section>';
   };
