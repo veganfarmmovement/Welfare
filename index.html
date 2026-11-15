@@ -1743,4 +1743,283 @@ currentUser().then(function(u){
   }catch(error){console.warn('Live case notifications unavailable; use Refresh submissions.',error);}
 })();
 </script>
+
+<script>
+/* VEGANFARM_TEAM_TWO_STAGE_FORMS_V1 */
+(function(){
+  'use strict';
+  var client=window.vfSupabase;
+  if(!client)return;
+  var requestSent=false,requestAddress='';
+
+  function esc(v){
+    return String(v==null?'':v).replace(/[&<>"']/g,function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+  function cash(v){
+    return '₹'+Number(v||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+  }
+  function statusText(v){return esc(v||'Pending Founder review');}
+
+  /* Public-facing request page: name and email only. */
+  P['veganfarm-team']=function(){
+    if(requestSent){
+      return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Request submitted</h1><p class="note">Your VEGANFARM Team access request for <b>'+esc(requestAddress)+'</b> has been sent to the Founder for review.</p><p>After approval, open the Team Member page and create your login using this same email address.</p><a class="btn" href="#team">Open Team Member</a></div></section>';
+    }
+    return '<section class="sec"><div class="wrap" style="max-width:540px"><h1 style="font-size:2.2rem">Join VEGANFARM Team</h1><p class="mut">Submit your name and email address. The Founder must approve your request before you can access the Team Member portal.</p><form onsubmit="vfSubmitTeamRequest(event)"><label for="vf-request-name">Full name</label><input id="vf-request-name" name="name" autocomplete="name" required minlength="3"><label for="vf-request-email">Email address</label><input id="vf-request-email" name="email" type="email" autocomplete="email" required><p id="vf-request-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Submit access request</button></form><p class="mut" style="margin-top:18px">Already approved? <a href="#team">Open Team Member login.</a></p></div></section>';
+  };
+  window.vfSubmitTeamRequest=function(e){
+    e.preventDefault();
+    var form=e.target,name=(form.elements.name.value||'').trim().replace(/\s+/g,' ');
+    var email=(form.elements.email.value||'').trim().toLowerCase();
+    var error=document.getElementById('vf-request-error'),button=form.querySelector('button');
+    function fail(message){if(error)error.textContent=message;if(button){button.disabled=false;button.textContent='Submit access request';}}
+    if(name.length<3){fail('Enter your full name.');return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter a valid email address.');return;}
+    if(button){button.disabled=true;button.textContent='Submitting...';}
+    client.from('team_access_requests').insert({name:name,email:email,status:'pending'}).select('id').single()
+      .then(function(r){
+        if(r.error){
+          if(r.error.code==='23505'){fail('A request already exists for this email. The Founder can check its status in Admin → Team requests.');return;}
+          throw r.error;
+        }
+        requestSent=true;requestAddress=email;form.reset();go(true);
+      }).catch(function(err){console.error(err);fail('Your request was not saved: '+(err&&err.message?err.message:'Please try again.'));});
+  };
+
+  /* Team Member is the approved-member login/account-setup route. */
+  function loginPage(){
+    return '<section class="sec"><div class="wrap" style="max-width:480px"><h1 style="font-size:2.2rem">VEGANFARM Team Member</h1><p class="mut">Only Founder-approved Team members can enter this portal and submit rescue cases.</p><h3>Sign in</h3><form onsubmit="vfLogin(event,\'team\')"><label>Email address</label><input name="email" type="email" autocomplete="username" required><label>Password</label><input name="password" type="password" autocomplete="current-password" required><p id="perr" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn">Sign in</button></form><div class="divider" style="margin:24px 0"></div><h3>First-time login setup</h3><p class="mut">After the Founder approves your VEGANFARM Team request, create a password using the same email address you submitted. You do not need to submit your name again.</p><form onsubmit="vfSignup(event)"><label>Approved email address</label><input name="email" type="email" autocomplete="email" required><label>Create password (minimum 8 characters)</label><input name="password" type="password" minlength="8" autocomplete="new-password" required><p id="vf-signup-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn out">Create Team login</button></form><p class="mut" style="margin-top:18px">Haven't requested access? <a href="#veganfarm-team">Submit your name and email here.</a></p></div></section>';
+  }
+  window.vfSignup=function(e){
+    e.preventDefault();
+    var form=e.target,email=(form.elements.email.value||'').trim().toLowerCase(),password=form.elements.password.value;
+    var error=document.getElementById('vf-signup-error'),button=form.querySelector('button');
+    function fail(message){if(error)error.textContent=message;if(button){button.disabled=false;button.textContent='Create Team login';}}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){fail('Enter the same valid email address used in your Team access request.');return;}
+    if(password.length<8){fail('Use a password with at least 8 characters.');return;}
+    if(button){button.disabled=true;button.textContent='Creating account...';}
+    client.auth.signUp({email:email,password:password,options:{data:{display_name:email.split('@')[0]}}})
+      .then(function(r){
+        if(r.error)throw r.error;
+        return client.auth.signOut().then(function(){
+          form.reset();if(error)error.textContent='Account created. If email confirmation is enabled, confirm your email first. Your Team account will work only after Founder approval.';
+          if(button){button.disabled=false;button.textContent='Create Team login';}
+        });
+      }).catch(function(err){console.error(err);fail(err&&err.message?err.message:'Account setup failed. If this email already has an account, use Sign in.');});
+  };
+
+  function animalChoices(){
+    return '<option value="">Select animal type</option><option>Dog</option><option>Cat</option><option>Cow</option><option>Buffalo</option><option>Bird</option><option>Other</option>';
+  }
+  function commonFields(){
+    return '<label>Animal or group name *</label><input name="n" required maxlength="120">'+
+      '<label>Animal type *</label><select name="animal_type" required>'+animalChoices()+'</select>'+
+      '<label>Rescue / service location *</label><input name="loc" required>'+
+      '<label>Upload animal or feeding photograph *</label><input name="photo" type="file" accept="image/jpeg,image/png" required>'+
+      '<label>Additional details *</label><textarea name="desc" rows="4" required placeholder="Explain the situation and the support required."></textarea>'+
+      '<h3 style="margin-top:22px">Your contact details (visible only to the Founder)</h3>'+
+      '<label>Your full name *</label><input name="vname" required>'+
+      '<label>Contact number *</label><input name="vphone" type="tel" pattern="[0-9+ ()\\-]{10,}" required>'+
+      '<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p>'+
+      '<button class="btn" type="submit">Submit for Founder review</button>';
+  }
+  function feedingForm(){
+    return '<form style="max-width:680px" onsubmit="tNew(event,\'Feeding\')"><h3>Feeding support details</h3>'+
+      commonFields().replace('<label>Animal or group name *</label>','<label>Animal group / feeding location name *</label>')+
+      '<label>Number of animals being fed *</label><input name="fn" type="number" min="1" step="1" required>'+
+      '<label>Food being provided *</label><input name="food_type" required placeholder="Example: dry food, cooked food, fodder">'+
+      '<label>Feeding frequency *</label><select name="frequency" required><option value="">Select frequency</option><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Weekly</option><option>Emergency / one-time</option></select>'+
+      '<label>Daily feeding cost (₹) *</label><input name="fdaily" type="number" min="1" step="0.01" required>'+
+      '<p class="mut">The Founder will set the official campaign target after reviewing the request. Estimated monthly feeding cost is calculated from the daily cost.</p></form>';
+  }
+  function treatmentForm(){
+    return '<form style="max-width:680px" onsubmit="tNew(event,\'Treatment\')"><h3>Treatment support details</h3>'+
+      commonFields()+
+      '<label>Hospital / veterinary clinic name *</label><input name="hosp" required>'+
+      '<label>Medical condition or injury *</label><input name="cond" required>'+
+      '<label>Treatment required *</label><textarea name="treat" rows="3" required></textarea>'+
+      '<label>Estimated treatment cost (₹) *</label><input name="amt" type="number" min="1" step="0.01" required>'+
+      '<label>Medical report (optional)</label><input name="rep" type="file" accept="image/jpeg,image/png,application/pdf">'+
+      '<label>Veterinary bill / estimate (optional)</label><input name="bill" type="file" accept="image/jpeg,image/png,application/pdf">'+
+      '<p class="mut">The Founder will verify the medical details and set the official fundraising target before publication.</p></form>';
+  }
+  function teamHome(){
+    var who=(window.vfUser&&(window.vfUser.display_name||window.vfUser.email))||'Approved Team member';
+    return '<section class="sec"><div class="wrap" style="max-width:920px"><div class="row" style="justify-content:space-between;align-items:center"><div><h1 style="font-size:2.1rem">Team Member Portal</h1><p class="mut">Signed in as '+esc(who)+'. Every submission goes to the Founder for review.</p></div><button class="btn out sm" onclick="tOut()">Sign out</button></div><div class="card" style="margin:18px 0"><div class="b"><h2>Choose a submission form</h2><p class="mut">Feeding and Treatment use different questions and are reviewed separately.</p><div class="row"><button class="btn" type="button" onclick="showTeamCaseForm(\'Feeding\')">Feeding Form</button><button class="btn out" type="button" onclick="showTeamCaseForm(\'Treatment\')">Treatment Form</button><a class="btn out" href="#team-manage">My submissions</a></div><div id="vf-team-case-form" style="margin-top:22px"><p class="note">Select Feeding Form or Treatment Form to begin.</p></div></div></div></div></section>';
+  }
+  function mySubmissions(){
+    var rows=(APP||[]).map(function(a){
+      var k=a.kind||'Treatment';
+      return [esc(a.id),esc(a.n),esc(k),statusText(a.pub),esc(a.note||'—')];
+    });
+    return '<section class="sec"><div class="wrap" style="max-width:1100px"><div class="row" style="justify-content:space-between"><h1 style="font-size:2rem">My submissions</h1><a class="btn out sm" href="#team">Back to portal</a></div><p class="mut">The Founder reviews every Feeding and Treatment submission before it becomes public.</p>'+
+      (rows.length?tbl(['Case ID','Animal / group','Form type','Status','Founder note'],rows):'<p class="note">You have not submitted any cases yet.</p>')+'</div></section>';
+  }
+  window.showTeamCaseForm=function(kind){
+    var target=document.getElementById('vf-team-case-form');if(!target)return;
+    target.innerHTML=kind==='Feeding'?feedingForm():kind==='Treatment'?treatmentForm():'<p class="note">Select a form above.</p>';
+  };
+  window.TEAM2=function(h){
+    if(window.vfRole==='team'){
+      if(h==='team-manage')return mySubmissions();
+      return teamHome();
+    }
+    if(window.vfRole==='founder')return '<section class="sec"><div class="wrap"><h1>Founder account</h1><p class="mut">Use the Founder dashboard to review Team requests and rescue submissions.</p><a class="btn" href="#admin">Open Founder dashboard</a></div></section>';
+    return loginPage();
+  };
+
+  function upload(bucket,file,caseId,docType,userId){
+    if(!file||!file.size)return Promise.resolve(null);
+    var isPhoto=bucket==='case-photos';
+    if(file.size>(isPhoto?5242880:10485760))return Promise.reject(new Error(isPhoto?'Photo exceeds 5 MB.':'Document exceeds 10 MB.'));
+    if(!(file.type==='image/jpeg'||file.type==='image/png'||(!isPhoto&&file.type==='application/pdf')))return Promise.reject(new Error(isPhoto?'Use a JPG or PNG photograph.':'Use JPG, PNG or PDF documents.'));
+    var ext=file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg';
+    var path=isPhoto?(Date.now()+'-'+Math.random().toString(36).slice(2,10)+'.'+ext):(caseId+'/'+docType+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext);
+    return client.storage.from(bucket).upload(path,file,{contentType:file.type}).then(function(r){
+      if(r.error)throw r.error;
+      if(isPhoto)return path;
+      return client.from('case_documents').insert({case_id:caseId,document_type:docType,file_path:path,is_public:false,created_by:userId}).then(function(d){if(d.error)throw d.error;return path;});
+    });
+  }
+  window.tNew=function(e,forcedKind){
+    e.preventDefault();
+    if(window.vfRole!=='team'){toast('Sign in with an approved Team Member account first.');return;}
+    if(!TP.submit){toast('Case submissions are disabled by the Founder.');return;}
+    var form=e.target,fd=new FormData(form),v=function(k){return String(fd.get(k)||'').trim();};
+    var kind=forcedKind==='Feeding'?'Feeding':'Treatment';
+    if(!v('n')||!v('animal_type')||!v('loc')||!v('desc')||!v('vname')){toast('Complete all required case details.');return;}
+    if(v('vphone').replace(/\D/g,'').length<10){toast('Enter a valid contact number.');return;}
+    var photo=form.elements.photo&&form.elements.photo.files[0];
+    if(!photo){toast('Upload an animal photograph.');return;}
+    if(kind==='Feeding'&&(!(Number(v('fn'))>0)||!(Number(v('fdaily'))>0)||!v('food_type')||!v('frequency'))){toast('Complete all Feeding form questions.');return;}
+    if(kind==='Treatment'&&(!v('hosp')||!v('cond')||!v('treat')||!(Number(v('amt'))>0))){toast('Complete all Treatment form questions.');return;}
+    var button=form.querySelector('button[type="submit"]');if(button){button.disabled=true;button.textContent='Submitting...';}
+    var caseId=null;
+    client.auth.getUser().then(function(auth){
+      var user=auth.data&&auth.data.user;if(auth.error)throw auth.error;if(!user)throw new Error('Your login session has expired. Sign in again.');
+      return upload('case-photos',photo,null,null,user.id).then(function(photoPath){
+        var extra={case_type:kind,est:kind==='Feeding'?Number(v('fdaily'))*30:Number(v('amt')),fdaily:kind==='Feeding'?Number(v('fdaily')):0,fn:kind==='Feeding'?Number(v('fn')):0,food_type:kind==='Feeding'?v('food_type'):'',frequency:kind==='Feeding'?v('frequency'):'',feeding_notes:kind==='Feeding'?v('desc'):''};
+        var row={animal_name:v('n'),animal_type:v('animal_type'),location:v('loc'),hospital:kind==='Treatment'?v('hosp'):null,condition:kind==='Treatment'?v('cond'):null,treatment:kind==='Treatment'?v('treat'):null,description:v('desc'),kind:kind,status:kind==='Feeding'?'Feeding ongoing':'Awaiting treatment',publication:'pending_review',target_amount:null,photo_path:photoPath,submitted_by:user.id,extra:extra};
+        return client.from('rescue_cases').insert(row).select('id').single().then(function(r){if(r.error)throw r.error;if(!r.data)throw new Error('The case record was not returned.');caseId=r.data.id;
+          var jobs=[client.from('case_private').insert({case_id:caseId,finder_name:v('vname'),finder_phone:v('vphone')})];
+          if(kind==='Treatment'){
+            var rep=form.elements.rep&&form.elements.rep.files[0],bill=form.elements.bill&&form.elements.bill.files[0];
+            if(rep)jobs.push(upload('case-documents',rep,caseId,'medical_report',user.id));
+            if(bill)jobs.push(upload('case-documents',bill,caseId,'veterinary_bill',user.id));
+          }
+          return Promise.all(jobs).then(function(results){var failed=results.find(function(x){return x&&x.error;});if(failed)throw failed.error;});
+        });
+      });
+    }).then(function(){
+      return window.vfAfterLogin?window.vfAfterLogin():Promise.resolve();
+    }).then(function(){
+      form.reset();if(button){button.disabled=false;button.textContent='Submit for Founder review';}
+      toast(kind+' case submitted. It is now waiting in Founder → Rescue appeals.');
+      location.hash='team-manage';go(true);
+    }).catch(function(err){
+      console.error('Team case submission failed',err);if(button){button.disabled=false;button.textContent='Submit for Founder review';}
+      if(caseId){
+        if(window.vfAfterLogin)window.vfAfterLogin().then(function(){location.hash='team-manage';go(true);});
+        toast('Case record was created, but an attachment or private contact detail failed: '+(err&&err.message?err.message:'Please contact the Founder.'));
+      }else toast('Case was not submitted: '+(err&&err.message?err.message:'Please try again.'));
+    });
+  };
+
+  /* Enrich records with the separate Feeding/Treatment answers for Founder and public views. */
+  function enrichLoadedCases(){
+    return client.from('rescue_cases').select('id,kind,animal_type,extra').then(function(r){
+      if(r.error)throw r.error;
+      var byId={};(r.data||[]).forEach(function(x){byId[String(x.id)]=x;});
+      (APP||[]).forEach(function(a){
+        var x=byId[String(a.dbId)];if(!x)return;
+        var ex=x.extra||{};a.kind=x.kind||a.kind||'Treatment';a.animalType=x.animal_type||'';
+        a.caseExtra=ex;a.foodType=ex.food_type||'';a.frequency=ex.frequency||'';
+        a.est=ex.est==null?a.est:Number(ex.est);a.fdaily=Number(ex.fdaily||0);a.fn=Number(ex.fn||0);
+      });
+    });
+  }
+  var oldFounderMore=window.vfLoadFounderMore;
+  if(oldFounderMore)window.vfLoadFounderMore=function(){return Promise.resolve(oldFounderMore()).then(enrichLoadedCases);};
+  var oldPublicMore=window.vfLoadPublicMore;
+  if(oldPublicMore)window.vfLoadPublicMore=function(){return Promise.resolve(oldPublicMore()).then(enrichLoadedCases);};
+  var oldAfterLogin=window.vfAfterLogin;
+  if(oldAfterLogin)window.vfAfterLogin=function(){return Promise.resolve(oldAfterLogin()).then(enrichLoadedCases);};
+
+  /* The actual Founder Team Requests tab reads the persistent request table. */
+  A['admin-treq']=function(){
+    var rows=(TREQ||[]).filter(function(m){
+      var em=String(m.email||'').toLowerCase();
+      return em!=='hdedhia22@gmail.com'&&em!=='veganfarmmovement@gmail.com';
+    }).map(function(m){
+      var action=m.status==='pending'
+        ?'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button> <button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Reject</button>'
+        :m.status==='approved'
+          ?'<button class="btn out sm" onclick="treqSet(\''+esc(m.id)+'\',\'rejected\')">Suspend</button>'
+          :'<button class="btn sm" onclick="treqSet(\''+esc(m.id)+'\',\'approved\')">Approve</button>';
+      return [esc(m.name||'—'),esc(m.email||'—'),esc(m.date||'—'),'<span class="tag">'+esc(m.status)+'</span>',action];
+    });
+    return '<h2>VEGANFARM Team access requests</h2><p class="mut">Requests submitted on the VEGANFARM Team page appear here. Approve a request before the person creates or uses their Team Member login.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){go(true);})">Refresh Team requests</button></div>'+
+      (rows.length?tbl(['Name','Email','Requested','Status','Founder decision'],rows):'<p class="note">No Team access requests have been submitted yet.</p>');
+  };
+  A['admin-team']=function(){
+    var rows=(TREQ||[]).filter(function(m){return m.profileId||m.requestId===null;}).map(function(m){
+      return [esc(m.name||'—'),esc(m.email||'—'),'<span class="tag">'+esc(m.status)+'</span>'];
+    });
+    return '<h2>Team member accounts</h2><p class="mut">Approved people can sign in through the Team Member page. Use Team requests to approve or suspend access.</p>'+
+      (rows.length?tbl(['Name','Email','Access status'],rows):'<p class="note">No Team member accounts have been created yet.</p>');
+  };
+
+  function caseDetail(a){
+    var x=a.caseExtra||{};
+    if(a.kind==='Feeding'){
+      return '<b>Feeding</b><br>Animal type: '+esc(a.animalType||'—')+
+        '<br>Animals: '+esc(a.fn||'—')+'<br>Food: '+esc(a.foodType||'—')+
+        '<br>Frequency: '+esc(a.frequency||'—')+'<br>Daily cost: '+cash(a.fdaily||0)+
+        '<br>Estimated monthly: '+cash(x.est||a.est||0)+'<br>Details: '+esc(a.desc||'—');
+    }
+    return '<b>Treatment</b><br>Animal type: '+esc(a.animalType||'—')+
+      '<br>Hospital: '+esc(a.hosp||'—')+'<br>Condition: '+esc(a.cond||'—')+
+      '<br>Treatment: '+esc(a.treat||'—')+'<br>Estimated cost: '+cash(x.est||a.est||0)+
+      '<br>Details: '+esc(a.desc||'—');
+  }
+  A['admin-appeals']=function(){
+    var items=(APP||[]).filter(function(a){return a.src==='team';});
+    var rows=items.map(function(a){
+      var received=(DONS||[]).filter(function(d){return !d.rev&&String(d.tg||'')===String(a.id);}).reduce(function(sum,d){return sum+Number(d.a||0);},0);
+      var target=Number(a.amt||0),remaining=target>0?Math.max(0,target-received):null;
+      var targetInput=(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested')?
+        '<input id="vf-case-target-'+esc(a.id)+'" type="number" min="1" step="0.01" value="'+esc(a.amt||a.est||'')+'" placeholder="Set target (₹)" style="max-width:145px">':
+        (target>0?cash(target):'Not set');
+      var photo=a.photo?'<a href="'+esc(a.photo)+'" target="_blank" rel="noopener"><img src="'+esc(a.photo)+'" alt="Case photo" style="height:54px;max-width:76px;object-fit:cover;border-radius:6px"></a>':'No photo';
+      var docs=a.docs?[
+        a.docs.rep?'<a href="'+esc(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
+        a.docs.bill?'<a href="'+esc(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+      ].filter(Boolean).join(' · '):'';
+      var applicant=[a.vname,a.vphone].filter(Boolean).map(esc).join('<br>');
+      var actions='';
+      if(a.pub==='Pending Founder review'||a.pub==='Draft'||a.pub==='Corrections requested'){
+        actions='<button class="btn sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'approve\')">Approve &amp; Publish</button> <button class="btn out sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'correct\')">Request corrections</button> <button class="btn out sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'reject\')">Reject</button>';
+      }else if(a.pub==='Rejected')actions='<button class="btn sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'reopen\')">Reopen</button>';
+      else if(a.pub==='Published')actions='<button class="btn out sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'unpublish\')">Unpublish</button>';
+      else actions='<button class="btn sm" onclick="vfReviewCase(\''+esc(a.id)+'\',\'reopen\')">Return to review</button>';
+      return [esc(a.id),esc(a.n),caseDetail(a),applicant||'—',photo+(docs?'<br>'+docs:''),esc(a.loc||'—'),targetInput,cash(received),remaining===null?'—':cash(remaining),esc(a.pub)+(a.note?'<br><span class="mut">'+esc(a.note)+'</span>':''),actions];
+    });
+    return '<h2>Rescue case submissions</h2><p class="mut">Feeding and Treatment submissions from approved Team members appear here. Review the different form details, set the official fundraising target, then approve, request corrections or reject.</p><div class="row" style="margin:12px 0"><button class="btn out sm" onclick="window.vfReload().then(function(){go(true);})">Refresh submissions</button></div><h3>Team submissions ('+items.length+')</h3>'+
+      (items.length?tbl(['Case ID','Animal / group','Form and submitted details','Rescuer contact','Photo / documents','Location','Fundraising target','Verified raised','Remaining','Status','Founder decision'],rows):'<p class="note">No Team rescue cases have been submitted yet. A Founder-approved Team member must sign in and submit a Feeding or Treatment form.</p>');
+  };
+
+  /* Add the request page to the main navigation without replacing existing routes. */
+  var oldGo=window.go;
+  if(oldGo)window.go=function(keep){
+    oldGo(keep);
+    var menu=document.getElementById('menu');
+    if(menu&&!menu.querySelector('a[href="#veganfarm-team"]')){
+      menu.insertAdjacentHTML('beforeend','<a class="l" href="#veganfarm-team">VEGANFARM TEAM</a>');
+    }
+  };
+})();
+</script>
+
 </body></html>
