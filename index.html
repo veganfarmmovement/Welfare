@@ -2014,13 +2014,16 @@ currentUser().then(function(u){
 
   /* Add the request page to the main navigation without replacing existing routes. */
   var oldGo=window.go;
-  if(oldGo)window.go=function(keep){
-    oldGo(keep);
-    var menu=document.getElementById('menu');
-    if(menu&&!menu.querySelector('a[href="#veganfarm-team"]')){
-      menu.insertAdjacentHTML('beforeend','<a class="l" href="#veganfarm-team">VEGANFARM TEAM</a>');
-    }
-  };
+  if(oldGo){
+    window.go=function(keep){
+      oldGo(keep);
+      var menu=document.getElementById('menu');
+      if(menu&&!menu.querySelector('a[href="#veganfarm-team"]')){
+        menu.insertAdjacentHTML('beforeend','<a class="l" href="#veganfarm-team">VEGANFARM TEAM</a>');
+      }
+    };
+    window.go(true);
+  }
 })();
 </script>
 
