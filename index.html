@@ -975,7 +975,7 @@ sb.from('stories').select('id,title,location,body,photo_path').eq('published',tr
 if(r.error)return console.warn('Stories not loaded',r.error);
 (r.data||[]).forEach(function(s){
 if(STORIES.some(function(x){return x.dbId===s.id}))return;
-STORIES.push({id:'ST-'+s.id,dbId:s.id,t:s.title,w:s.location||'',b:s.body||'',pub:true,photo:s.photo_path?( /^https?:\\/\\//i.test(s.photo_path)?s.photo_path:sb.storage.from('story-photos').getPublicUrl(s.photo_path).data.publicUrl):null});
+STORIES.push({id:'ST-'+s.id,dbId:s.id,t:s.title,w:s.location||'',b:s.body||'',pub:true,photo:s.photo_path?( (s.photo_path.indexOf('https://')===0||s.photo_path.indexOf('http://')===0)?s.photo_path:sb.storage.from('story-photos').getPublicUrl(s.photo_path).data.publicUrl):null});
 });go(true);
 });
 })();
