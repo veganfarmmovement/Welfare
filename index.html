@@ -1306,7 +1306,7 @@ function loadFounderCaseExtras(){
       var d=docsById[a.dbId]||[];if(!d.length)return;
       a.docs={};a.docsPub={};
       d.forEach(function(row){
-        var key=row.document_type==='medical_report'?'rep':row.document_type==='veterinary_bill'?'bill':'other';
+        var key=row.document_type==='medical_report'?'rep':row.document_type==='veterinary_bill'?'bill':row.document_type==='treatment_video'?'video':'other';
         jobs.push(sb.storage.from('case-documents').createSignedUrl(row.file_path,3600).then(function(s){
           if(s.error)throw s.error;
           a.docs[key]=s.data.signedUrl;a.docsPub[key]=!!row.is_public;
@@ -1776,7 +1776,8 @@ currentUser().then(function(u){
       var media=a.photo?'<a href="'+safe(a.photo)+'" target="_blank" rel="noopener"><img src="'+safe(a.photo)+'" alt="Animal photograph" style="height:58px;max-width:82px;object-fit:cover;border-radius:6px"></a>':'Photo not available';
       var docs=a.docs?[
         a.docs.rep?'<a href="'+safe(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
-        a.docs.bill?'<a href="'+safe(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+        a.docs.bill?'<a href="'+safe(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':'',
+        a.docs.video?'<a href="'+safe(a.docs.video)+'" target="_blank" rel="noopener">Case video</a>':''
       ].filter(Boolean).join(' · '):'';
       var applicant=[a.vname,a.vphone].filter(Boolean).map(safe).join('<br>');
       var actions='';
@@ -1890,7 +1891,8 @@ currentUser().then(function(u){
       var photo=a.photo?'<a href="'+escHtml(a.photo)+'" target="_blank" rel="noopener"><img src="'+escHtml(a.photo)+'" alt="Animal photo" style="height:54px;max-width:76px;object-fit:cover;border-radius:6px"></a>':'No photo';
       var docs=a.docs?[
         a.docs.rep?'<a href="'+escHtml(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
-        a.docs.bill?'<a href="'+escHtml(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+        a.docs.bill?'<a href="'+escHtml(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':'',
+        a.docs.video?'<a href="'+escHtml(a.docs.video)+'" target="_blank" rel="noopener">Case video</a>':''
       ].filter(Boolean).join(' · '):'';
       var applicant=[a.vname,a.vphone].filter(Boolean).map(escHtml).join('<br>');
       var actions='';
@@ -2301,7 +2303,8 @@ currentUser().then(function(u){
       var photo=a.photo?'<a href="'+esc(a.photo)+'" target="_blank" rel="noopener"><img src="'+esc(a.photo)+'" alt="Case photo" style="height:54px;max-width:76px;object-fit:cover;border-radius:6px"></a>':'No photo';
       var docs=a.docs?[
         a.docs.rep?'<a href="'+esc(a.docs.rep)+'" target="_blank" rel="noopener">Medical report</a>':'',
-        a.docs.bill?'<a href="'+esc(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':''
+        a.docs.bill?'<a href="'+esc(a.docs.bill)+'" target="_blank" rel="noopener">Veterinary bill</a>':'',
+        a.docs.video?'<a href="'+esc(a.docs.video)+'" target="_blank" rel="noopener">Case video</a>':''
       ].filter(Boolean).join(' · '):'';
       var applicant=[a.vname,a.vphone].filter(Boolean).map(esc).join('<br>');
       var actions='';
@@ -2519,7 +2522,7 @@ currentUser().then(function(u){
       if(data.ok!==true)throw new Error(data.error||'Case submission failed.');
       var target=document.getElementById('vf-team-case-form');
       if(target){
-        target.innerHTML='<div class="note" role="status"><b>Case '+escapeHtml(data.case_code||'submitted')+' received.</b> Your '+escapeHtml(kind)+' submission has been saved and sent to Founder → Rescue Appeals for review. It will not be published until the Founder approves it.</div>'+
+        target.innerHTML='<div class="note" role="status"><b>Case '+escapeHtml(data.case_code||'submitted')+' received.</b> Your '+escapeHtml(kind)+' submission has been saved to the database and sent to Founder → Rescue Appeals for review. It will not be published until the Founder approves it.'+(data.warning?'<br><span style="color:#92400e">'+escapeHtml(data.warning)+'</span>':'')+'</div>'+
           '<div class="row" style="margin-top:16px"><button class="btn" type="button" onclick="showTeamCaseForm(\'Feeding\')">Submit another Feeding case</button><button class="btn out" type="button" onclick="showTeamCaseForm(\'Treatment\')">Submit another Treatment case</button></div>';
       }
       if(typeof toast==='function')toast(kind+' case sent to Founder for approval.');
