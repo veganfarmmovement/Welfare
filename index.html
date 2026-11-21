@@ -422,7 +422,8 @@ let NT=[];
 RP.push(['Enter with the shared team access code','Yes','Yes (while enabled)','No'],['Change, disable or revoke the shared access code','Yes','No','No'],['Choose Animal or Human Welfare and donate without an account','Yes','Yes','Yes']);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sumC=c=>DONS.filter(d=>d.cat==c&&!d.rev).reduce((s,d)=>s+d.a,0)+ADJ.filter(a=>a.cat==c).reduce((s,a)=>s+a.amt,0);
-const AWT=()=>sumC('Animal Welfare'),HWT=()=>sumC('Human Welfare'),DT=()=>AWT()+HWT(),BAL=()=>DT()-EXP;
+let PUBLIC_VERIFIED_TOTAL=null;
+const AWT=()=>sumC('Animal Welfare'),HWT=()=>sumC('Human Welfare'),DT=()=>window.vfRole==='founder'||PUBLIC_VERIFIED_TOTAL===null?AWT()+HWT():PUBLIC_VERIFIED_TOTAL,BAL=()=>DT()-EXP;
 let EXP=0;
 const cnt=c=>DONS.filter(d=>d.cat==c&&!d.rev).length;
 function alloc(n){return DONS.filter(d=>d.tg==n).reduce((s,d)=>s+d.a,0)}
@@ -1018,10 +1019,10 @@ function loadPublic(){if(vfRole==='founder')return Promise.resolve();
 return Promise.all([sb.from('public_donation_feed').select('*').order('created_at',{ascending:true}),sb.from('public_financial_totals').select('*').single()]).then(function(r){
 if(r[0].error){console.warn('Public donation feed unavailable; rescue appeals will still load.',r[0].error)}else{
 DONS.length=0;(r[0].data||[]).forEach(function(x,i){DONS.push({id:'F'+i,n:x.donor,a:+x.amount,cat:x.category,tg:x.target_label||'',when:fmt(x.created_at),pub:x.donor==='Anonymous'?'anon':'name'})})}
-if(r[1].error){console.warn('Public financial totals unavailable; rescue appeals will still load.',r[1].error)}else{EXP=+r[1].data.approved_expenses||0}
+if(r[1].error){PUBLIC_VERIFIED_TOTAL=null;console.warn('Public financial totals unavailable; rescue appeals will still load.',r[1].error)}else{PUBLIC_VERIFIED_TOTAL=Number(r[1].data.verified_donations)||0;EXP=Number(r[1].data.approved_expenses)||0}
 return window.vfLoadPublicMore?window.vfLoadPublicMore():0}).then(function(){go(true)})}
 
-function loadFounder(){return Promise.all([sb.from('donations').select('*').order('created_at',{ascending:true}),sb.from('audit_log').select('*').order('created_at',{ascending:false}).limit(500)]).then(function(res){
+function loadFounder(){PUBLIC_VERIFIED_TOTAL=null;return Promise.all([sb.from('donations').select('*').order('created_at',{ascending:true}),sb.from('audit_log').select('*').order('created_at',{ascending:false}).limit(500)]).then(function(res){
 var d=res[0],a=res[1];if(d.error||a.error){console.error(d.error||a.error);toast('Could not load data from the database.');return}
 PEND.length=0;DONS.length=0;REJ.length=0;LG.length=0;Object.keys(LGM).forEach(function(k){delete LGM[k]});
 d.data.forEach(function(r){var p={id:r.id,n:r.donor_name,c:r.donor_contact,a:+r.amount,cat:r.category,tg:r.target_label,ref:r.upi_reference||'',pub:r.show_name?'name':'anon',when:fmt(r.created_at),t:fmt(r.created_at),ts:Date.parse(r.created_at),shot:null,spath:r.screenshot_path};
