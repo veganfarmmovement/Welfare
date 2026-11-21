@@ -1636,7 +1636,7 @@ currentUser().then(function(u){
   var client=window.vfSupabase;
   if(!client)return;
   function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
-  function money(v){return '₹'+Number(v||0).toLocaleString('en-IN',{maximumFractionDigits:2});}
+  function money(v){return '₹0';}
   function raisedFor(code){
     return (DONS||[]).filter(function(d){return !d.rev&&String(d.tg||'')===String(code);})
       .reduce(function(sum,d){return sum+Number(d.a||0);},0);
@@ -1826,9 +1826,7 @@ currentUser().then(function(u){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
     });
   }
-  function cash(v){
-    return '₹'+Number(v||0).toLocaleString('en-IN',{maximumFractionDigits:2});
-  }
+  function cash(v){return '₹0';}
   function statusText(v){return esc(v||'Pending Founder review');}
 
   /* Public-facing request page: name and email only. */
