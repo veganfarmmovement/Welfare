@@ -1156,7 +1156,14 @@ ev.forEach(function(e,i){var n=i+1;LG.push([n,fmt(e.ts),e.k==='don'?'Donation':'
 })};
 window.vfReload=function(){return window.vfLoadFounder().then(window.vfLoadFounderMore)};
 window.vfLoadPublicMore=function(){return sb.from('rescue_cases').select(CASECOLS).eq('publication','published').order('created_at',{ascending:false}).then(function(r){
-if(r.error)return console.error(r.error);APP.length=0;r.data.forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases()})};
+if(r.error){console.error('Public rescue appeals could not be loaded:',r.error);return}
+APP.length=0;(r.data||[]).forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases();go(true)})};
+/* Load approved appeals for every visitor, without requiring Founder or Team sign-in. */
+function refreshPublicAppeals(){if(document.visibilityState==='hidden')return window.vfLoadPublicMore();return window.vfLoadPublicMore()}
+window.vfLoadPublicMore().then(function(){window.dispatchEvent(new Event('vf-public-appeals-loaded'))});
+/* Keep the public dashboard fresh while the page remains open. */
+if(window.vfPublicRefreshTimer)clearInterval(window.vfPublicRefreshTimer);
+window.vfPublicRefreshTimer=setInterval(function(){if(document.visibilityState!=='hidden')refreshPublicAppeals()},30000);
 window.vfAfterLogin=function(){if(window.vfRole!=='team')return Promise.resolve();
 return me().then(function(id){return sb.from('rescue_cases').select(CASECOLS).eq('submitted_by',id).order('created_at',{ascending:false})}).then(function(r){
 if(r.error)return console.error(r.error);APP.length=0;r.data.forEach(function(c){var a=mapCase(c);a.src='team';APP.push(a)});go(true)})};
