@@ -36,7 +36,7 @@
   setupScroll();
   setupReveal(app);
   setupButtons(app);
-  setupTilt(app);
+  setupTilt(app);\n  setupMagnetic(app);\n  setupHeroParallax(app);
  }
  var scrollBound=false;
  function setupScroll(){
@@ -85,7 +85,32 @@
    card.addEventListener('pointerleave',function(){card.style.transform='';});
   });
  }
- function checkApp(){
+
+ function setupMagnetic(root){
+  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  root.querySelectorAll('.btn,#vf-floating-donate').forEach(function(button){
+   if(button.dataset.vfMagnetic==='1')return;button.dataset.vfMagnetic='1';button.classList.add('vf-magnetic');
+   button.addEventListener('pointermove',function(e){
+    var r=button.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+    button.style.setProperty('--vf-mx',(dx*.10).toFixed(1)+'px');
+    button.style.setProperty('--vf-my',(dy*.10).toFixed(1)+'px');
+   });
+   button.addEventListener('pointerleave',function(){button.style.setProperty('--vf-mx','0px');button.style.setProperty('--vf-my','0px');});
+  });
+ }
+ function setupHeroParallax(root){
+  var hero=root.querySelector('.hero');
+  if(!hero||hero.dataset.vfParallax==='1'||!window.matchMedia('(hover:hover) and (pointer:fine)').matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  hero.dataset.vfParallax='1';
+  hero.addEventListener('pointermove',function(e){
+   var r=hero.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+   hero.style.setProperty('--vf-pointer-x',(x*1.8).toFixed(2)+'%');
+   hero.style.setProperty('--vf-pointer-y',(y*1.8).toFixed(2)+'%');
+   hero.style.backgroundPosition='center 48%,calc(50% + '+(x*16).toFixed(1)+'px) calc(48% + '+(y*12).toFixed(1)+'px)';
+  });
+  hero.addEventListener('pointerleave',function(){hero.style.backgroundPosition='';});
+ }
+\n function checkApp(){
   var app=byId(APP_ID);if(!app||app.innerHTML.trim())return;
   app.innerHTML='<section class="vf-load-fallback" role="status"><h2>VEGANFARM is taking longer than expected</h2><p>The page could not finish starting. Check your connection and try again. Your saved records have not been changed.</p><button class="btn" type="button" id="vf-retry-load">Try again</button></section>';
   var b=byId('vf-retry-load');if(b)b.addEventListener('click',function(){location.reload();});

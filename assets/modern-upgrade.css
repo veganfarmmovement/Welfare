@@ -135,3 +135,40 @@ nav.vf-scrolled{box-shadow:0 12px 34px rgba(18,52,25,.12);background:rgba(255,25
  .vf-reveal{opacity:1;transform:none;transition:none}
  .btn,.card,#vf-modern-visuals .vf-visual-card{transition:none!important}
 }
+
+
+/* Cinematic donor experience: restrained motion, depth and clear donation focus */
+.hero{
+ background-size:cover,108% auto;
+ animation:vf-hero-drift 22s ease-in-out infinite alternate;
+}
+.hero:after{box-shadow:inset 0 0 90px rgba(0,0,0,.12),0 0 50px rgba(168,207,56,.06)}
+.hero .in{filter:drop-shadow(0 8px 24px rgba(0,0,0,.14))}
+.hero .in h1{animation:vf-title-in 1s cubic-bezier(.18,.75,.25,1) both}
+.hero .in p{animation:vf-title-in 1.1s .12s cubic-bezier(.18,.75,.25,1) both}
+.hero .in .btn{animation:vf-title-in 1.15s .22s cubic-bezier(.18,.75,.25,1) both}
+#vf-donation-feature{border:1px solid rgba(220,242,181,.24);transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+#vf-donation-feature:hover{transform:translateY(-5px);box-shadow:0 36px 85px rgba(18,55,27,.25)}
+#vf-donation-feature .vf-trust{position:relative;overflow:hidden}
+#vf-donation-feature .vf-trust:after{content:"";position:absolute;inset:-60% auto -60% -45%;width:35%;transform:rotate(22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.11),transparent);animation:vf-glass-sweep 7s ease-in-out infinite}
+#vf-floating-donate{animation:vf-float 3.6s ease-in-out infinite,vf-donate-glow 3.6s ease-in-out infinite}
+#vf-floating-donate:focus-visible,.btn:focus-visible{outline:3px solid var(--vf-sun);outline-offset:4px}
+.btn.vf-magnetic{translate:var(--vf-mx,0px) var(--vf-my,0px);transition:translate .18s ease,box-shadow .2s ease,filter .2s ease}
+.btn.vf-magnetic:hover{filter:brightness(1.06)}
+.vf-visual-card{transform-style:preserve-3d}
+.vf-visual-card:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border:1px solid rgba(255,255,255,.18);border-radius:inherit}
+.vf-visual-card img{will-change:transform}
+#vf-modern-visuals .vf-visual-card:hover .vf-visual-copy{transform:translate3d(0,-5px,18px)}
+#vf-modern-visuals .vf-visual-copy{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes vf-hero-drift{0%{background-position:center 48%,50% 48%}100%{background-position:center 48%,53% 52%}}
+@keyframes vf-title-in{from{opacity:0;transform:translate3d(0,22px,0);filter:blur(5px)}to{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}}
+@keyframes vf-glass-sweep{0%,35%{left:-45%}65%,100%{left:130%}}
+@keyframes vf-donate-glow{0%,100%{filter:drop-shadow(0 0 0 rgba(168,207,56,0))}50%{filter:drop-shadow(0 0 11px rgba(168,207,56,.35))}}
+@media(max-width:760px){.hero{background-size:cover,cover;animation:none}}
+@media(prefers-reduced-motion:reduce){
+ .hero{animation:none;background-size:cover}
+ .hero .in h1,.hero .in p,.hero .in .btn{animation:none}
+ #vf-donation-feature,.vf-visual-card,.vf-visual-copy{transition:none!important}
+ #vf-floating-donate{animation:none!important}
+ .btn.vf-magnetic{translate:none!important}
+}
