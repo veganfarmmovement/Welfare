@@ -744,7 +744,7 @@ const DOCPUB=id=>{const a=APP.find(x=>x.id==id);if(!a||!a.docs||!a.docsPub)retur
 P.home=()=>{const V=VIS;return `<div class="hero"><div class="ph" role="img" aria-label="${SET.heroImg?'Hero photograph':'Illustration of a dog and a cat'}">${SET.heroImg?`<img src="${SET.heroImg}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`:`<svg viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${HERO}</svg>`}</div><div class="wrap"><div class="in"><h1>${esc(SET.hero1)}</h1><p>${esc(SET.hero2)}</p><div class="row"><a class="btn gold" href="#cases">Support a Rescue</a><a class="btn gold" href="#donate">Donate Now</a><a class="btn out" href="#projects">Explore Our Work</a></div></div></div></div>`
 +S(`<h2>Who we are</h2><p>${esc(SET.intro)}</p><a class="btn out" href="#about">About us</a>`)
 +S(`<h2>Live campaigns: every life matters</h2><p class="mut">Active appeals approved by the Founder. Funding progress updates when a payment is verified and allocated.</p>${CAMP(6)}`,1)
-+(V.impact?S(`<h2>Our impact</h2>${IMPACT()}<p style="margin-top:12px"><a href="#impact">See the impact page</a></p>`):'')
+
 +(V.projects?S(`<h2>Our projects</h2><div class="grid">${PROJ.map(pcard).join('')}</div>`,1):'')
 +(V.categories?S(CATS()):'')+''+''
 +S(`<h2>How donations help</h2><p>Donations go to the Trust’s UPI account. The Founder checks each payment against the Trust’s records, then allocates it to a case or project. Pending submissions are never shown as received money.</p><a class="btn" href="#donate">See how to donate</a><h2 style="margin-top:44px">Financial transparency</h2>${finStats}<p style="margin-top:16px"><a href="#transparency">Open the full report</a></p>`,1)
