@@ -577,7 +577,7 @@ const acard=a=>{const lock=a.id=='VF-0001'&&a.pub=='Draft',on=a.pub=='Published'
 Object.assign(A,{
 'admin-cases':()=>`<h2>Rescue cases &amp; animals</h2>${sampleNote}<p class="mut">Founder controls for every case and animal record. Verified amounts come only from verified donations and cannot be typed in.</p>${APP.length?`<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">${APP.map(acard).join('')}</div>`:'<div class="note">No rescue cases yet. Cases appear here when the team submits an appeal.</div>'}`,
 'admin-appeals':()=>{const bt=a=>({'Pending Founder review':[['Publish','publish'],['Request corrections','correct'],['Reject','reject']],'Corrections requested':[['Publish','publish'],['Reject','reject']],'Change pending Founder approval':[['Approve change','approve'],['Reject change','reject']],'Rejected':[['Publish','publish']],'Unpublished':[['Publish','publish']],'Draft':a.id=='VF-0001'?[]:[['Publish','publish']]}[a.pub]||[]);
-return `<h2>Appeal submissions</h2>${sampleNote}<p class="mut">Team members submit and edit appeals. Only the Founder publishes, rejects or requests corrections. Nothing is published automatically.</p>${tbl(['Case ID','Animal','Submitted by','Photo and documents','Target','Status','Founder actions'],APP.map(a=>[a.id,esc(a.n)+(a.sample?' (SAMPLE)':''),(a.owner?teamWho(a.owner,a.by):(a.vname?esc(a.vname)+'<br><span class="mut">'+esc(a.vphone)+'</span>':esc(a.by)||'Founder (real case)')),(a.photo?`<img src="${a.photo}" alt="" style="height:44px;border-radius:4px">`:'Photo: '+NA)+(a.docs?`<br><span class="mut">Report: ${esc(a.docs.rep)||'none'}<br>Bill: ${esc(a.docs.bill)||'none'}<br>Signature: ${esc(a.docs.sig)||'none'} (${a.docs.sigOk?'consent given':'private'})</span>`:''),a.amt?inr(a.amt):NA,pt(a.pub)+(a.note?`<br><span class="mut">${esc(a.note)}</span>`:''),bt(a).map(x=>`<button class="btn sm ${x[1]=='publish'||x[1]=='approve'?'':'out'}" onclick="decide('${a.id}','${x[1]}')">${x[0]}</button>`).join(' ')||(a.id=='VF-0001'&&a.pub=='Draft'?'<button class="btn sm" disabled>Publish</button> <span class="mut">Locked until real photographs and medical documents are uploaded and approved</span>':'<span class="mut">Managed in Rescue cases</span>')]))}`},
+return `<h2>Appeal submissions</h2>${sampleNote}<p class="mut">Team members submit and edit appeals. Only the Founder publishes, rejects or requests corrections. Nothing is published automatically.</p>${tbl(['Case ID','Animal','Submitted by','Photo and documents','Target','Status','Founder actions'],APP.map(a=>[a.id,esc(a.n)+(a.sample?' (SAMPLE)':''),(a.owner?teamWho(a.owner,a.by):(a.vname?esc(a.vname)+'<br><span class="mut">'+esc(a.vphone)+'</span>':esc(a.by)||'Founder (real case)')),(a.photo?`<img src="${a.photo}" alt="" style="height:44px;border-radius:4px">`:'Photo: '+NA)+(a.docs?`<br><span class="mut">Report: ${esc(a.docs.rep)||'none'}<br>Bill: ${esc(a.docs.bill)||'none'}<br>Video: ${a.docs.video?'<a href="'+esc(a.docs.video)+'" target="_blank" rel="noopener">Review video</a>':'none'}<br>Signature: ${esc(a.docs.sig)||'none'} (${a.docs.sigOk?'consent given':'private'})</span>`:''),a.amt?inr(a.amt):NA,pt(a.pub)+(a.note?`<br><span class="mut">${esc(a.note)}</span>`:''),bt(a).map(x=>`<button class="btn sm ${x[1]=='publish'||x[1]=='approve'?'':'out'}" onclick="decide('${a.id}','${x[1]}')">${x[0]}</button>`).join(' ')||(a.id=='VF-0001'&&a.pub=='Draft'?'<button class="btn sm" disabled>Publish</button> <span class="mut">Locked until real photographs and medical documents are uploaded and approved</span>':'<span class="mut">Managed in Rescue cases</span>')]))}`},
 admin:()=>`<h2>Overview</h2>${sampleNote}<p class="note">Production data policy: the live database starts empty. No sample cases, donations, expenses, donors or ledger entries are ever loaded into it.</p><div class="stats"><div><b>${cases.length}</b>Live campaigns</div><div><b>${APP.filter(a=>/Pending|Change|Correct/.test(a.pub)).length}</b>Pending appeal submissions</div><div><b>${inr(DT())}</b>Verified donations</div><div><b>${PEND.length}</b>Pending donation submissions</div><div><b>${inr(EXP)}</b>Approved expenses</div><div><b>${inr(BAL())}</b>Available balance</div><div><b>${inr(AWT())}</b>Animal Welfare total</div><div><b>${inr(HWT())}</b>Human Welfare total</div><div><b>${VOL.filter(x=>x.st=='New').length+MSG.filter(x=>x.st=='New').length}</b>New applications and messages</div></div><h3 style="margin-top:28px">Recent activity</h3>${tbl(['When','Who','Record','Activity'],HIST.slice(0,6).map(x=>[esc(x[0]),esc(x[1]),esc(x[2]),esc(x[3])]))}<div class="row" style="margin-top:16px"><a class="btn sm" href="#admin-appeals">Review appeals</a><a class="btn sm out" href="#admin-donations">Review donations</a><a class="btn sm out" href="#admin-apps">Applications</a></div>`});
 /* donations */
 const known2=()=>[['All','All'],['General animal welfare fund','General animal welfare fund'],...APP.map(a=>[a.id,a.n]),['General humanitarian fund','General humanitarian fund'],['Aashram Education Support','Aashram Education Support'],['Education & Stationery Drive','Education & Stationery Drive'],['Community Donation Drive','Community Donation Drive']];
@@ -1323,7 +1323,7 @@ window.vfLoadPublicMore=function(){
     return sb.from('case_documents').select('case_id,document_type,file_path,is_public');
   }).then(function(r){
     if(r.error)throw r.error;
-    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
+    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
     return Promise.all(jobs);
   });
 };
@@ -1332,7 +1332,7 @@ window.vfAfterLogin=function(){
     return sb.from('case_documents').select('case_id,document_type,file_path,is_public');
   }).then(function(r){
     if(r.error)throw r.error;
-    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
+    var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(!s.error)a.docs[k]=s.data.signedUrl;}));});
     return Promise.all(jobs);
   });
 };
@@ -2122,7 +2122,8 @@ currentUser().then(function(u){
       '<label>Estimated treatment cost (₹) *</label><input name="amt" type="number" min="1" step="0.01" required>'+
       '<label>Medical report (optional)</label><input name="rep" type="file" accept="image/jpeg,image/png,application/pdf">'+
       '<label>Veterinary bill / estimate (optional)</label><input name="bill" type="file" accept="image/jpeg,image/png,application/pdf">'+
-      '<p class="mut">The Founder will verify the medical details and set the official fundraising target before publication.</p>'+
+      '<label>Case video (optional)</label><input name="case_video" type="file" accept="video/mp4,video/webm,video/quicktime">'+
+      '<p class="mut">Upload one short MP4, WebM or MOV video (up to 50 MB). Videos and medical documents remain private until the Founder reviews them. The Founder will verify the medical details and set the official fundraising target before publication.</p>'+
       contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Treatment case for Founder review</button></form>';
   }
   function teamHome(){
@@ -2157,9 +2158,11 @@ currentUser().then(function(u){
   function upload(bucket,file,caseId,docType,userId){
     if(!file||!file.size)return Promise.resolve(null);
     var isPhoto=bucket==='case-photos';
-    if(file.size>(isPhoto?5242880:10485760))return Promise.reject(new Error(isPhoto?'Photo exceeds 5 MB.':'Document exceeds 10 MB.'));
-    if(!(file.type==='image/jpeg'||file.type==='image/png'||(!isPhoto&&file.type==='application/pdf')))return Promise.reject(new Error(isPhoto?'Use a JPG or PNG photograph.':'Use JPG, PNG or PDF documents.'));
-    var ext=file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg';
+    var isVideo=docType==='treatment_video';
+    if(file.size>(isPhoto?5242880:isVideo?52428800:10485760))return Promise.reject(new Error(isPhoto?'Photo exceeds 5 MB.':isVideo?'Video exceeds 50 MB.':'Document exceeds 10 MB.'));
+    if(isVideo&&!/^(video\/mp4|video\/webm|video\/quicktime)$/.test(file.type))return Promise.reject(new Error('Use an MP4, WebM or MOV video.'));
+    if(!isVideo&&!(file.type==='image/jpeg'||file.type==='image/png'||(!isPhoto&&file.type==='application/pdf')))return Promise.reject(new Error(isPhoto?'Use a JPG or PNG photograph.':'Use JPG, PNG or PDF documents.'));
+    var ext=isVideo?(file.type==='video/webm'?'webm':file.type==='video/quicktime'?'mov':'mp4'):(file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg');
     var path=isPhoto?(Date.now()+'-'+Math.random().toString(36).slice(2,10)+'.'+ext):(caseId+'/'+docType+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext);
     return client.storage.from(bucket).upload(path,file,{contentType:file.type}).then(function(r){
       if(r.error)throw r.error;
@@ -2189,9 +2192,10 @@ currentUser().then(function(u){
         return client.from('rescue_cases').insert(row).select('id').single().then(function(r){if(r.error)throw r.error;if(!r.data)throw new Error('The case record was not returned.');caseId=r.data.id;
           var jobs=[client.from('case_private').insert({case_id:caseId,finder_name:v('vname'),finder_phone:v('vphone')})];
           if(kind==='Treatment'){
-            var rep=form.elements.rep&&form.elements.rep.files[0],bill=form.elements.bill&&form.elements.bill.files[0];
+            var rep=form.elements.rep&&form.elements.rep.files[0],bill=form.elements.bill&&form.elements.bill.files[0],video=form.elements.case_video&&form.elements.case_video.files[0];
             if(rep)jobs.push(upload('case-documents',rep,caseId,'medical_report',user.id));
             if(bill)jobs.push(upload('case-documents',bill,caseId,'veterinary_bill',user.id));
+            if(video)jobs.push(upload('case-documents',video,caseId,'treatment_video',user.id));
           }
           return Promise.all(jobs).then(function(results){var failed=results.find(function(x){return x&&x.error;});if(failed)throw failed.error;});
         });
