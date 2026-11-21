@@ -1346,7 +1346,9 @@ window.vfLoadPublicMore=function(){
   // The base loader fetches only Founder-published cases from rescue_cases.
   // Medical reports, bills and treatment videos remain private and are never signed for anonymous visitors.
   return Promise.resolve(basePublicMore&&basePublicMore()).then(function(){
-    var ids=APP.filter(function(a){return a.dbId&&!a.completed&&!/^(Completed|Recovered|Closed)$/i.test(String(a.status||''));}).map(function(a){return a.dbId;});
+    APP.splice(0,APP.length,...APP.filter(function(a){return !a.completed&&!/^(Completed|Recovered|Closed)$/i.test(String(a.status||''));}));
+    if(typeof syncCases==='function')syncCases();
+    var ids=APP.filter(function(a){return a.dbId;}).map(function(a){return a.dbId;});
     if(!ids.length)return;
     return sb.from('case_documents').select('case_id,document_type,file_path,is_public').in('case_id',ids).eq('is_public',true).then(function(r){
       if(r.error)throw r.error;var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};a.docsPub=a.docsPub||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(s.error)throw s.error;a.docs[k]=s.data.signedUrl;a.docsPub[k]=true;}));});return Promise.all(jobs).then(function(){if(typeof syncCases==='function')syncCases();if(typeof go==='function')go(true);});
