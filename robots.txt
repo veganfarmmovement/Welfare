@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://veganfarmmovement.github.io/Welfare/sitemap.xml
