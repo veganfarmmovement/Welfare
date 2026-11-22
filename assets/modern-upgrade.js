@@ -19,7 +19,7 @@
    var donation=document.createElement('section');
    donation.id='vf-donation-feature';donation.className='wrap';
    donation.setAttribute('aria-label','Support VEGANFARM initiatives');
-   donation.innerHTML='<div class="vf-donate-inner"><div><span class="vf-eyebrow">Turn compassion into action</span><h2>Small acts of care can change a life.</h2><p>Support an active animal-welfare or education initiative. Review the appeal details and payment information before contributing.</p><a class="btn gold" href="#donate">Explore donation options <span aria-hidden="true">↗</span></a></div><div class="vf-trust"><strong>Donation transparency matters.</strong><span>VEGANFARM is an independent, unregistered welfare movement. Donations for designated initiatives are handled separately through Niswarth Seva 1008 Charitable Trust. Please verify the beneficiary and appeal details on the Donate page.</span><a class="btn out" href="#donate">View donation details</a></div></div>';
+   donation.innerHTML='<div class="vf-donate-inner"><div><span class="vf-eyebrow">Turn compassion into action</span><h2>Small acts of care can change a life.</h2><p>Support an active animal-welfare or education initiative. Review the appeal details and payment information before contributing.</p><a class="btn gold" href="#donate">Explore donation options <span aria-hidden="true">↗</span></a></div><div class="vf-trust"><strong>Donation transparency matters.</strong><span>VEGANFARM is an independent, unregistered welfare movement. Check each appeal for its named beneficiary and payment instructions. Niswarth Seva 1008 Charitable Trust is a separate organisation.</span><a class="btn out" href="#donate">View donation details</a></div></div>';
    var visual=byId('vf-modern-visuals');
    if(visual)visual.insertAdjacentElement('afterend',donation);
    else hero.insertAdjacentElement('afterend',donation);
@@ -36,7 +36,9 @@
   setupScroll();
   setupReveal(app);
   setupButtons(app);
-  setupTilt(app);\n  setupMagnetic(app);\n  setupHeroParallax(app);
+  setupTilt(app);
+  setupMagnetic(app);
+  setupHeroParallax(app);
  }
  var scrollBound=false;
  function setupScroll(){
@@ -110,7 +112,8 @@
   });
   hero.addEventListener('pointerleave',function(){hero.style.backgroundPosition='';});
  }
-\n function checkApp(){
+
+ function checkApp(){
   var app=byId(APP_ID);if(!app||app.innerHTML.trim())return;
   app.innerHTML='<section class="vf-load-fallback" role="status"><h2>VEGANFARM is taking longer than expected</h2><p>The page could not finish starting. Check your connection and try again. Your saved records have not been changed.</p><button class="btn" type="button" id="vf-retry-load">Try again</button></section>';
   var b=byId('vf-retry-load');if(b)b.addEventListener('click',function(){location.reload();});
