@@ -2684,9 +2684,16 @@ currentUser().then(function(u){
     entries.forEach(function(d){if(d.status==='verified'&&raised[d.project_key]!=null)raised[d.project_key]+=Number(d.amount||0)});
   }
   function load(){
-    return sb.from('trust_project_donations').select('id,project_key,amount,donor_name,show_name,payment_reference,status,note,created_at,verified_at').order('created_at',{ascending:false}).then(function(r){
+    var founder=window.vfRole==='founder';
+    var request=founder
+      ?sb.from('trust_project_donations').select('id,project_key,amount,donor_name,show_name,payment_reference,status,note,created_at,verified_at').order('created_at',{ascending:false})
+      :sb.from('trust_project_fundraising_totals').select('project_key,verified_raised');
+    return request.then(function(r){
       if(r.error){console.warn('Trust fundraising could not load',r.error);return}
-      entries=r.data||[];totals();loaded=true;
+      entries=founder?(r.data||[]):[];
+      totals();
+      if(!founder)(r.data||[]).forEach(function(x){if(raised[x.project_key]!=null)raised[x.project_key]=Number(x.verified_raised||0)});
+      loaded=true;
       if(typeof go==='function')go(true);
     });
   }
