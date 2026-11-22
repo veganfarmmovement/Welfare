@@ -101,7 +101,7 @@ footer{background:#fff;color:var(--ink);border-top:1px solid var(--line);padding
 body{background:#fbfcfa;color:var(--ink)}
 nav{backdrop-filter:blur(14px);background:rgba(255,255,255,.94);box-shadow:0 4px 22px rgba(20,60,30,.05)}
 .logo{letter-spacing:-.02em}
-.hero{min-height:520px;display:flex;align-items:center;background:linear-gradient(90deg,rgba(9,34,19,.88) 0%,rgba(9,34,19,.66) 48%,rgba(9,34,19,.08) 100%),url('https://images.unsplash.com/photo-1776876031680-a2b42d79248f?auto=format&fit=crop&w=2200&q=85') center 42%/cover no-repeat;color:white;border:0;padding:90px 0}
+.hero{min-height:520px;display:flex;align-items:center;background:linear-gradient(90deg,rgba(9,34,19,.88) 0%,rgba(9,34,19,.66) 48%,rgba(9,34,19,.08) 100%),url('https://images.unsplash.com/photo-1776876031680-a2b42d79248f?auto=format&fit=crop&w=1800&q=78') center 42%/cover no-repeat;color:white;border:0;padding:90px 0}
 .hero h1{color:#fff;max-width:700px;font-size:clamp(3rem,7vw,5.7rem);text-shadow:0 2px 20px rgba(0,0,0,.18)}
 .hero p{color:#f1f7f0;font-size:1.2rem;max-width:540px}
 .hero .ph{display:none}
@@ -149,7 +149,7 @@ nav a.l:hover,nav a.on{color:var(--g)}
 .btn.out{background:transparent;color:var(--g);border:1.5px solid rgba(40,107,54,.28);box-shadow:none}
 .btn.out:hover{background:#f0f6df;border-color:var(--g)}
 .btn.sm{padding:9px 15px;font-size:12px}
-.hero{min-height:min(690px,calc(100svh - 82px));padding:clamp(84px,11vw,150px) 0;display:flex;align-items:center;isolation:isolate;background-image:linear-gradient(90deg,rgba(12,38,21,.91) 0%,rgba(17,52,28,.78) 48%,rgba(17,52,28,.2) 100%),url('https://images.unsplash.com/photo-1776876031680-a2b42d79248f?auto=format&fit=crop&w=2200&q=85');background-position:center 42%;background-size:cover;border:0}
+.hero{min-height:min(690px,calc(100svh - 82px));padding:clamp(84px,11vw,150px) 0;display:flex;align-items:center;isolation:isolate;background-image:linear-gradient(90deg,rgba(12,38,21,.91) 0%,rgba(17,52,28,.78) 48%,rgba(17,52,28,.2) 100%),url('https://images.unsplash.com/photo-1776876031680-a2b42d79248f?auto=format&fit=crop&w=1800&q=78');background-position:center 42%;background-size:cover;border:0}
 .hero:after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.19);border-radius:22px;pointer-events:none;z-index:-1}
 .hero .wrap{width:100%}
 .hero .in{max-width:760px}
@@ -1154,7 +1154,7 @@ var bad=r.filter(function(x){return x.error})[0];if(bad){console.error(bad.error
 var approvedTeamIds={};(r[2].data||[]).forEach(function(p){approvedTeamIds[p.id]=true;});APP.length=0;r[0].data.forEach(function(c){var a=mapCase(c);a.src=approvedTeamIds[c.submitted_by]?'team':(c.extra&&c.extra.submitted_via==='VEGANFARM Team'?'team':'founder');APP.push(a);if(a.pub==='Published')goLive(a)});syncCases();
 EXPS.length=0;r[1].data.forEach(function(x){EXPS.push({id:x.id,cat:x.category||'',proj:x.project||'',a:+x.amount,desc:x.description||'',rec:x.receipt_path?'Receipt on file':'',rpath:x.receipt_path,st:{approved:'Approved',rejected:'Rejected',reversed:'Reversed'}[x.status]||'Pending',dt:Date.parse((x.expense_date||String(x.created_at).slice(0,10))+'T12:00:00'),ts:Date.parse(x.created_at)})});
 TREQ.length=0;r[2].data.forEach(function(p){TREQ.push({id:p.id,name:p.display_name||'',email:p.email||'',eh:p.id,status:p.status==='approved'?'approved':p.status==='pending'?'pending':'rejected',ts:Date.parse(p.created_at),date:fmt(p.created_at)})});
-STORIES.length=0;r[3].data.forEach(function(s){STORIES.push({id:s.id,t:s.title,b:s.body||'',w:fmt(s.created_at),pub:!!s.published,photo:s.photo_path?sb.storage.from('story-photos').getPublicUrl(s.photo_path).data.publicUrl:''})});
+STORIES.length=0;r[3].data.forEach(function(s){STORIES.push({id:s.id,t:s.title,b:s.body||'',w:fmt(s.created_at),pub:!!s.published,photo:s.photo_path?((s.photo_path.indexOf('https://')===0||s.photo_path.indexOf('http://')===0)?s.photo_path:sb.storage.from('story-photos').getPublicUrl(s.photo_path).data.publicUrl):''})});
 /* one ledger from verified donations and approved expenses, oldest first; reversed records are excluded */
 EXP=0;var ev=[];
 DONS.forEach(function(d){if(!d.rev)ev.push({ts:d.ts||0,k:'don',id:d.id,d:d,desc:String(d.id).slice(0,8)+' · '+d.cat+' · '+(d.tg||''),amt:d.a})});
