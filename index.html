@@ -2718,11 +2718,17 @@ currentUser().then(function(u){
   }
   /* Show the same five Trust fundraising cards in the public Rescue Cases area,
      in a clearly separate section so Trust funds are not presented as VEGANFARM rescue funds. */
-  var oldCases=P.cases;
-  if(typeof oldCases==='function'){
-    P.cases=function(){return oldCases()+'<section style="margin-top:30px">'+publicPanel()+'</section>'};
-  }
-  /* Render the updated route immediately on direct visits to #cases. */
+  /* Build the public Cases route explicitly so the Trust projects cannot be lost
+     if another script replaces the original animal-rescue renderer. */
+  P.cases=function(){
+    var live=(typeof cases!=='undefined'?cases:[]).filter(function(c){
+      return !c.completed&&!/^(Completed|Recovered|Closed)$/i.test(String(c.status||''));
+    });
+    var animalSection=head('Active rescue appeals','Only current, Founder-approved VEGANFARM animal-rescue cases are shown here.')+
+      S('<div class="grid">'+(live.length?live.map(ccard2).join(''):'<p class="note">There are no active VEGANFARM animal-rescue appeals at the moment.</p>')+'</div>');
+    return animalSection+'<section style="margin-top:30px">'+publicPanel()+'</section>';
+  };
+  /* Re-render after the Trust route is registered, including direct #cases visits. */
   if(typeof go==='function'&&(location.hash||'').split('?')[0]==='#cases')go(true);
   function adminPanel(){
     if(window.vfRole!=='founder')return '';
