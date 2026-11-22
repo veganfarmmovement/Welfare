@@ -2662,4 +2662,82 @@ currentUser().then(function(u){
 })();
 </script>
 
+
+<script id="vf-trust-live-fundraising">
+/* Separate live fundraising tracker for Niswarth Seva 1008 Charitable Trust.
+   Founder records contributions after independently confirming receipt. */
+(function(){
+  var sb=window.vfSupabase;
+  if(!sb||typeof P==='undefined'||typeof A==='undefined')return;
+  var projects=[
+    {key:'ration',name:'Monthly Ration Seva',target:145000},
+    {key:'nutrition',name:'Healthy Nutrition Seva – Government Maternity Hospital',target:22000},
+    {key:'tiffin',name:'Free Tiffin Seva – Nalasopara',target:45000},
+    {key:'medical',name:'Medical Support Seva',target:17000},
+    {key:'self_reliance',name:'Self-Reliance & Dignity Seva',target:20000}
+  ];
+  var raised={},entries=[],loaded=false;
+  var fmt=function(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:2})};
+  var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  function totals(){
+    raised={};projects.forEach(function(p){raised[p.key]=0});
+    entries.forEach(function(d){if(d.status==='verified'&&raised[d.project_key]!=null)raised[d.project_key]+=Number(d.amount||0)});
+  }
+  function load(){
+    return sb.from('trust_project_donations').select('id,project_key,amount,donor_name,show_name,payment_reference,status,note,created_at,verified_at').order('created_at',{ascending:false}).then(function(r){
+      if(r.error){console.warn('Trust fundraising could not load',r.error);return}
+      entries=r.data||[];totals();loaded=true;
+      if(typeof go==='function')go(true);
+    });
+  }
+  function publicPanel(){
+    var cards=projects.map(function(p){
+      var got=raised[p.key]||0,remain=Math.max(0,p.target-got),pct=p.target?Math.min(100,got/p.target*100):0;
+      return '<div class="card" style="margin:12px 0"><div class="b"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><b>'+esc(p.name)+'</b><span class="tag">LIVE FUNDRAISING</span></div><div class="stats" style="margin-top:12px"><div><b>'+fmt(got)+'</b>Verified amount raised</div><div><b>'+fmt(p.target)+'</b>Monthly target</div><div><b>'+fmt(remain)+'</b>Remaining this month</div></div><div style="height:10px;background:#e8eee8;border-radius:99px;overflow:hidden;margin-top:10px"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:linear-gradient(90deg,#a8cf38,#286b36);border-radius:99px"></div></div><small class="mut">'+pct.toFixed(1)+'% of monthly target · Updates when a contribution is verified</small></div></div>';
+    }).join('');
+    return '<section class="card" style="margin-top:22px"><div class="b"><span class="tag">PUBLIC LIVE FUNDRAISING</span><h2 style="margin-top:10px">Support the Five Ongoing Seva Projects</h2><p>Only contributions recorded and verified by the Trust are included in the amounts raised below.</p>'+cards+'<p class="mut" style="font-size:12px">Fundraising figures are maintained separately for Niswarth Seva 1008 Charitable Trust and are not included in VEGANFARM accounts.</p></div></section>';
+  }
+  var oldPublic=P['niswarth-seva'];
+  if(typeof oldPublic==='function'){
+    P['niswarth-seva']=function(){return oldPublic()+publicPanel()};
+  }
+  function adminPanel(){
+    if(window.vfRole!=='founder')return '';
+    var options=projects.map(function(p){return '<option value="'+p.key+'">'+esc(p.name)+'</option>'}).join('');
+    var rows=projects.map(function(p){
+      var got=raised[p.key]||0;
+      return '<tr><td>'+esc(p.name)+'</td><td>'+fmt(p.target)+'</td><td>'+fmt(got)+'</td><td>'+fmt(Math.max(0,p.target-got))+'</td></tr>';
+    }).join('');
+    var recent=entries.slice(0,12).map(function(d){
+      var p=projects.find(function(x){return x.key===d.project_key});
+      return '<tr><td>'+esc(p?p.name:d.project_key)+'</td><td>'+fmt(d.amount)+'</td><td>'+esc(d.donor_name||'Anonymous / not displayed')+'</td><td>'+esc(d.status)+'</td><td>'+esc(new Date(d.created_at).toLocaleDateString('en-IN'))+'</td></tr>';
+    }).join('');
+    return '<section class="card" id="vf-trust-live-fundraising" style="margin-top:26px"><div class="b"><span class="tag">Separate Trust ledger · Founder only</span><h2 style="margin-top:10px">Niswarth Seva – Live Fundraising Manager</h2><p>Record a contribution only after confirming that the payment was received by the Trust. Verified entries immediately update the public project totals.</p><form id="vf-trust-donation-form" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px"><label>Project<select name="project_key" required>'+options+'</select></label><label>Amount received (₹)<input name="amount" type="number" min="1" step="0.01" required placeholder="e.g. 500"></label><label>Donor name (optional)<input name="donor_name" maxlength="100" placeholder="Donor name"></label><label>UPI / transaction reference (optional)<input name="payment_reference" maxlength="120" placeholder="Reference ID"></label><label style="display:flex;align-items:center;gap:8px"><input name="show_name" type="checkbox" style="width:auto"> Show donor name publicly</label><div style="grid-column:1/-1"><button class="btn" type="submit">Save verified contribution</button><small class="mut" style="display:block;margin-top:7px">Saving here marks the contribution as verified. Do not enter pending or unconfirmed payments.</small></div></form><h3 style="margin-top:22px">Project fundraising summary</h3><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Project</th><th>Monthly target</th><th>Verified raised</th><th>Remaining</th></tr></thead><tbody>'+rows+'</tbody></table></div><h3 style="margin-top:22px">Recent contribution records</h3><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Project</th><th>Amount</th><th>Donor</th><th>Status</th><th>Date</th></tr></thead><tbody>'+(recent||'<tr><td colspan="5">No contributions recorded yet.</td></tr>')+'</tbody></table></div><p class="mut" style="font-size:12px">This tracker is separate from VEGANFARM rescue donations, expenses and balances. Donor names are public only when the display option is selected.</p></div></section>';
+  }
+  var oldAdmin=A.admin;
+  if(typeof oldAdmin==='function')A.admin=function(){return oldAdmin()+adminPanel()};
+  document.addEventListener('submit',function(e){
+    var form=e.target;
+    if(!form||form.id!=='vf-trust-donation-form')return;
+    e.preventDefault();
+    if(window.vfRole!=='founder'){toast('Founder sign-in required.');return}
+    var fd=new FormData(form),amount=Number(fd.get('amount'));
+    if(!(amount>0)){toast('Enter a valid contribution amount.');return}
+    var payload={project_key:fd.get('project_key'),amount:amount,donor_name:String(fd.get('donor_name')||'').trim()||null,show_name:fd.get('show_name')==='on',payment_reference:String(fd.get('payment_reference')||'').trim()||null,status:'verified',verified_at:new Date().toISOString()};
+    var button=form.querySelector('button[type="submit"]');if(button)button.disabled=true;
+    sb.from('trust_project_donations').insert(payload).select('id').then(function(r){
+      if(button)button.disabled=false;
+      if(r.error){toast('Contribution not saved: '+r.error.message);return}
+      form.reset();toast('Verified contribution saved. Public total updated.');
+      load();
+    },function(){if(button)button.disabled=false;toast('Network issue. Contribution was not saved.')});
+  });
+  load();
+  try{
+    sb.channel('niswarth-seva-public-fundraising')
+      .on('postgres_changes',{event:'*',schema:'public',table:'trust_project_donations'},function(){load()})
+      .subscribe();
+  }catch(e){console.warn('Live Trust updates unavailable',e)}
+})();
+</script>
 </body></html>
