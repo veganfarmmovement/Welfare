@@ -2612,4 +2612,54 @@ currentUser().then(function(u){
   P.transparency=function(){return head('Financial transparency','Active rescue appeals show case-level fundraising progress.')+S('<div class="card"><div class="b"><h2>Donation verification</h2><p>Each active rescue appeal displays its fundraising target, case-linked amount raised, remaining requirement and progress. Only donations verified by the Founder and allocated to that specific case are included. General donations are not automatically assigned to an individual rescue case.</p><p class="mut">The overall internal ledger, donor contact details, payment references and screenshots are not published.</p></div></div>');};
 })();
 </script>
+
+<script id="vf-niswarth-seva-v1">
+/* Separate public profile for Niswarth Seva 1008 Charitable Trust.
+   Figures below are supplied by the Trust and are not VEGANFARM funds. */
+(function(){
+  if(typeof P==='undefined')return;
+  var projects=[
+    {name:'Monthly Ration Seva',duration:'Ongoing for 5 years',beneficiaries:'145 families every month',amount:145000,desc:'Providing ₹1,000 worth of monthly ration to 145 special families, including families with special children, persons with physical and mental disabilities, widowed women and lonely senior citizens.'},
+    {name:'Healthy Nutrition Seva – Government Maternity Hospital',duration:'Ongoing for 4 years',beneficiaries:'600 mothers every month',amount:22000,desc:'Serving nutritious homemade Sheera prepared with jaggery, desi ghee, dry fruits and Ayurvedic herbs to mothers after delivery, supporting the health and well-being of mothers and babies.'},
+    {name:'Free Tiffin Seva – Nalasopara',duration:'Ongoing for 6 months',beneficiaries:'15 people every day',amount:45000,desc:'Providing free daily tiffin support to lonely senior citizens and physically challenged families.'},
+    {name:'Medical Support Seva',duration:'Ongoing',beneficiaries:'12 beneficiaries every month',amount:17000,desc:'Providing medical assistance to financially unstable families with physical and mental disabilities.'},
+    {name:'Self-Reliance & Dignity Seva',duration:'Ongoing',beneficiaries:'10 beneficiaries every month',amount:20000,desc:'Supporting lonely senior citizens and visually impaired individuals with items they can sell, helping them earn an income and live with self-respect and dignity.'}
+  ];
+  var total=projects.reduce(function(sum,p){return sum+p.amount;},0);
+  var fmt=function(n){return '₹'+Number(n).toLocaleString('en-IN');};
+  var cards=projects.map(function(p){
+    var width=(p.amount/145000*100).toFixed(1);
+    return '<article class="card" style="overflow:hidden"><div class="b">'+
+      '<div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span class="tag">Ongoing project</span><span class="mut" style="font-size:12px">'+p.duration+'</span></div>'+
+      '<h3 style="margin:12px 0 8px">'+p.name+'</h3><p>'+p.desc+'</p>'+
+      '<p class="mut" style="margin:12px 0 4px"><b>Beneficiaries:</b> '+p.beneficiaries+'</p>'+
+      '<div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-top:14px"><span class="mut">Monthly project cost</span><b style="font-size:1.35rem;color:#166534">'+fmt(p.amount)+'</b></div>'+
+      '<div style="height:7px;background:#e8eee8;border-radius:99px;overflow:hidden;margin-top:9px"><div style="height:100%;width:'+width+'%;background:linear-gradient(90deg,#84b83e,#166534);border-radius:99px"></div></div>'+
+      '</div></article>';
+  }).join('');
+  P['niswarth-seva']=function(){
+    return head('Niswarth Seva 1008 Charitable Trust','Our ongoing seva projects')+
+      S('<div class="card" style="margin-bottom:20px"><div class="b"><span class="tag">Separate registered charitable trust</span><h2 style="margin-top:12px">OUR ONGOING SEVA PROJECTS</h2><p>Serving humanity through continuous food, nutrition, medical and self-reliance initiatives. All five projects listed below are ongoing.</p><div class="stats"><div><b>'+fmt(total)+'</b>Combined monthly project cost</div><div><b>5</b>Ongoing projects</div><div><b>15</b>Daily tiffin beneficiaries</div></div><p class="mut" style="font-size:13px">Project figures are provided by Niswarth Seva 1008 Charitable Trust. They are separate from VEGANFARM Movement activities, accounts and fundraising.</p></div></div>'+
+      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">'+cards+'</div>'+
+      '<div class="card" style="margin-top:20px"><div class="b"><h3>And many more…</h3><p>Numerous other acts of kindness and humanitarian services continue throughout the year, with one simple mission — serving humanity with love, care and dignity.</p></div></div>');
+  };
+  var priorProjects=P.projects;
+  P.projects=function(){
+    return priorProjects()+'<section class="sec"><div class="wrap"><div class="card"><div class="b"><span class="tag">Separate registered charitable trust</span><h2>Niswarth Seva 1008 Charitable Trust</h2><p>Explore five ongoing monthly seva projects supporting families, mothers, senior citizens and people with disabilities.</p><a class="btn" href="#niswarth-seva">View ongoing seva projects</a></div></div></div></section>';
+  };
+  /* Add a separate Trust budget snapshot to the Founder overview; never add it to VEGANFARM ledger totals. */
+  if(typeof A!=='undefined'&&typeof A.admin==='function'){
+    var oldAdmin=A.admin;
+    A.admin=function(){
+      var html=oldAdmin();
+      var rows=projects.map(function(p){
+        var pct=(p.amount/145000*100).toFixed(1);
+        return '<div style="margin:12px 0"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+p.name+'</b><b>'+fmt(p.amount)+'</b></div><div style="height:9px;background:#e8eee8;border-radius:99px;overflow:hidden;margin-top:6px"><div style="height:100%;width:'+pct+'%;background:#39834a"></div></div><small class="mut">'+p.beneficiaries+' · '+p.duration+'</small></div>';
+      }).join('');
+      return html+'<section class="card" style="margin-top:26px"><div class="b"><span class="tag">Separate organisation · Reference figures</span><h3 style="margin-top:10px">Niswarth Seva – Ongoing project budget</h3><div class="stats"><div><b>'+fmt(total)+'</b>Combined monthly project cost</div><div><b>5</b>Ongoing projects</div><div><b>15 daily</b>Tiffin beneficiaries</div></div>'+rows+'<p class="mut" style="font-size:12px">These are Trust-supplied monthly project budgets for reference only. They are not VEGANFARM donations, expenses, balances or ledger entries.</p><a class="btn out sm" href="#niswarth-seva">View public project page</a></div></section>';
+    };
+  }
+})();
+</script>
+
 </body></html>
