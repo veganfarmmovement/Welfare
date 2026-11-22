@@ -2702,11 +2702,17 @@ currentUser().then(function(u){
       var got=raised[p.key]||0,remain=Math.max(0,p.target-got),pct=p.target?Math.min(100,got/p.target*100):0;
       return '<div class="card" style="margin:12px 0"><div class="b"><div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><b>'+esc(p.name)+'</b><span class="tag">LIVE FUNDRAISING</span></div><div class="stats" style="margin-top:12px"><div><b>'+fmt(got)+'</b>Verified amount raised</div><div><b>'+fmt(p.target)+'</b>Monthly target</div><div><b>'+fmt(remain)+'</b>Remaining this month</div></div><div style="height:10px;background:#e8eee8;border-radius:99px;overflow:hidden;margin-top:10px"><div style="height:100%;width:'+pct.toFixed(1)+'%;background:linear-gradient(90deg,#a8cf38,#286b36);border-radius:99px"></div></div><small class="mut">'+pct.toFixed(1)+'% of monthly target · Updates when a contribution is verified</small></div></div>';
     }).join('');
-    return '<section class="card" style="margin-top:22px"><div class="b"><span class="tag">PUBLIC LIVE FUNDRAISING</span><h2 style="margin-top:10px">Support the Five Ongoing Seva Projects</h2><p>Only contributions recorded and verified by the Trust are included in the amounts raised below.</p>'+cards+'<p class="mut" style="font-size:12px">Fundraising figures are maintained separately for Niswarth Seva 1008 Charitable Trust and are not included in VEGANFARM accounts.</p></div></section>';
+    return '<section class="card" style="margin-top:22px"><div class="b"><span class="tag">PUBLIC LIVE FUNDRAISING</span><h2 style="margin-top:10px">Niswarth Seva 1008 Trust – Five Ongoing Projects</h2><p>Separate from VEGANFARM animal rescue cases. Only contributions recorded and verified by the Trust are included in the amounts raised below.</p>'+cards+'<p class="mut" style="font-size:12px">Fundraising figures are maintained separately for Niswarth Seva 1008 Charitable Trust and are not included in VEGANFARM accounts.</p></div></section>';
   }
   var oldPublic=P['niswarth-seva'];
   if(typeof oldPublic==='function'){
     P['niswarth-seva']=function(){return oldPublic()+publicPanel()};
+  }
+  /* Show the same five Trust fundraising cards in the public Rescue Cases area,
+     in a clearly separate section so Trust funds are not presented as VEGANFARM rescue funds. */
+  var oldCases=P.cases;
+  if(typeof oldCases==='function'){
+    P.cases=function(){return oldCases()+'<section style="margin-top:30px">'+publicPanel()+'</section>'};
   }
   function adminPanel(){
     if(window.vfRole!=='founder')return '';
