@@ -2627,22 +2627,27 @@ currentUser().then(function(u){
   ];
   var total=projects.reduce(function(sum,p){return sum+p.amount;},0);
   var fmt=function(n){return '₹'+Number(n).toLocaleString('en-IN');};
-  var cards=projects.map(function(p){
-    var width=(p.amount/145000*100).toFixed(1);
+  var keys=['ration','nutrition','tiffin','medical','self_reliance'];
+  var cards=projects.map(function(p,index){
+    var width=(p.amount/145000*100).toFixed(1),key=keys[index];
     return '<article class="card" style="overflow:hidden"><div class="b">'+
       '<div class="row" style="justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span class="tag">Ongoing project</span><span class="mut" style="font-size:12px">'+p.duration+'</span></div>'+
       '<h3 style="margin:12px 0 8px">'+p.name+'</h3><p>'+p.desc+'</p>'+
       '<p class="mut" style="margin:12px 0 4px"><b>Beneficiaries:</b> '+p.beneficiaries+'</p>'+
       '<div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-top:14px"><span class="mut">Monthly project cost</span><b style="font-size:1.35rem;color:#166534">'+fmt(p.amount)+'</b></div>'+
       '<div style="height:7px;background:#e8eee8;border-radius:99px;overflow:hidden;margin-top:9px"><div style="height:100%;width:'+width+'%;background:linear-gradient(90deg,#84b83e,#166534);border-radius:99px"></div></div>'+
+      '<a class="btn" style="display:inline-flex;margin-top:16px" href="#niswarth-fund-'+key+'">View funding &amp; Donate</a>'+
       '</div></article>';
   }).join('');
-  P['niswarth-seva']=function(){
-    return head('Niswarth Seva 1008 Charitable Trust','Our ongoing seva projects')+
-      S('<div class="card" style="margin-bottom:20px"><div class="b"><span class="tag">Separate registered charitable trust</span><h2 style="margin-top:12px">OUR ONGOING SEVA PROJECTS</h2><p>Serving humanity through continuous food, nutrition, medical and self-reliance initiatives. All five projects listed below are ongoing.</p><div class="stats"><div><b>'+fmt(total)+'</b>Combined monthly project cost</div><div><b>5</b>Ongoing projects</div><div><b>15</b>Daily tiffin beneficiaries</div></div><p class="mut" style="font-size:13px">Project figures are provided by Niswarth Seva 1008 Charitable Trust. They are separate from VEGANFARM Movement activities, accounts and fundraising.</p></div></div>'+
-      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(270px,1fr))">'+cards+'</div>'+
-      '<div class="card" style="margin-top:20px"><div class="b"><h3>And many more…</h3><p>Numerous other acts of kindness and humanitarian services continue throughout the year, with one simple mission — serving humanity with love, care and dignity.</p></div></div>');
-  };
+  keys.forEach(function(key,index){
+    P['niswarth-fund-'+key]=function(){
+      var p=projects[index],panel=typeof window.vfNiswarthPublicPanel==='function'?window.vfNiswarthPublicPanel():'';
+      var upi='9619461022@kotakbank';
+      var pay='upi://pay?pa=9619461022%40kotakbank&pn=SWAPNIL%20SANDESH%20RAMANE&cu=INR&tn='+encodeURIComponent('Niswarth '+p.name);
+      return head(p.name,'Niswarth Seva 1008 Charitable Trust · Project funding')+
+        S('<div class="two" style="align-items:start"><div class="card"><div class="b"><span class="tag">ONGOING TRUST PROJECT</span><h2 style="margin-top:12px">'+p.name+'</h2><p>'+p.desc+'</p><p><b>Beneficiaries:</b> '+p.beneficiaries+'<br><b>Monthly funding requirement:</b> '+fmt(p.amount)+'</p><p class="mut">This is a separate Niswarth Seva 1008 Charitable Trust project, not a VEGANFARM animal-rescue appeal.</p></div></div><div class="card"><div class="b"><span class="tag">SUPPORT THIS PROJECT</span><h3 style="margin-top:10px">Make a contribution</h3><p><b>Payment beneficiary:</b> Swapnil Sandesh Ramane<br><b>UPI ID:</b> '+upi+'</p><img src="'+QR+'" alt="UPI QR code for Swapnil Sandesh Ramane" style="display:block;width:240px;height:240px;max-width:100%;object-fit:contain;background:#fff;padding:10px;border:1px solid var(--line);border-radius:14px"><div class="row" style="gap:10px;flex-wrap:wrap;margin-top:12px"><a class="btn sm" href="'+pay+'" rel="nofollow">Open UPI app</a><button class="btn out sm" type="button" onclick="copyUPI()">Copy UPI ID</button></div><p class="mut" style="margin-top:12px">Before paying, confirm that your UPI app displays Swapnil Sandesh Ramane as the recipient. Add the project name in the payment note if your app allows it. Keep your transaction reference for your records.</p><p class="mut">Payments are made to the named beneficiary above. Do not assume an automatic payment confirmation; public raised totals update only after the contribution is recorded and verified.</p></div></div></div><div style="margin-top:20px">'+panel+'</div><p><a class="btn out" href="#niswarth-seva">Back to all five projects</a></p>');
+    };
+  });
   var priorProjects=P.projects;
   P.projects=function(){
     return priorProjects()+'<section class="sec"><div class="wrap"><div class="card"><div class="b"><span class="tag">Separate registered charitable trust</span><h2>Niswarth Seva 1008 Charitable Trust</h2><p>Explore five ongoing monthly seva projects supporting families, mothers, senior citizens and people with disabilities.</p><a class="btn" href="#niswarth-seva">View ongoing seva projects</a></div></div></div></section>';
