@@ -439,3 +439,35 @@ body{background:radial-gradient(ellipse at 12% 0%,rgba(100,145,84,.18),transpare
 #app .vf-founder-quote p span{color:#f5d928!important;padding:0 8px}
 @media(max-width:700px){#app .vf-founder-quote{padding:76px 18px}#app .vf-project-mark{height:112px;padding:18px}#app .vf-about-emblem{min-height:260px}}
 @media(prefers-reduced-motion:reduce){#app *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* GLOBAL NON-WHITE SURFACE SYSTEM — enforce across public pages, Founder dashboard and Team portal */
+:root{color-scheme:dark;--vf-page:#081c14;--vf-surface:#103522;--vf-surface-2:#17452d;--vf-surface-3:#0b281b;--vf-accent:#a8cf38;--vf-gold:#f5d928}
+html,body{background:#081c14!important;color:#fff!important}
+body{background:radial-gradient(ellipse at 15% 0%,rgba(168,207,56,.13),transparent 34%),radial-gradient(ellipse at 90% 35%,rgba(40,107,54,.22),transparent 38%),linear-gradient(145deg,#081c14 0%,#102f20 52%,#071910 100%)!important;background-attachment:fixed!important}
+#app{background:transparent!important;color:#fff!important;min-height:100vh}
+#app>nav,#app nav{background:#0b281b!important;color:#fff!important;border-bottom:1px solid rgba(168,207,56,.24)!important}
+#app .hero,#app .sec,#app section.sec,#app .alt,#app .wa,#app .tick,#app footer,footer{background:linear-gradient(145deg,#0d2b1d,#123b28 58%,#0a2418)!important;color:#fff!important;border-color:rgba(168,207,56,.18)!important}
+#app .card,#app .kpi,#app .completed-total,#app .stats div,#app .note,#app .adm .card,#app .adm .kpi,#app .adm .scroll,#app .adm .tbl-wrap{background:#123b28!important;color:#fff!important;border:1px solid rgba(168,207,56,.22)!important;box-shadow:0 12px 32px rgba(0,0,0,.16)!important}
+#app .card .b,#app .card .body,#app .kpi *,#app .stats div *{color:#fff!important}
+#app .adm,#app .adm .side,#app .adm .main,#app .adm .content,#app .adm .nav,#app .adm .sidebar,#app .admin,#app [class*="dashboard"],#app [class*="admin-"]{background-color:#0b2a1c!important;color:#fff!important}
+#app .adm .side,#app .adm .sidebar,#app .adm .nav{background:#0a2418!important}
+#app .adm .main,#app .adm .content{background:#0e3020!important}
+#app .adm .side a,#app .adm .sidebar a,#app .adm .nav a{color:#fff!important;background:transparent!important}
+#app .adm .side a:hover,#app .adm .side a.on,#app .adm .sidebar a:hover,#app .adm .sidebar a.on{background:#1b5435!important;color:#fff!important}
+#app .adm table,#app .adm thead,#app .adm tbody,#app .adm tr,#app .adm td,#app .adm th{background:transparent!important;color:#fff!important;border-color:rgba(255,255,255,.16)!important}
+#app input,#app select,#app textarea,#app option{background:#071d13!important;color:#fff!important;border:1px solid rgba(168,207,56,.48)!important}
+#app input::placeholder,#app textarea::placeholder{color:#b9c9bb!important}
+#app button.btn,#app .btn{background:#a8cf38!important;color:#102817!important;border-color:#a8cf38!important}
+#app button.btn.out,#app .btn.out{background:#17452d!important;color:#fff!important;border:1px solid rgba(168,207,56,.55)!important}
+#app .tag,#app .tag.d,#app .tag.r{background:#17452d!important;color:#fff!important;border:1px solid rgba(168,207,56,.32)!important}
+#app .bar{background:#244b34!important}
+#app .bar i{background:linear-gradient(90deg,#a8cf38,#f5d928)!important}
+#app a{color:#d5ef6b}
+#app .logo>span{background:#17452d!important;border:1px solid rgba(168,207,56,.3)!important}
+#app .skip:focus{background:#17452d!important;color:#fff!important}
+/* Replace common inline light panels, including progress boxes, donation details and cards */
+#app [style*="background:#fff"],#app [style*="background: #fff"],#app [style*="background-color:#fff"],#app [style*="background-color: #fff"],#app [style*="background:#f7faf4"],#app [style*="background: #f7faf4"],#app [style*="background:var(--cream"],#app [style*="background: var(--cream"]{background:#123b28!important;color:#fff!important;border-color:rgba(168,207,56,.28)!important}
+#app [style*="color:#263b20"],#app [style*="color: #263b20"],#app [style*="color:#687568"],#app [style*="color: #687568"]{color:#fff!important}
+#app img{background-color:#123b28}
+@media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}#app *{animation:none!important;transition:none!important}}
