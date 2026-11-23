@@ -404,3 +404,38 @@ body{background:radial-gradient(ellipse at 12% 0%,rgba(100,145,84,.18),transpare
 #vf-back-top{position:fixed;right:24px;bottom:26px;z-index:9998;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#d5ef6b;color:#0b1e13;border:0;box-shadow:0 8px 30px rgba(0,0,0,.3);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:.25s}
 #vf-back-top.is-visible{opacity:1;pointer-events:auto;transform:translateY(0)}
 @media(max-width:760px){#app .vf-project-tools{grid-template-columns:1fr}#app .vf-project-bottom-cta{align-items:flex-start;flex-direction:column;padding:25px}#vf-back-top{right:14px;bottom:16px}}
+
+
+/* 24 Nov accessibility and portal contrast correction */
+#app .adm,#app .adm .side,#app .adm .main,#app .side,#app .main{background:#0b2a1c!important;color:#fff!important}
+#app .adm .side{border-color:rgba(210,235,175,.22)!important}
+#app .adm .side a,#app .adm .side a.on,#app .adm .side a:hover{color:#fff!important;background:#17452d!important;border-radius:10px}
+#app .adm .main h1,#app .adm .main h2,#app .adm .main h3,#app .adm .main p,#app .adm .main label,#app .adm .main small,#app .adm .main th,#app .adm .main td{color:#fff!important}
+#app .adm .card,#app .adm .kpi,#app .adm .scroll,#app .adm .tbl-wrap{background:#123b28!important;color:#fff!important;border-color:rgba(213,239,107,.2)!important}
+#app .adm table,#app .adm tr,#app .adm td,#app .adm th{background:transparent!important;color:#fff!important;border-color:rgba(255,255,255,.18)!important}
+#app .adm input,#app .adm select,#app .adm textarea{background:#071d13!important;color:#fff!important;border:1px solid rgba(213,239,107,.45)!important}
+#app .adm input::placeholder,#app .adm textarea::placeholder{color:#c3d3c5!important}
+#app section:has(#vf-team-code),#app section:has(#vf-team-case-form){background:linear-gradient(145deg,#0b2a1c,#123b28)!important;color:#fff!important;min-height:75vh;padding-block:clamp(48px,7vw,90px)}
+#app section:has(#vf-team-code) .wrap,#app section:has(#vf-team-case-form) .wrap{background:transparent!important}
+#app section:has(#vf-team-code) h1,#app section:has(#vf-team-code) p,#app section:has(#vf-team-case-form) h1,#app section:has(#vf-team-case-form) h2,#app section:has(#vf-team-case-form) p{color:#fff!important}
+#app section:has(#vf-team-code) .card,#app section:has(#vf-team-case-form) .card{background:#17452d!important;border:1px solid rgba(213,239,107,.28)!important;color:#fff!important}
+#app section:has(#vf-team-code) .note,#app section:has(#vf-team-case-form) .note{background:#0a2118!important;color:#fff!important;border-color:rgba(213,239,107,.35)!important}
+#app section:has(#vf-team-code) input,#app section:has(#vf-team-case-form) input,#app section:has(#vf-team-code) textarea,#app section:has(#vf-team-case-form) textarea,#app section:has(#vf-team-code) select,#app section:has(#vf-team-case-form) select{background:#071d13!important;color:#fff!important;border:1px solid rgba(213,239,107,.5)!important}
+#app .vf-project-mark{height:145px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:26px;background:radial-gradient(circle at 85% 15%,rgba(213,239,107,.2),transparent 38%),linear-gradient(135deg,#173f2b,#0b2419);border-bottom:1px solid rgba(213,239,107,.2)}
+#app .vf-project-mark span{font:500 clamp(2.8rem,5vw,4.5rem) 'Playfair Display',serif;color:#d5ef6b!important;opacity:.85}
+#app .vf-project-mark b{font:800 10px 'Manrope',sans-serif;letter-spacing:.18em;color:#fff!important}
+#app .vf-focus-card{background:linear-gradient(145deg,#17452d,#0b2419)!important}
+#app .vf-focus-symbol{position:absolute;top:22px;left:24px;font:500 3.4rem 'Playfair Display',serif;color:#d5ef6b!important;opacity:.75}
+#app .vf-focus-content{position:relative;z-index:2}
+#app .vf-about-emblem{min-height:360px;background:radial-gradient(circle at 50% 45%,rgba(213,239,107,.2),transparent 30%),linear-gradient(145deg,#17452d,#071a13)!important;border-radius:22px;display:grid;place-items:center}
+#app .vf-about-emblem .vf-image-stamp{position:static;transform:none;color:#d5ef6b!important;border:1px solid rgba(213,239,107,.5);padding:34px;border-radius:50%;font-size:1.3rem;line-height:1.4}
+#app .vf-education-emblem{display:grid;place-items:center;background:radial-gradient(circle,rgba(213,239,107,.18),transparent 45%),linear-gradient(145deg,#17452d,#071a13)!important}
+#app .vf-education-emblem span{font:500 clamp(2rem,4vw,3.5rem)/1.1 'Playfair Display',serif;letter-spacing:.06em;text-align:center;color:#d5ef6b!important}
+#app .vf-founder-quote{padding:clamp(76px,10vw,140px) 0;background:linear-gradient(125deg,#1d5b35,#286b36 62%,#17452d)!important;border-top:1px solid rgba(245,217,40,.35);text-align:center}
+#app .vf-founder-quote .vf-container{max-width:1000px}
+#app .vf-founder-quote .vf-quote-mark{display:block;font:500 6rem/0.7 'Playfair Display',serif;color:#f5d928!important;opacity:.95}
+#app .vf-founder-quote blockquote{margin:24px auto 28px;max-width:900px;font:500 clamp(2rem,5vw,4.1rem)/1.16 'Playfair Display',serif;letter-spacing:-.025em;color:#f5d928!important}
+#app .vf-founder-quote p{margin:0 auto;color:#fff!important;font:800 10px 'Manrope',sans-serif;letter-spacing:.2em}
+#app .vf-founder-quote p span{color:#f5d928!important;padding:0 8px}
+@media(max-width:700px){#app .vf-founder-quote{padding:76px 18px}#app .vf-project-mark{height:112px;padding:18px}#app .vf-about-emblem{min-height:260px}}
+@media(prefers-reduced-motion:reduce){#app *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
