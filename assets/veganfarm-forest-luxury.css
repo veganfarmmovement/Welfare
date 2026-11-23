@@ -667,3 +667,10 @@ body{background:linear-gradient(145deg,#f3f1e5 0%,#e5ecd9 48%,#d8e5d0 100%)!impo
  #app .vf-impact-content .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media(prefers-reduced-motion:reduce){#app *,#app *:before,#app *:after{animation:none!important;transition:none!important}}
+
+
+/* Final contrast safeguard: keep image-card text dark over a light readable veil */
+#app .vf-motion-card:before{background:linear-gradient(180deg,rgba(246,246,230,.12) 0%,rgba(246,246,230,.62) 42%,rgba(246,246,230,.96) 100%)!important}
+#app .vf-motion-card *:not(svg):not(path):not(img):not(video):not(canvas){color:#17251a!important}
+#app .vf-motion-card .vf-motion-icon{background:rgba(250,249,235,.96)!important}
+#app .vf-motion-card .vf-motion-icon svg{stroke:#315c2d!important}
