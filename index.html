@@ -315,6 +315,33 @@ footer .mut{color:#c5d2c0!important}
 @media(max-width:720px){.completed-heading{align-items:stretch;flex-direction:column}.completed-total{min-width:0}.completed-section{padding:20px 14px;border-radius:18px}.completed-metrics{grid-template-columns:1fr}.vf-stamp{width:90px;height:90px;right:10px;bottom:10px}}
 
 .past-amount{font-size:14px;line-height:1.55;margin:12px 0 6px}.past-amount strong{color:#286b36;font-size:18px}.past-faq{margin-top:14px;padding:12px 14px;border:1px solid #e3e9dc;border-radius:12px;background:#f8faf4}.past-faq details+details{border-top:1px solid #e5eadf;margin-top:9px;padding-top:9px}.past-faq summary{cursor:pointer;font-weight:700;font-size:13px;color:#286b36}.past-faq p{font-size:13px;margin:7px 0 2px;color:#596354}.completed-photo{position:relative;aspect-ratio:4/3;overflow:hidden;background:#e8eedf}.completed-photo>img{width:100%;height:100%;object-fit:cover;display:block}.vf-stamp{position:absolute;right:12px;bottom:12px;width:104px;height:104px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18));transform:rotate(-10deg)}.vf-stamp svg{width:100%;height:100%}@media(max-width:720px){.vf-stamp{width:86px;height:86px}}
+
+/* Animated homepage feature — replaces the former three-photo panel only */
+.vf-motion-intro{max-width:780px;margin:0 auto 34px;text-align:center}
+.vf-motion-kicker{display:inline-block;color:#527d35;font-size:11px;font-weight:700;letter-spacing:.18em;margin-bottom:12px}
+.vf-motion-intro h2{font-size:clamp(2.1rem,4vw,3.25rem);margin:0 0 10px;color:#1d3322}
+.vf-motion-intro p{margin:0 auto;color:#687568;max-width:620px}
+.vf-motion-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.vf-motion-card{position:relative;isolation:isolate;min-height:300px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:11px;padding:28px;border:1px solid rgba(40,107,54,.13);border-radius:24px;text-decoration:none;color:#203626;background:linear-gradient(145deg,#f7f9e9,#e9f1d8);box-shadow:0 16px 40px rgba(31,63,35,.07);transition:transform .35s ease,box-shadow .35s ease}
+.vf-motion-card:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 78% 20%,rgba(168,207,56,.28),transparent 34%),linear-gradient(135deg,transparent 45%,rgba(255,255,255,.52));transition:transform .6s ease}
+.vf-motion-card:hover{transform:translateY(-8px);box-shadow:0 24px 54px rgba(31,63,35,.14)}
+.vf-motion-card:hover:before{transform:scale(1.14) rotate(-5deg)}
+.vf-motion-card strong{font:600 clamp(1.55rem,2.5vw,2.1rem)/1.08 'Newsreader',Georgia,serif;max-width:290px;letter-spacing:-.025em}
+.vf-motion-label{font-size:11px;font-weight:700;letter-spacing:.14em;color:#527d35}
+.vf-motion-link{font-size:13px;font-weight:700;color:#286b36;margin-top:7px}
+.vf-motion-link span{display:inline-block;transition:transform .25s}
+.vf-motion-card:hover .vf-motion-link span{transform:translate(4px,-3px)}
+.vf-motion-icon{position:absolute;top:24px;right:25px;width:90px;height:90px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.62);box-shadow:inset 0 0 0 1px rgba(40,107,54,.08);animation:vfIconFloat 5s ease-in-out infinite}
+.vf-motion-icon svg{width:57px;height:57px;fill:none;stroke:#286b36;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.vf-learn{background:linear-gradient(145deg,#f7f2d9,#edf0d9)}
+.vf-vegan{background:linear-gradient(145deg,#eaf3dc,#f7f7e8)}
+.vf-orbit{position:absolute;z-index:-1;width:180px;height:180px;border:1px solid rgba(83,125,53,.14);border-radius:50%;right:-48px;top:-58px;animation:vfOrbit 18s linear infinite}
+.vf-orbit-two{width:235px;height:235px;right:-76px;top:-84px;animation-duration:26s;animation-direction:reverse}
+@keyframes vfIconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes vfOrbit{to{transform:rotate(360deg)}}
+@media(max-width:820px){.vf-motion-grid{grid-template-columns:1fr}.vf-motion-card{min-height:230px}.vf-motion-icon{width:76px;height:76px}.vf-motion-icon svg{width:48px;height:48px}}
+@media(prefers-reduced-motion:reduce){.vf-motion-card,.vf-motion-card:before,.vf-motion-icon,.vf-orbit,.vf-motion-link span{animation:none!important;transition:none!important}}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -398,6 +425,7 @@ const donateForm=`<form onsubmit="event.preventDefault();toast('Sample: submissi
 const formPage=(t,s,fields)=>head(t,s)+S(`<form style="max-width:560px" onsubmit="event.preventDefault();toast('Sample: application would go to admin review')">${fields.map(f=>`<label>${f}</label>${f=='Message'?'<textarea rows=4></textarea>':'<input>'}`).join('')}<br><button class="btn">Submit application</button></form>`);
 const P={
 home:()=>`<div class="hero"><div class="ph" aria-hidden="true"></div><div class="wrap"><div class="in"><span style="display:inline-block;border:1px solid rgba(255,255,255,.55);border-radius:99px;padding:6px 14px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#f2f8f0;margin-bottom:18px">ANIMAL WELFARE · EDUCATION · VEGAN AWARENESS</span><h1>HELP SAVE A LIFE.</h1><p>Every animal deserves compassion, medical care and a chance to live. Stand with us for a kinder world.</p><div class="row"><a class="btn gold" href="#cases">Support a Rescue</a><a class="btn gold" href="#donate">Donate Now</a><a class="btn out" href="#projects">Explore Our Work</a></div></div></div></div>`
++S(`<div class="vf-motion-intro"><span class="vf-motion-kicker">THE WORK WE STAND FOR</span><h2>Compassion, put into motion.</h2><p>Three connected ways to build a kinder community — through care, learning and everyday choices.</p></div><div class="vf-motion-grid"><a class="vf-motion-card vf-care" href="#cases"><span class="vf-motion-icon" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 82C36 70 15 54 15 34c0-13 9-22 21-22 8 0 13 5 14 12 2-7 8-12 16-12 12 0 21 9 21 22 0 20-22 37-37 48Z"/><path d="M50 24v47M30 48h40"/></svg></span><span class="vf-motion-label">ANIMAL WELFARE</span><strong>Stand beside animals in need.</strong><span class="vf-motion-link">Explore rescue support <span aria-hidden="true">↗</span></span><i class="vf-orbit vf-orbit-one"></i><i class="vf-orbit vf-orbit-two"></i></a><a class="vf-motion-card vf-learn" href="#education"><span class="vf-motion-icon" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M12 25c15-7 27-4 38 5v53c-11-9-23-12-38-5V25Zm76 0c-15-7-27-4-38 5v53c11-9 23-12 38-5V25Z"/><path d="M24 39c8-2 14-1 20 3M24 51c8-2 14-1 20 3M76 39c-8-2-14-1-20 3M76 51c-8-2-14-1-20 3"/></svg></span><span class="vf-motion-label">EDUCATION</span><strong>Make room for learning.</strong><span class="vf-motion-link">Explore education <span aria-hidden="true">↗</span></span><i class="vf-orbit vf-orbit-one"></i><i class="vf-orbit vf-orbit-two"></i></a><a class="vf-motion-card vf-vegan" href="#projects"><span class="vf-motion-icon" aria-hidden="true"><svg viewBox="0 0 100 100"><path d="M50 82V42M50 57C25 57 17 42 18 20c21-1 37 7 32 37ZM50 47c0-22 14-34 34-33 2 22-8 37-34 39M30 82h40"/></svg></span><span class="vf-motion-label">VEGAN AWARENESS</span><strong>Choose kindness in daily life.</strong><span class="vf-motion-link">Explore our projects <span aria-hidden="true">↗</span></span><i class="vf-orbit vf-orbit-one"></i><i class="vf-orbit vf-orbit-two"></i></a></div>`,1)
 +S(`<h2>Who we are</h2><p>VEGANFARM Movement is an independent welfare organisation working on animal welfare, vegan awareness and education, led by Harshit Dedhia.</p><a class="btn out" href="#about">About us</a>`)
 +S(`<h2>Animals who need help now</h2><div class="grid">${cases.length?cases.map(caseCard).join(''):EMPTYC}</div>`,1)
 +S(`<h2>Our impact</h2>${sampleNote}<div class="stats"><div><b>0</b>Animals assisted</div><div><b>0</b>Cases supported</div><div><b>${inr(0)}</b>Medical aid</div><div><b>—</b>Education initiative</div></div>`)
