@@ -360,3 +360,47 @@ footer{background:#06140f!important;color:#dce5d7!important;border-top:1px solid
 .vf-education-detail-copy h2{font:500 clamp(2.6rem,4.5vw,4.3rem) 'Playfair Display',serif;color:#edf1df;line-height:1.04;margin:15px 0}.vf-education-detail-copy h2 em{color:#d5ef6b}.vf-education-detail-copy>p{color:#b8c6b8;line-height:1.9;font-size:14px}.vf-education-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}.vf-education-facts>div{padding:17px 12px;border-top:1px solid rgba(213,239,107,.22)}.vf-education-facts strong{display:block;color:#d5ef6b;font:500 24px 'Playfair Display',serif}.vf-education-facts span{display:block;margin-top:7px;color:#aebcae;font:700 8px 'Manrope',sans-serif;letter-spacing:.1em}.vf-detail-note{font-size:11px!important;color:#9eae9e!important;margin:25px 0}
 .vf-education-gallery{max-width:1240px;width:90%;margin:85px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.vf-education-gallery>div{height:260px;position:relative;overflow:hidden;border-radius:6px 50px 6px 6px}.vf-education-gallery img{width:100%;height:100%;object-fit:cover}.vf-education-gallery span{position:absolute;left:16px;bottom:16px;background:rgba(8,27,20,.85);color:#d5ef6b;padding:9px 12px;border-radius:30px;font:700 8px 'Manrope',sans-serif}
 @media(max-width:800px){.vf-education-detail{grid-template-columns:1fr}.vf-education-detail-image{height:420px}.vf-education-gallery{grid-template-columns:1fr}.vf-detail-hero{padding:95px 22px 70px}.vf-project-photo{height:215px}}
+
+/* VEGANFARM high-contrast dark system: every visible label and heading is white */
+html,body,#app,.vf-reimagined-home,.vf-detail-page{background-color:#071a13!important;color:#fff!important}
+body{background:radial-gradient(ellipse at 12% 0%,rgba(100,145,84,.18),transparent 34%),radial-gradient(ellipse at 88% 60%,rgba(188,220,103,.07),transparent 30%),linear-gradient(180deg,#071a13 0%,#0c2419 48%,#071a13 100%)!important}
+#app,#app *:not(input):not(textarea):not(select):not(option):not(img):not(svg):not(path),footer,footer *{color:#fff!important}
+#app .vf-education-feature{background:linear-gradient(125deg,#102d20,#183c2b 70%,#10271c)!important;color:#fff!important}
+#app .vf-education-feature *{color:#fff!important}
+#app .vf-project-photo-card,#app .vf-project-photo-card .vf-project-body,#app .vf-project-photo-card .vf-project-foot{background:#123323!important;color:#fff!important}
+#app .vf-project-photo-card h3,#app .vf-project-photo-card p,#app .vf-project-photo-card small,#app .vf-project-photo-card a,#app .vf-project-photo-card .vf-project-kind{color:#fff!important}
+#app .vf-project-photo-card .vf-project-foot{border-top:1px solid rgba(255,255,255,.2)!important}
+#app .vf-project-photo-card .vf-project-kind{opacity:.8}
+#app .vf-education-copy h2,#app .vf-education-copy p,#app .vf-education-copy .vf-eyebrow,#app .vf-education-copy .vf-education-facts strong,#app .vf-education-copy .vf-education-facts span,#app .vf-education-copy a{color:#fff!important}
+#app .vf-detail-hero,#app .vf-motion-hero{background-color:#0a2118!important}
+#app .vf-detail-hero h1,#app .vf-detail-hero p,#app .vf-detail-hero span,#app .vf-detail-intro h2,#app .vf-detail-intro p{color:#fff!important}
+#app .vf-detail-hero h1 em,#app .vf-detail-intro h2 em{color:#d5ef6b!important}
+#app .vf-eyebrow,#app .vf-overline,#app .vf-founder-signature,#app .vf-founder-line{color:#fff!important}
+#app .vf-founder-signature strong,#app .vf-founder-line strong{color:#d5ef6b!important}
+#app .vf-image-disclaimer{color:#fff!important;opacity:.72}
+#app .vf-project-photo-card .vf-photo-tag{color:#fff!important;background:rgba(3,17,11,.88)!important}
+#app .vf-project-photo-card .vf-project-foot a{color:#d5ef6b!important}
+#app .vf-project-photo-card .vf-project-foot small{color:#fff!important}
+#app input,#app textarea,#app select,#app option{background:#102b1e!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important}
+#app input::placeholder,#app textarea::placeholder{color:rgba(255,255,255,.62)!important}
+#app label{color:#fff!important}
+#app .vf-project-tools{display:grid;grid-template-columns:minmax(240px,1fr) minmax(210px,.55fr) auto;align-items:end;gap:16px;margin:32px 0 28px;padding:22px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.045);border-radius:22px}
+#app .vf-project-tools label{display:grid;gap:9px;font-size:9px;font-weight:800;letter-spacing:.14em}
+#app .vf-project-tools input,#app .vf-project-tools select{height:50px;padding:0 15px;border-radius:12px;font:500 14px 'Manrope',sans-serif}
+#app #vf-project-count{font-size:12px;white-space:nowrap;padding:15px 0}
+#app .vf-project-photo-card[hidden]{display:none!important}
+#app .vf-project-empty{padding:36px;text-align:center;color:#fff!important;border:1px dashed rgba(255,255,255,.28);border-radius:18px}
+#app .vf-project-bottom-cta{margin-top:70px;padding:38px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:linear-gradient(115deg,#193d2a,#0e281c);border:1px solid rgba(213,239,107,.25);border-radius:26px}
+#app .vf-project-bottom-cta h3{font:500 clamp(1.7rem,3vw,2.6rem) 'Playfair Display',serif;margin:10px 0}
+#app .vf-project-bottom-cta p{color:#fff!important;opacity:.8}
+#app .vf-project-bottom-cta .vf-button{flex-shrink:0}
+#app .vf-education-facts>div{border-color:rgba(255,255,255,.3)!important}
+#app .vf-education-facts strong,#app .vf-education-facts span{color:#fff!important}
+#app .vf-education-photo-caption,#app .vf-education-detail-image>span,#app .vf-education-gallery span{color:#fff!important}
+#app .vf-education-gallery>div{border:1px solid rgba(255,255,255,.16)}
+#app .vf-detail-note{color:#fff!important;opacity:.75}
+#app .vf-button-gold{color:#102316!important;background:#d5ef6b!important}
+#app a:hover{filter:brightness(1.12)}
+#vf-back-top{position:fixed;right:24px;bottom:26px;z-index:9998;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#d5ef6b;color:#0b1e13;border:0;box-shadow:0 8px 30px rgba(0,0,0,.3);font-size:20px;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(8px);transition:.25s}
+#vf-back-top.is-visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+@media(max-width:760px){#app .vf-project-tools{grid-template-columns:1fr}#app .vf-project-bottom-cta{align-items:flex-start;flex-direction:column;padding:25px}#vf-back-top{right:14px;bottom:16px}}
