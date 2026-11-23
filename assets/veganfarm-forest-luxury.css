@@ -471,3 +471,59 @@ body{background:radial-gradient(ellipse at 15% 0%,rgba(168,207,56,.13),transpare
 #app [style*="color:#263b20"],#app [style*="color: #263b20"],#app [style*="color:#687568"],#app [style*="color: #687568"]{color:#fff!important}
 #app img{background-color:#123b28}
 @media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}#app *{animation:none!important;transition:none!important}}
+
+
+/* VEGANFARM full-site readable evergreen redesign — 24 Nov 2026 */
+:root{--vf-page:#071a12;--vf-panel:#103522;--vf-panel-2:#17452d;--vf-lime:#b7dc45;--vf-yellow:#f5d928;--vf-copy:#f5f7ed}
+html,body,#app{background:#071a12!important;color:#f5f7ed!important}
+body{background:radial-gradient(ellipse at 12% 0%,rgba(183,220,69,.13),transparent 34%),radial-gradient(ellipse at 90% 45%,rgba(40,107,54,.22),transparent 38%),linear-gradient(145deg,#071a12 0%,#0c2b1c 52%,#06160f 100%)!important;background-attachment:fixed!important}
+#app .vf-focus-section,#app .vf-about-section,#app .vf-transparency-section,#app .vf-impact-section,#app .vf-contact-strip,#app .vf-quote-section,#app .vf-route-shell,#app .vf-route-content{background:linear-gradient(145deg,#0b281b,#123b28 58%,#092318)!important;color:#f5f7ed!important;border-color:rgba(183,220,69,.2)!important}
+#app .vf-focus-section *,#app .vf-about-section *,#app .vf-transparency-section *,#app .vf-impact-section *,#app .vf-contact-strip *,#app .vf-quote-section *{color:#f5f7ed!important}
+#app .vf-focus-section h2 em,#app .vf-about-section h2 em,#app .vf-transparency-section h2 em,#app .vf-impact-section h2 em,#app .vf-contact-strip h2 em,#app .vf-quote-section blockquote em{color:#b7dc45!important}
+#app .vf-focus-card,#app .vf-choice-card,#app .vf-choice-human,#app .vf-choice-animal,#app .vf-about-image,#app .vf-transparency-steps,#app .vf-impact-content .stats>div,#app .vf-contact-strip .vf-contact-inner{background:linear-gradient(145deg,#17452d,#0c2b1d)!important;color:#f5f7ed!important;border-color:rgba(183,220,69,.24)!important}
+#app .vf-section-intro>p,#app .vf-transparency-layout>div:first-child>p,#app .vf-contact-inner p,#app .vf-choice-card p,#app .vf-payment-note,#app .vf-volunteer-inner p{color:#e0e9d9!important;opacity:1!important}
+#app .vf-transparency-steps{border-color:rgba(245,247,237,.3)!important}
+#app .vf-transparency-steps>div{border-color:rgba(245,247,237,.24)!important}
+#app .vf-transparency-steps>div>b{color:#b7dc45!important}
+#app .vf-transparency-steps strong{color:#fff!important;font-size:16px!important}
+#app .vf-transparency-steps small{color:#e0e9d9!important;font-size:15px!important;line-height:1.65!important}
+#app .vf-transparency-layout>div:first-child>p{font-size:17px!important;line-height:1.75!important}
+#app .vf-section-intro>p,#app .vf-contact-inner p{font-size:16px!important;line-height:1.75!important}
+#app .vf-eyebrow,#app .vf-overline,#app .vf-choice-label,#app .vf-choice-index,#app .vf-focus-index{color:#d6ef82!important;font-size:12px!important;letter-spacing:.14em!important}
+#app .vf-payment-note{font-size:14px!important;line-height:1.7!important}
+#app .vf-impact-content .stats{background:rgba(183,220,69,.22)!important;border-color:rgba(183,220,69,.28)!important;gap:1px!important}
+#app .vf-impact-content .stats>div{background:#123b28!important;color:#f5f7ed!important;font-size:14px!important;letter-spacing:.04em!important;line-height:1.5!important;padding:26px 22px!important}
+#app .vf-impact-content .stats b{color:#d8f27c!important;font-size:clamp(28px,3vw,38px)!important;margin-bottom:10px!important}
+#app .vf-contact-strip{border-top:1px solid rgba(183,220,69,.22)!important;border-bottom:1px solid rgba(183,220,69,.22)!important}
+#app .vf-text-arrow,#app .vf-choice-card>a{color:#d8f27c!important;border-color:rgba(183,220,69,.35)!important;font-size:13px!important}
+#app .vf-text-arrow span,#app .vf-choice-card>a b{color:#f5d928!important}
+#app .vf-button-cream,#app .vf-button-gold{background:#b7dc45!important;color:#102817!important;border:1px solid #b7dc45!important}
+#app .vf-button-glass{background:#17452d!important;color:#fff!important;border-color:rgba(255,255,255,.5)!important}
+#app .vf-button-dark{background:#b7dc45!important;color:#102817!important}
+#app .vf-focus-card h3,#app .vf-choice-card h3{color:#fff!important}
+#app .vf-choice-symbol{color:#d8f27c!important}
+#app .vf-quote-section blockquote{color:#f5f7ed!important}
+#app .vf-volunteer-section{background:linear-gradient(120deg,#1a5936,#0d2d1e)!important}
+#app .vf-project-photo-card,#app .vf-project-photo-card .vf-project-body,#app .vf-project-photo-card .vf-project-foot{background:#123b28!important;color:#fff!important}
+#app .vf-project-photo-card h3,#app .vf-project-photo-card p,#app .vf-project-photo-card small,#app .vf-project-photo-card a{color:#fff!important}
+#app .vf-project-photo-card .vf-project-foot a{color:#d8f27c!important}
+#app .vf-detail-page,#app .vf-detail-content{background:transparent!important;color:#fff!important}
+#app .vf-detail-page p,#app .vf-detail-content p,#app .vf-detail-note{color:#e0e9d9!important}
+#app .vf-detail-page h1,#app .vf-detail-page h2,#app .vf-detail-page h3{color:#fff!important}
+#app .vf-detail-page h1 em,#app .vf-detail-page h2 em{color:#d8f27c!important}
+#app .vf-detail-page .card,#app .vf-route-content .card{background:#123b28!important;color:#fff!important;border-color:rgba(183,220,69,.22)!important}
+#app .vf-route-content .tbl th{background:#17452d!important;color:#fff!important}
+#app .vf-route-content .tbl td{background:#103522!important;color:#fff!important}
+#app .vf-payment-note,#app .vf-image-disclaimer{font-size:14px!important}
+#app .vf-section-intro{gap:38px}
+@media(max-width:850px){
+ #app .vf-transparency-section,#app .vf-impact-section{padding:68px 0!important}
+ #app .vf-transparency-layout{grid-template-columns:1fr!important;gap:38px!important}
+ #app .vf-section-intro{display:block!important;margin-bottom:30px!important}
+ #app .vf-section-intro>p{margin-top:18px!important;max-width:unset!important}
+ #app .vf-impact-content .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #app .vf-transparency-steps>div{grid-template-columns:44px 1fr!important;gap:14px!important;padding:18px 0!important}
+ #app .vf-transparency-steps small{font-size:14px!important}
+ #app .vf-contact-inner{align-items:flex-start!important;flex-direction:column!important}
+}
+@media(max-width:520px){#app .vf-impact-content .stats>div{padding:18px 14px!important;font-size:12px!important}#app .vf-impact-content .stats b{font-size:28px!important}}
