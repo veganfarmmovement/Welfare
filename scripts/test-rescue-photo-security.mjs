@@ -27,6 +27,8 @@ assert.ok(appUploads.every((call) => call.includes("rescue-case-photos")), "Ever
 assert.doesNotMatch(html, /(?:up|upload)\(['"]case-photos['"]/, "No active app upload may target legacy case-photos");
 assert.doesNotMatch(html, /storage\.from\(['"](?:case-photos|rescue-case-photos)['"]\)\.getPublicUrl/, "Rescue photos must not use permanent public URLs");
 assert.match(html, /assets\/veganfarm-private-case-photos\.js/, "Private signed-photo loader must be included");
+assert.match(html, /client\.functions\.invoke\(\x27veganfarm-team-gate\x27/, "Active shared-code Team portal must use the Edge Function");
+assert.match(html, /Only JPG or PNG rescue photographs are allowed/, "Browser photo helper must match the private bucket MIME allowlist");
 
 assert.match(html, /bucket==='rescue-case-photos'\?'rescue-case-photos\/'\+uploadPath/, "App must store a bucket-prefixed private object path");
 assert.match(html, /saveUpload\(userId\+'\/'\+path\)/, "Direct Team uploads must use the authenticated user's folder");
@@ -38,6 +40,7 @@ assert.match(photoAsset, /RENEW_AFTER_MS=240000/, "Signed URLs must refresh befo
 assert.match(photoAsset, /item\.live\.photo=item\.photo/, "Public live snapshot must receive the signed URL");
 assert.match(photoAsset, /window\.syncCases\(\)/, "Public case cards must be rebuilt after signing");
 assert.match(photoAsset, /update\(\{photo_path:null,photo_url:null\}\)/, "Founder photo removal must persist to the database");
+assert.match(photoAsset, /typeof toast===\x27function\x27/, "Founder photo removal must use the app\x27s lexical toast binding");
 
 assert.match(edge, /from\("rescue-case-photos"\)\.upload/, "Team Edge Function must upload to the private bucket");
 assert.match(edge, /photo_path: \`rescue-case-photos\/\$\{photoPath\}\`/, "Team Edge Function must persist the bucket prefix");
