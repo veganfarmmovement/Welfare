@@ -110,3 +110,10 @@ end;
 $function$;
 revoke all on function public.vf_founder_pin_change(text) from public, anon, authenticated;
 grant execute on function public.vf_founder_pin_change(text) to service_role;
+
+-- Defense in depth for new Team animal photographs; the Edge Function also validates
+-- the actual file signature and enforces the same 5 MB limit.
+update storage.buckets
+set file_size_limit=5242880,
+    allowed_mime_types=array['image/jpeg','image/png']::text[]
+where id='rescue-case-photos';
