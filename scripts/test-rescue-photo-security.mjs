@@ -53,7 +53,7 @@ assert.match(migration, /private\.is_team\(\)/, "Team access must use the approv
 assert.match(migration, /split_part\(storage\.objects\.name,'\/',1\)=\(select auth\.uid\(\)\)::text/, "Team insert path must match auth.uid");
 assert.doesNotMatch(migration, /update public\.rescue_cases/i, "Forward migration must not rewrite rescue records or photo paths");
 
-assert.match(rollback, /raise exception 'Rollback stopped: rescue-case-photos still contains objects'/, "Rollback must stop while new-bucket objects remain");
+assert.match(rollback, /raise exception 'Rollback stopped: rescue-case-photos still contains objects\./, "Rollback must stop while new-bucket objects remain");
 assert.match(rollback, /update public\.rescue_cases[\s\S]*?photo_path=substring/, "Rollback must restore legacy path prefixes after copy verification");
 assert.match(rollback, /set public=true where id='case-photos'/, "Rollback must restore the legacy bucket setting");
 
