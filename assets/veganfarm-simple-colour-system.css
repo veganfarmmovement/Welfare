@@ -179,3 +179,10 @@ body>nav .menu a.l{background:transparent!important;border-bottom:2px solid tran
 body>nav .menu a.l.on,body>nav .menu a.l[aria-current="page"]{color:#173d2b!important;border-bottom-color:#c7a66a!important;background:transparent!important}
 body>nav .menu a.l:hover{color:#286b36!important;background:#f2efe7!important}
 body>nav .btn,body>nav .button,body>nav button{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
+
+
+/* Beat legacy footer:not(#vf-never) specificity and clear nested green panels. */
+#app footer:not(#vf-never),footer:not(#vf-never),.footer:not(#vf-never){background:#fffdf5!important;color:#1d2c21!important;border-top:1px solid #f2efe7!important}
+#app footer:not(#vf-never) .wrap,footer:not(#vf-never) .wrap,.footer:not(#vf-never) .wrap{background:#fffdf5!important;color:#1d2c21!important}
+#app footer:not(#vf-never) :is(div,section),footer:not(#vf-never) :is(div,section),.footer:not(#vf-never) :is(div,section){background:transparent!important;color:#1d2c21!important}
+body>nav #mb{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
