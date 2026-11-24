@@ -35,7 +35,7 @@ nav a.l:hover,nav a.on{color:var(--vf-forest)}
 .btn.gold:hover,#app .btn.gold:hover{background:var(--vf-yellow)}
 .btn.out,#app .btn.out{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55);color:inherit!important;box-shadow:none}
 .btn.sm{min-height:36px;padding:8px 14px;font-size:12px}
-#app .hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:min(690px,calc(100svh - 78px));overflow:hidden;padding:clamp(76px,10vw,140px) 0;background-image:linear-gradient(90deg,rgba(13,43,25,.94) 0%,rgba(18,56,31,.82) 48%,rgba(18,56,31,.2) 100%),url("https://images.unsplash.com/photo-1776876031680-a2b42d79248f?auto=format&fit=crop&w=2000&q=85");background-position:center 44%;background-size:cover;border:0}
+#app .hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:min(690px,calc(100svh - 78px));overflow:hidden;padding:clamp(76px,10vw,140px) 0;background-image:linear-gradient(90deg,rgba(13,43,25,.94) 0%,rgba(18,56,31,.82) 48%,rgba(18,56,31,.2) 100%),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=2000&q=85");background-position:center 44%;background-size:cover;border:0}
 #app .hero:before{position:absolute;z-index:-1;inset:16px;border:1px solid rgba(255,255,255,.22);border-radius:26px;content:"";pointer-events:none}
 #app .hero .wrap{width:min(100% - 64px,1240px)}
 #app .hero .in{max-width:760px}
