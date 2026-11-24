@@ -84,6 +84,10 @@ assert.match(forestJs, /P\.projects=function/, "Forest presentation must own the
 assert.match(forestJs, /P\.education=function/, "Forest presentation must own the Education page renderer");
 assert.match(forestJs, /function updateNav\(/, "Forest presentation must own navigation rendering");
 assert.match(forestJs, /function footer\(/, "Forest presentation must own footer rendering");
+assert.match(forestJs, /P\.volunteer=function\(\)[\s\S]*?fsub\(event,\\'vol\\'\)/, "Volunteer form must submit through the existing Supabase-backed handler");
+assert.match(forestJs, /P\.contact=function\(\)[\s\S]*?fsub\(event,\\'msg\\'\)/, "Contact form must submit through the existing Supabase-backed handler");
+assert.match(forestJs, /P\.donate=function\(\)[\s\S]*?donSubmit\(event\)/, "Donation form must submit through the existing pending-verification handler");
+assert.ok(html.includes("window.VF_QR=QR"), "Donation presentation must reuse the existing UPI QR data");
 assert.match(forestJs, /id="fcon"><\/p><p id="socf"><\/p>/, "Presentation footer must preserve core notification and social-link mount points");
 assert.ok(html.includes("if(window.vfRole!=='team')return;") && html.indexOf("public_case_documents", html.indexOf("if(window.vfRole!=='team')return;")) > -1, "Anonymous visitors must not query restricted public case attachments");
 assert.match(forestJs, /vf-public-data-warning/, "Public data permission failures must be disclosed without exposing private case data");
