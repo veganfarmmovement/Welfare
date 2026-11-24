@@ -2,7 +2,7 @@ name: VEGANFARM browser regression audit
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development/platform-transformation]
     paths:
       - 'index.html'
       - 'assets/**'
