@@ -68,8 +68,9 @@ function buildHeader(){
 }
 function buildFooter(){
  var f=document.querySelector('body > footer .wrap');if(!f||f.dataset.vf2==='1')return;
+ var credits=document.querySelector('footer .vf-photo-credits');var creditsMarkup=credits?credits.innerHTML:'<summary>Photography credits</summary><p>Editorial photographs are illustrative.</p>';
  f.dataset.vf2='1';f.className='vf2-footer-grid';
- f.innerHTML='<div class="vf2-footer-main"><span class="vf2-eyebrow">VEGANFARM MOVEMENT</span><h2>Compassion is a practice.</h2><p>An independent, currently unregistered welfare movement supporting animal welfare, education and compassionate living.</p><p>Founder &amp; Movement Lead · Harshit Dedhia</p></div><div class="vf2-footer-links"><div><b>Explore</b><a href="#about">About</a><a href="#cases">Rescue appeals</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#impact">Impact</a><a href="#volunteer">Volunteer</a></div><div><b>Information</b><a href="#transparency">Transparency</a><a href="#contact">Contact</a><a href="#policy-privacy">Privacy</a><a href="#policy-donation">Donation policy</a><a href="#policy-refund">Refund policy</a><a href="#policy-terms">Terms</a><a href="#admin">Founder access</a></div></div><div class="vf2-footer-contact"><a href="mailto:veganfarmmovement@gmail.com">veganfarmmovement@gmail.com</a><p id="fcon"></p><p id="socf"></p><details class="vf-photo-credits"><summary>Photography credits</summary><p>Editorial photographs are sourced from Unsplash under its applicable license. Images are illustrative and are not actual case evidence or programme documentation.</p></details></div><div class="vf2-footer-bottom"><span>© VEGANFARM Movement · India</span><span>Animal welfare · Education · Compassionate living</span></div>';
+ f.innerHTML='<div class="vf2-footer-main"><span class="vf2-eyebrow">VEGANFARM MOVEMENT</span><h2>Compassion is a practice.</h2><p>An independent, currently unregistered welfare movement supporting animal welfare, education and compassionate living.</p><p>Founder &amp; Movement Lead · Harshit Dedhia</p></div><div class="vf2-footer-links"><div><b>Explore</b><a href="#about">About</a><a href="#cases">Rescue appeals</a><a href="#projects">Projects</a><a href="#education">Education</a><a href="#impact">Impact</a><a href="#volunteer">Volunteer</a></div><div><b>Information</b><a href="#transparency">Transparency</a><a href="#contact">Contact</a><a href="#policy-privacy">Privacy</a><a href="#policy-donation">Donation policy</a><a href="#policy-refund">Refund policy</a><a href="#policy-terms">Terms</a><a href="#admin">Founder access</a></div></div><div class="vf2-footer-contact"><a href="mailto:veganfarmmovement@gmail.com">veganfarmmovement@gmail.com</a><p id="fcon"></p><p id="socf"></p><details class="vf-photo-credits">'+creditsMarkup+'</details></div><div class="vf2-footer-bottom"><span>© VEGANFARM Movement · India</span><span>Animal welfare · Education · Compassionate living</span></div>';
 }
 function decoratePrivate(){
  var route=(location.hash||'#home').slice(1);
@@ -84,7 +85,7 @@ function decoratePrivate(){
 function afterRoute(){
  buildHeader();buildFooter();decoratePrivate();
  var route=(location.hash||'#home').slice(1);
- if(route.indexOf('case-')===0&&route!=='case-archived'&&!app.querySelector('.vf2-page-hero')){
+ if(route.indexOf('case-')===0&&!app.querySelector('.vf2-page-hero')){
   var meta={eyebrow:'ANIMAL WELFARE · CASE DETAIL',title:'Rescue case details',copy:'Review the published case information and verified support details.',image:'photo-1552053831-71594a27632d'};
   var content=app.innerHTML;app.innerHTML='<div class="vf2-page vf2-page-case-detail">'+hero(meta,'case-detail')+'<div class="vf2-page-content vf2-shell">'+content+'</div></div>';
  }
