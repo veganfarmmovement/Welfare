@@ -99,7 +99,7 @@ try {
     report.languageChecks.push({code,dir,actual,ok});
     if(!ok) report.errors.push({type:'language-switch',code,expected:{lang:expectedLang,dir,notice:code!=='en'},actual});
     if(code==='en'){
-      const file=path.join(out,'screenshots','rtl-'+code+'.png');
+      const file=path.join(out,'screenshots','language-'+code+'.png');
       await page.screenshot({path:file,fullPage:true,animations:'disabled'});
       report.screenshots.push(file);
     }
