@@ -8,7 +8,6 @@ The following editorial photographs are used in the VEGANFARM website. Each sour
 | Farm animals / cows | Francesco Ungaro | https://unsplash.com/photos/a-group-of-cows-grazing-in-a-field-1fbUIZ1uMiM |
 | Street cat shelter | Tunahan Kuzgun | https://unsplash.com/photos/makeshift-shelter-with-tarps-and-wood-pallets-oYtETwr8L4o |
 | Education / learning | Towfiqu barbhuiya | https://unsplash.com/photos/a-person-writing-on-a-notebook-with-a-pencil-c9NlNPByu_o |
-| Plant-based food / vegan awareness | Iñigo De la Maza | https://unsplash.com/photos/vegetables-and-fruits-s285sDw5Ikc |
 | Community volunteering / volunteer page | Vitaly Gariev | https://unsplash.com/photos/person-in-gloves-writing-on-clipboard-with-volunteers-in-background-HpW0eYZi0QI |
 
 ## License
@@ -28,4 +27,4 @@ All listed images are published on Unsplash photo pages that state “Free to us
 
 ## Review note
 
-Unsplash licensing does not automatically grant rights to trademarks, separately copyrighted works or identifiable people depicted in an image. The selected set is focused on animals, food and hands-only learning imagery to reduce those additional rights concerns. Recheck the source page and rights context before replacing or expanding this set.
+Unsplash licensing does not automatically grant rights to trademarks, separately copyrighted works or identifiable people depicted in an image. The selected set is focused on animals, community work and hands-only learning imagery to reduce those additional rights concerns. Recheck the source page and rights context before replacing or expanding this set.
