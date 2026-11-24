@@ -38,7 +38,7 @@ var dict={};
 languages.slice(1).forEach(function(l,i){dict[l.code]={};Object.keys(keys).forEach(function(k){dict[l.code][k]=keys[k][i]||k;});});
 var current='en',observer=null;
 var fallbackNotice='Translation status: This language is only partially translated. Some page content remains in English; human review is pending.';
-function ensureFallbackNotice(){var app=document.getElementById('app');if(!app)return;var note=app.querySelector('[data-vf-translation-notice]');if(current==='en'){if(note)note.remove();return;}if(!note){note=document.createElement('p');note.className='vf-translation-fallback';note.setAttribute('data-vf-translation-notice','1');note.setAttribute('role','status');note.setAttribute('aria-live','polite');app.insertBefore(note,app.firstChild);}note.textContent=fallbackNotice;}
+function ensureFallbackNotice(){var app=document.getElementById('app');if(!app)return;var note=app.querySelector('[data-vf-translation-notice]');if(current==='en'){if(note)note.remove();return;}if(!note){note=document.createElement('p');note.className='vf-translation-fallback';note.setAttribute('data-vf-translation-notice','1');note.setAttribute('role','status');note.setAttribute('aria-live','polite');app.insertBefore(note,app.firstChild);}if(note.textContent!==fallbackNotice)note.textContent=fallbackNotice;}
 function translateNode(node){
  if(!node||node.nodeType!==3)return;
  var parent=node.parentElement;
