@@ -2181,16 +2181,21 @@ currentUser().then(function(u){
 
   /* Team Member is the approved-member login/account-setup route. */
   function loginPage(){
-    return '<section class="sec"><div class="wrap" style="max-width:480px">'+
-      '<h1 style="font-size:2.2rem">VEGANFARM Team Member</h1>'+
-      '<p class="mut">Enter your name and registered email address. We will send a secure one-time sign-in link to your inbox. No password is required.</p>'+
-      '<form onsubmit="vfTeamEmailLink(event)">'+
-      '<label>Full name</label><input name="name" autocomplete="name" required minlength="3" maxlength="120">'+
-      '<label>Email address</label><input name="email" type="email" autocomplete="email" required>'+
-      '<p id="vf-team-email-status" role="status" aria-live="polite" style="color:var(--mut);min-height:42px;margin:10px 0"></p>'+
-      '<button class="btn" type="submit">Send secure sign-in link</button></form>'+
-      '<p class="mut" style="margin-top:18px">New to the VEGANFARM Team? You can submit your access request here. Founder approval is required before case submissions are enabled.</p>'+
-      '<a class="btn out sm" href="#veganfarm-team">Request Team access</a>'+
+    return '<section class="sec vf-team-access"><div class="wrap vf-team-access-wrap">'+
+      '<div class="vf-team-access-intro"><span class="vf-team-access-kicker">VEGANFARM · PRIVATE TEAM PORTAL</span>'+
+      '<h1>Team Member Sign In</h1>'+
+      '<p>Use your registered name and email address. We will send a secure one-time sign-in link to your inbox. No password is required.</p></div>'+
+      '<div class="vf-team-access-card"><div class="vf-team-access-card-head"><span class="vf-team-access-mark" aria-hidden="true">VF</span>'+
+      '<div><h2>Secure access</h2><p>For approved VEGANFARM team members</p></div></div>'+
+      '<form class="vf-team-access-form" onsubmit="vfTeamEmailLink(event)">'+
+      '<label for="vf-team-login-name">Full name</label><input id="vf-team-login-name" name="name" autocomplete="name" required minlength="3" maxlength="120" placeholder="Enter your full name">'+
+      '<label for="vf-team-login-email">Email address</label><input id="vf-team-login-email" name="email" type="email" autocomplete="email" required placeholder="name@example.com">'+
+      '<p id="vf-team-email-status" class="vf-team-access-status" role="status" aria-live="polite"></p>'+
+      '<button class="btn vf-team-access-submit" type="submit">Send secure sign-in link</button></form>'+
+      '<div class="vf-team-access-divider" aria-hidden="true"></div>'+
+      '<p class="vf-team-access-help">New to the VEGANFARM Team? Submit an access request. The Founder must approve your request before case submissions are enabled.</p>'+
+      '<a class="btn out sm vf-team-access-request" href="#veganfarm-team">Request Team access</a></div>'+
+      '<p class="vf-team-access-footnote">Your account and access permissions are managed securely. Never share your sign-in link with anyone.</p>'+
       '</div></section>';
   }
   window.vfTeamEmailLink=function(event){
