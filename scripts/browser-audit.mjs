@@ -2,6 +2,9 @@ import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// Run the source-level preservation and security assertions before opening Chromium.
+await import('./test-rescue-photo-security.mjs');
+
 const base=process.env.VF_BASE_URL||'http://127.0.0.1:4173/';
 const widths=[360,390,430,768,1024,1440,1920];
 const routes=['home','about','cases','case-archived','projects','education','impact','transparency','donate','volunteer','contact','stories','policy-privacy','policy-donation','policy-refund','policy-terms','policy-financial','policy-volunteer','team','admin','admin-cases','admin-donations','admin-audit'];
