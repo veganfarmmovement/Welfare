@@ -7,7 +7,7 @@ await import('./test-rescue-photo-security.mjs');
 
 const base=process.env.VF_BASE_URL||'http://127.0.0.1:4173/';
 const widths=[360,390,430,768,1024,1440,1920];
-const routes=['home','about','cases','case-archived','projects','education','impact','transparency','donate','volunteer','contact','stories','policy-privacy','policy-donation','policy-refund','policy-terms','policy-financial','policy-volunteer','team','admin','admin-cases','admin-donations','admin-audit'];
+const routes=['home','about','cases','case-archived','projects','education','impact','transparency','donate','volunteer','contact','stories','policy-privacy','policy-donation','policy-refund','policy-terms','policy-financial','policy-volunteer','team','admin','admin-cases','admin-donations','admin-expenses','admin-volunteers','admin-messages','admin-stories','admin-team','admin-settings','admin-audit'];
 const out=path.resolve('artifacts');fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
 const report={base,widths,routes,routeChecks:[],errors:[],networkFailures:[],screenshots:[],englishOnlyCheck:null,menuChecks:[]};
 let activeRoute='',activeWidth=0;
@@ -29,7 +29,7 @@ try{
     item.loaded=await page.locator('#app').evaluate(e=>e.innerText.trim().length>0);
     item.layout=route==='home'?await page.locator('#app .vf2-home-hero').count()>0:
       (route==='team'?await page.locator('#vf-team-code').count()>0:
-       route.startsWith('admin')?await page.locator('#app').innerText().then(t=>t.trim().length>0):
+       route.startsWith('admin')?await page.locator('#app .vf-admin-login, #app .vf-admin-shell').count()>0:
        await page.locator('#app .vf2-page-hero').count()>0);
     item.overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
     if(item.overflow)item.overflowElements=await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className:'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)})).filter(x=>x.right>innerWidth+1&&x.width>0).slice(0,12));
@@ -69,7 +69,7 @@ try{
  if(!report.team.heading.includes('Secure sign-in')||!report.team.bodyText.includes('Authorised Team members only')||!report.team.card||report.team.card.bg!=='rgb(255, 255, 255)'||report.team.buttonContrast<4.5)report.errors.push({type:'team-access-visual-failed',actual:report.team});
  await page.locator('#vf-team-code').focus();await page.keyboard.press('Tab');await page.keyboard.press('Shift+Tab');const focus=await page.locator('#vf-team-code').evaluate(e=>parseFloat(getComputedStyle(e).outlineWidth)>=3);if(!focus)report.errors.push({type:'team-focus-style-missing'});
  await save('team-access-mobile.png',true);await page.setViewportSize({width:1440,height:1000});await save('team-access-desktop.png',true);
- await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={dashboardVisible:await page.locator('#app .adm').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(report.founderGate.dashboardVisible)report.errors.push({type:'unauthenticated-founder-dashboard-visible'});
+ await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={loginVisible:await page.locator('#app .vf-admin-login').count()>0,dashboardVisible:await page.locator('#app .vf-admin-shell').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(!report.founderGate.loginVisible||report.founderGate.dashboardVisible)report.errors.push({type:'founder-access-gate-failed'});
  // Capture a production baseline screenshot for visual comparison; it is never used as the test target.
  const baselinePage=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
  try{await baselinePage.goto('https://veganfarmmovement.github.io/Welfare/',{waitUntil:'domcontentloaded',timeout:20000});await baselinePage.waitForTimeout(500);const file=path.join(out,'screenshots','before-production-homepage.png');await baselinePage.screenshot({path:file,fullPage:false,animations:'disabled'});report.screenshots.push('before-production-homepage.png')}
