@@ -7,6 +7,7 @@ const html = read("../index.html");
 const photoAsset = read("../assets/veganfarm-private-case-photos.js");
 const visualCss = read("../assets/veganfarm-platform-system.css");
 const platformCss = read("../assets/veganfarm-platform-system.css");
+const unifiedCss = read("../assets/veganfarm-unified.css");
 const localeJs = read("../assets/veganfarm-languages.js");
 const edge = read("../supabase/functions/veganfarm-team-gate/index.ts");
 const migration = read("../supabase-phase7-private-case-photo-storage.sql");
@@ -38,7 +39,9 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile he
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.match(html, /veganfarm-simple-colour-system\.css/, "The simple colour system must load on every page");
-assert.match(html, /veganfarm-platform-system\\.css/, "The unified design system must load");
+assert.match(html, /veganfarm-unified\\.css/, "The consolidated stylesheet must load");
+assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\\.css/, "Legacy stylesheets must not load independently");
+assert.match(unifiedCss, /--vf-forest:#173D2B/, "The bundled stylesheet must contain the luxury palette");
 assert.match(platformCss, /--vf-forest:#173D2B/, "Luxury forest palette must be defined");
 assert.match(platformCss, /--vf-ivory:#FFFDF5/, "Luxury ivory palette must be defined");
 assert.match(html, /id="vf-language"/, "Language selector must be present");
