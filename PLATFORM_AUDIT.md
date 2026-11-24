@@ -180,5 +180,14 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - If the reference check or Storage delete fails, the object is not made public; the UI reports that private cleanup may still be required.
 - Added static regression assertions for the Storage removal call, shared-reference protection and failure reporting.
 - This does not implement multi-photo case galleries: the existing schema and UI still represent one `photo_path` per case, and the Team Edge Function accepts one photo.
-- GitHub Actions static validation is running on the updated branch. The result must be read from the run before marking checks passed.
+- GitHub Actions run 45355844948 passed after the new mocked lifecycle tests were added.
 - No SQL was applied, no production Storage or Supabase setting was changed, and no Edge Function was deployed.
+
+
+### Automated mock-test result — 24 November 2026
+- Added a Node VM harness that executes the signed-photo helper against a mocked Supabase client.
+- Passed: initial signed URL creation for the private bucket with a 300-second TTL; updating the public live snapshot; four-minute interval renewal; visibility-triggered renewal; Founder database reference clearing; Storage deletion of an unreferenced object; protection against deleting an object referenced by another case; and graceful reporting when Storage deletion returns an error.
+- GitHub Actions run 45355844948: all steps passed — Node regression assertions, Node syntax check for the helper, and Deno type-check for the Team Edge Function.
+- Two earlier CI runs failed while the new assertions were being developed (45355379969: an over-escaped assertion pattern; 45355739560: cross-realm deep-equality in the test harness). Both failures were corrected; run 45355844948 passed.
+- These tests use a mock client. They do not prove actual Supabase RLS, signed URL access, Storage DELETE permissions, Edge Function runtime behaviour, or browser rendering.
+- Multi-photo upload/gallery remains unimplemented; current schema/UI still use one `photo_path` per case.
