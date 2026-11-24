@@ -21,7 +21,7 @@ for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
 }
 assert.ok(inlineCount >= 15, "Expected to parse the app's inline JavaScript modules");
 assert.match(html, /const VF_PHOTOS=/, "Homepage must define a curated editorial photo set");
-for (const photoId of ["photo-1643786261573-9838e66d89dc","photo-1710871329594-b962eb958bc9","photo-1762951002221-76fe0ce6b419","photo-1633442495686-e8b67cffab53","photo-1557844352-761f2565b576"]) {
+for (const photoId of ["photo-1643786261573-9838e66d89dc","photo-1710871329594-b962eb958bc9","photo-1762951002221-76fe0ce6b419","photo-1633442495686-e8b67cffab53","photo-1557844352-761f2565b576","photo-1758599668125-e154250f24bd"]) {
   assert.ok(html.includes(photoId), "Expected curated Unsplash photo asset: " + photoId);
 }
 assert.match(html, /srcset=/, "Editorial photos must offer responsive image sources");
