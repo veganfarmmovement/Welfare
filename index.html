@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="vf-build" content="2026-11-24-sage-readable-rebuild-17">
+<meta name="vf-build" content="2026-11-24-sage-readable-private-columns-18">
 <meta name="description" content="VEGANFARM Movement is an independent, currently unregistered welfare movement working on animal welfare, vegan awareness and education. Donations are made to the named beneficiary shown on the Donate page.">
 <link rel="canonical" href="https://veganfarmmovement.github.io/Welfare/">
 <meta name="application-name" content="VEGANFARM Movement">
@@ -1214,7 +1214,8 @@ var sb=window.vfSupabase;if(!sb)return;
 var busy=false,fmt=function(d){return new Date(d).toLocaleString('en-IN')};
 var PUBL={draft:'Draft',pending_review:'Pending Founder review',published:'Published',unpublished:'Unpublished',archived:'Archived',rejected:'Rejected'};
 var pubDb=function(l){for(var k in PUBL)if(PUBL[k]===l)return k};
-var CASECOLS='id,case_code,animal_name,animal_type,location,hospital,condition,treatment,description,status,target_amount,publication,photo_path,photo_url,kind,urgent,extra,created_at,submitted_by';
+var CASECOLS='id,case_code,animal_name,animal_type,location,hospital,condition,treatment,description,status,target_amount,publication,photo_path,photo_url,kind,urgent,extra,created_at';
+var TEAMCASECOLS=CASECOLS+',submitted_by,review_note';
 var photoUrl=function(p){return p?sb.storage.from('case-photos').getPublicUrl(p).data.publicUrl:''};
 var me=function(){return sb.auth.getSession().then(function(r){return r.data&&r.data.session?r.data.session.user.id:null})};
 function mapCase(c){var x=c.extra||{};return{id:c.case_code,dbId:c.id,extra:x,n:c.animal_name,type:c.animal_type||'Animal',loc:c.location||'',hosp:c.hospital||'',cond:c.condition||'',treat:c.treatment||'',desc:c.description||'',kind:c.kind||'Treatment',fdaily:+x.fdaily||0,fn:+x.fn||0,amt:c.target_amount==null?null:+c.target_amount,est:x.est==null?null:+x.est,req:x.req||null,st:c.status||'',pub:PUBL[c.publication]||'Draft',note:c.review_note||'',urgent:!!c.urgent,photo:c.photo_url||photoUrl(c.photo_path),photoUrl:c.photo_url||'',ppath:c.photo_path,completed:!!x.completed,completedAmount:Number(x.completed_amount||0),donorCount:x.donor_count==null?null:Number(x.donor_count),fundingSource:x.funding_source||'',illustrative:!!x.image_is_illustrative,imageCredit:x.image_credit||'',imageCreditUrl:x.image_credit_url||'',imageLicense:x.image_license||'',updates:Array.isArray(x.updates)?x.updates:[],docs:null,src:c.submitted_by?'team':'',added:Date.parse(c.created_at),sample:false}}
@@ -1259,7 +1260,7 @@ window.vfLoadPublicMore().then(function(){window.dispatchEvent(new Event('vf-pub
 if(window.vfPublicRefreshTimer)clearInterval(window.vfPublicRefreshTimer);
 window.vfPublicRefreshTimer=setInterval(function(){if(document.visibilityState!=='hidden')refreshPublicAppeals()},30000);
 window.vfAfterLogin=function(){if(window.vfRole!=='team')return Promise.resolve();
-return me().then(function(id){return sb.from('rescue_cases').select(CASECOLS).eq('submitted_by',id).order('created_at',{ascending:false})}).then(function(r){
+return me().then(function(id){return sb.from('rescue_cases').select(TEAMCASECOLS).eq('submitted_by',id).order('created_at',{ascending:false})}).then(function(r){
 if(r.error)return console.error(r.error);APP.length=0;r.data.forEach(function(c){var a=mapCase(c);a.src='team';APP.push(a)});go(true)})};
 
 /* Rescue cases */
