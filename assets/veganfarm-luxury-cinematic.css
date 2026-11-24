@@ -325,3 +325,27 @@ body>nav #menu details.more[open]>.mp{display:flex!important;flex-direction:colu
 body>nav #menu details.more>.mp>a{display:flex!important;align-items:center;min-height:42px;padding:10px 12px;color:#203c2b!important;background:transparent;border-radius:5px;text-decoration:none;white-space:nowrap;font-size:.78rem!important;font-weight:700!important;letter-spacing:.01em!important;text-transform:none!important}
 body>nav #menu details.more>.mp>a:hover,body>nav #menu details.more>.mp>a.on{background:#edf2e8!important;color:#245b35!important}
 @media(max-width:1100px){body>nav #menu details.more{display:flex!important;width:100%;flex-direction:column;align-items:stretch}body>nav #menu details.more>summary{width:100%;justify-content:space-between;box-sizing:border-box}body>nav #menu details.more>.mp{position:static;min-width:0;width:100%;box-sizing:border-box;margin-top:7px;box-shadow:none;background:rgba(255,255,255,.98)}body>nav #menu details.more[open]>.mp{display:flex!important}}
+
+
+/* Structured, responsive case-submission forms: feeding and treatment */
+.vf2-page-content .vf-case-form{display:block!important;width:min(100%,820px)!important;max-width:820px!important;box-sizing:border-box!important;margin:26px auto 48px!important;padding:clamp(22px,4vw,42px)!important;background:#fffefa!important;border:1px solid #e4e2d8!important;border-radius:8px!important;box-shadow:0 18px 50px rgba(25,43,31,.08)!important;color:#24392d!important}
+.vf2-page-content .vf-case-form-intro{margin:0 0 28px!important;padding:0 0 22px!important;border-bottom:1px solid #e9e6dc!important}
+.vf-case-kicker{display:block;margin-bottom:9px;color:#8b7448;font-size:10px;font-weight:800;letter-spacing:.18em}
+.vf2-page-content .vf-case-form-intro h3{margin:0 0 9px!important;color:#1d3829!important;font-family:var(--vf-lx-serif,Georgia,serif)!important;font-size:clamp(28px,4vw,38px)!important;line-height:1.12!important}
+.vf2-page-content .vf-case-form-intro p,.vf-case-section-head p{margin:0!important;color:#69756b!important;font-size:14px!important;line-height:1.65!important}
+.vf-case-section{margin:0 0 26px!important}
+.vf-case-section-head{margin:0 0 15px!important}
+.vf-case-section-head h4{margin:0 0 5px!important;color:#254432!important;font-size:15px!important;font-weight:800!important;letter-spacing:.015em!important}
+.vf-case-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:17px 18px!important;align-items:start!important}
+.vf2-page-content .vf-case-field{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;margin:0!important}
+.vf2-page-content .vf-case-field.vf-case-wide{grid-column:1/-1!important}
+.vf2-page-content .vf-case-field label{display:block!important;margin:0!important;color:#3d5144!important;font-size:12px!important;font-weight:800!important;line-height:1.45!important;letter-spacing:.015em!important}
+.vf2-page-content .vf-case-field input:not([type=file]),.vf2-page-content .vf-case-field select,.vf2-page-content .vf-case-field textarea{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:48px!important;box-sizing:border-box!important;margin:0!important;padding:12px 13px!important;border:1px solid #d9ded4!important;border-radius:4px!important;background:#fff!important;color:#23392c!important;font:400 14px/1.5 var(--vf-lx-sans,Arial,sans-serif)!important;box-shadow:none!important}
+.vf2-page-content .vf-case-field textarea{min-height:112px!important;resize:vertical!important}
+.vf2-page-content .vf-case-field input[type=file]{display:block!important;width:100%!important;max-width:100%!important;min-height:48px!important;box-sizing:border-box!important;margin:0!important;padding:10px!important;border:1px dashed #c9d1c5!important;border-radius:4px!important;background:#f7f8f3!important;color:#536357!important;font-size:12px!important}
+.vf-case-field small{display:block;color:#7b857c;font-size:11px;line-height:1.5}
+.vf-case-note{margin:4px 0 25px!important;padding:13px 15px!important;border-left:3px solid #c5ad7d!important;background:#f7f5ed!important;color:#687469!important;font-size:12px!important;line-height:1.65!important}
+.vf2-page-content .vf-case-error{min-height:20px!important;margin:8px 0!important;color:#991b1b!important;font-size:13px!important}
+.vf2-page-content .vf-case-form .vf-case-submit{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;width:100%!important;min-height:54px!important;margin:8px 0 0!important;padding:0 20px!important;border-radius:4px!important;text-align:left!important}
+.vf-case-submit span{font-size:19px}
+@media(max-width:640px){.vf2-page-content .vf-case-form{margin:14px auto 30px!important;padding:21px 17px!important;border-radius:6px!important}.vf-case-grid{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}.vf2-page-content .vf-case-field.vf-case-wide{grid-column:auto!important}.vf2-page-content .vf-case-form-intro h3{font-size:29px!important}}
