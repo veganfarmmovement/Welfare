@@ -73,9 +73,9 @@ assert.deepEqual([...localeJs.matchAll(/code:'([a-z]+)'/g)].map(m=>m[1]), ['en',
 assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ'"), "Shared Home navigation labels must be provided for all three requested Indian languages");
 assert.match(localeJs, /sourceStrings:sharedStringCount/, "Language report must count the shared translation dictionary");
 assert.match(localeJs, /fullInterface:\{status:'NOT COMPLETE'/, "Language report must not imply full-site translation is complete");
-assert.match(html, /class="vf-team-access"/, "Team sign-in must use its dedicated accessible light-theme layout");
-assert.match(html, /id="vf-team-login-name"/, "Team sign-in must expose a labelled name field");
-assert.match(html, /id="vf-team-login-email"/, "Team sign-in must expose a labelled email field");
+assert.match(html, /class=\\?"sec vf-team-access\\?"/, "Team sign-in must use its dedicated accessible light-theme layout");
+assert.match(html, /id=\\?"vf-team-login-name\\?"/, "Team sign-in must expose a labelled name field");
+assert.match(html, /id=\\?"vf-team-login-email\\?"/, "Team sign-in must expose a labelled email field");
 assert.match(simpleCss, /#app \.vf-team-access-card[\s\S]*?background:#fff!important/, "Team sign-in card must use a high-contrast white surface");
 assert.match(simpleCss, /#app \.vf-team-access-form input::placeholder\{color:#68766a!important/, "Team sign-in placeholders must remain readable");
 assert.match(simpleCss, /#app \.vf-team-access-form input:focus-visible/, "Team sign-in fields must have visible keyboard focus");
