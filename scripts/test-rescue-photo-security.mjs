@@ -80,9 +80,9 @@ assert.match(forestJs, /P\.education=function/, "Forest presentation must own th
 assert.match(forestJs, /function updateNav\(/, "Forest presentation must own navigation rendering");
 assert.match(forestJs, /function footer\(/, "Forest presentation must own footer rendering");
 assert.match(forestJs, /id="fcon"><\/p><p id="socf"><\/p>/, "Presentation footer must preserve core notification and social-link mount points");
-assert.match(html, /if\\(!window\\.vfRole\\)return;[\\s\\S]*?public_case_documents/, "Anonymous visitors must not query restricted public case attachments");
+assert.match(html, /if\(!window\.vfRole\)return;[\s\S]*?public_case_documents/, "Anonymous visitors must not query restricted public case attachments");
 assert.match(forestJs, /vf-public-data-warning/, "Public data permission failures must be disclosed without exposing private case data");
-assert.match(visualCss, /#vf-piano-volume\\{flex:1 1 110px;width:auto;min-width:0;max-width:100%/, "Optional piano controls must not create mobile horizontal overflow");
+assert.match(visualCss, /#vf-piano-volume\{flex:1 1 110px;width:auto;min-width:0;max-width:100%/, "Optional piano controls must not create mobile horizontal overflow");
 assert.match(forestJs, /go=function\(keep\)/, "Forest presentation must wrap the core route function once");
 assert.doesNotMatch(editorialJs, /P\.home\s*=|go\s*=|navItems|innerHTML/, "Retired editorial renderer must not mutate pages, navigation or routes");
 assert.match(editorialJs, /Retired presentation renderer/, "Retired renderer must document its replacement");
