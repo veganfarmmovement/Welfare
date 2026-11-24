@@ -18,15 +18,18 @@ const languages = [
 const out = path.resolve('artifacts');
 fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
 const report = {base,widths,routes,languages,routeChecks:[],languageChecks:[],menuChecks:[],errors:[],screenshots:[]};
+let activeRoute='',activeWidth=0;
 const browser = await chromium.launch({headless:true});
 const page = await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
-page.on('pageerror',e=>report.errors.push({type:'pageerror',message:e.message}));
+page.on('pageerror',e=>report.errors.push({type:'pageerror',message:e.message,stack:e.stack,route:activeRoute,width:activeWidth}));
 page.on('console',m=>{if(m.type()==='error')report.errors.push({type:'console',message:m.text()})});
 
 try {
   for (const width of widths) {
+    activeWidth=width;
     await page.setViewportSize({width,height:1000});
     for (const route of routes) {
+      activeRoute=route;
       const url = base + '#' + route;
       let item = {route,width,url,loaded:false,routeShell:false,overflow:false,images:{total:0,loaded:0,failed:0}};
       try {
@@ -42,6 +45,7 @@ try {
         if(item.overflow) report.errors.push({type:'horizontal-overflow',route,width,scrollWidth:await page.evaluate(()=>document.documentElement.scrollWidth),elements:await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(el=>({el,r:el.getBoundingClientRect()})).filter(x=>x.r.width>0&&x.r.right>window.innerWidth+1).slice(0,12).map(x=>({tag:x.el.tagName,id:x.el.id,className:String(x.el.className||'').slice(0,120),right:Math.round(x.r.right),width:Math.round(x.r.width),position:getComputedStyle(x.el).position}))) });
         if(item.images.failed>0) report.errors.push({type:'broken-images',route,width,failed:item.images.failed});
         if(route==='home'){
+          await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},{timeout:8000}).catch(()=>{});
           item.heroImage=await page.locator('#app .vf-motion-backdrop').evaluate(el=>getComputedStyle(el).backgroundImage);
           if(!item.heroImage||item.heroImage==='none')report.errors.push({type:'hero-image-missing',width});
         }
@@ -70,6 +74,7 @@ try {
   await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('#vf-language').waitFor({state:'visible',timeout:15000});
   for (const [code,dir] of languages) {
+    activeRoute='language:'+code;activeWidth=390;
     await page.locator('#vf-language').selectOption(code);
     await page.waitForTimeout(80);
     const actual = await page.evaluate(()=>({lang:document.documentElement.lang,dir:document.documentElement.dir,notice:!!document.querySelector('[data-vf-translation-notice]')}));
