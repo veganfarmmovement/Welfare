@@ -140,6 +140,7 @@ try {
   await page.waitForTimeout(250);
   const teamLogin=await page.evaluate(()=>{
     const card=document.querySelector('.vf-team-access-card');
+    const wrap=document.querySelector('.vf-team-access-wrap');
     const input=document.querySelector('#vf-team-code');
     const button=document.querySelector('.vf-team-access-submit');
     const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor,display:s.display}};
@@ -159,7 +160,7 @@ try {
       heading:document.querySelector('#app h1')?.textContent||'',
       h1Count:document.querySelectorAll('#app h1').length,
       codeLabel:!!document.querySelector('label[for="vf-team-code"]'),
-      card:card?style(card):null,input:input?style(input):null,button:button?style(button):null,
+      card:card?style(card):null,wrapper:wrap?style(wrap):null,input:input?style(input):null,button:button?style(button):null,
       cardRect:card?rect(card):null,inputRect:ir,buttonRect:button?rect(button):null,
       buttonContrast:button?contrast(getComputedStyle(button).color,getComputedStyle(button).backgroundColor):0,
       floatingVisible:visible(floating),musicVisible:visible(music),
@@ -171,6 +172,7 @@ try {
   if(teamLogin.h1Count!==1)report.errors.push({type:'team-login-duplicate-heading',count:teamLogin.h1Count});
   if(!teamLogin.codeLabel)report.errors.push({type:'team-login-code-label-missing'});
   if(!teamLogin.card||teamLogin.card.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-card-not-light',actual:teamLogin.card});
+  if(!teamLogin.wrapper||teamLogin.wrapper.background!=='rgba(0, 0, 0, 0)')report.errors.push({type:'team-login-wrapper-not-transparent',actual:teamLogin.wrapper});
   if(!teamLogin.input||teamLogin.input.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-input-not-light',actual:teamLogin.input});
   if(!teamLogin.button||teamLogin.button.background!=='rgb(23, 61, 43)'||teamLogin.button.color!=='rgb(255, 253, 245)'||teamLogin.buttonContrast<4.5)report.errors.push({type:'team-login-button-contrast',actual:teamLogin.button,contrast:teamLogin.buttonContrast});
   if(teamLogin.floatingVisible||teamLogin.musicVisible||teamLogin.publicEnquiriesVisible)report.errors.push({type:'team-private-route-public-widget-visible',floating:teamLogin.floatingVisible,music:teamLogin.musicVisible,enquiries:teamLogin.publicEnquiriesVisible});
