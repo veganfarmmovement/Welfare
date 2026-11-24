@@ -130,3 +130,14 @@ footer a:hover{color:var(--vf-gold)!important}
  html{scroll-behavior:auto}
  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+/* Language selector */
+nav .vf-language-control{display:inline-flex;align-items:center;gap:7px;margin-left:auto;color:var(--vf-forest)!important;font-size:.82rem}
+nav .vf-language-control select{max-width:142px;min-height:40px;padding:7px 28px 7px 10px;background:var(--vf-ivory);color:var(--vf-forest);border:1px solid var(--vf-line);border-radius:3px;font:600 .82rem "Instrument Sans",sans-serif}
+nav .vf-language-control select:focus{outline:2px solid var(--vf-gold);outline-offset:2px}
+@media(max-width:760px){nav .vf-language-control{margin-left:0;margin-right:8px}nav .vf-language-control select{max-width:116px;min-height:38px;font-size:.76rem}}
+html[dir="rtl"] body{text-align:start}
+html[dir="rtl"] nav .wrap{direction:rtl}
+html[dir="rtl"] #app .adm{direction:rtl}
+html[dir="rtl"] #app input,html[dir="rtl"] #app textarea{direction:rtl;text-align:right}
+html[dir="rtl"] #app table{direction:rtl}
