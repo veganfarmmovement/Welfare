@@ -98,6 +98,7 @@ function decoratePrivate(){
  var route=(location.hash||'#home').slice(1);
  if(!app)return;
  app.classList.toggle('vf2-private',route==='team'||route==='veganfarm-team'||route.indexOf('admin')===0);
+ document.body.classList.toggle('vf2-private-route',route==='team'||route==='veganfarm-team'||route.indexOf('admin')===0);
  app.classList.toggle('vf2-team',route==='team'||route==='veganfarm-team');
  app.classList.toggle('vf2-founder',route.indexOf('admin')===0);
  if(route==='team'||route==='veganfarm-team'){
