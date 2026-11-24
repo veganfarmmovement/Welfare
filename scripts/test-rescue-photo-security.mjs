@@ -77,7 +77,7 @@ assert.match(html, /class="vf-team-access"/, "Team sign-in must use its dedicate
 assert.match(html, /id="vf-team-login-name"/, "Team sign-in must expose a labelled name field");
 assert.match(html, /id="vf-team-login-email"/, "Team sign-in must expose a labelled email field");
 assert.match(simpleCss, /#app \.vf-team-access-card[\s\S]*?background:#fff!important/, "Team sign-in card must use a high-contrast white surface");
-assert.match(visualCss, /#app \.vf-team-access-form input::placeholder\{color:#68766a!important/, "Team sign-in placeholders must remain readable");
+assert.match(simpleCss, /#app \.vf-team-access-form input::placeholder\{color:#68766a!important/, "Team sign-in placeholders must remain readable");
 assert.match(simpleCss, /#app \.vf-team-access-form input:focus-visible/, "Team sign-in fields must have visible keyboard focus");
 assert.match(forestJs, /Compassion is not just a belief\./, "Homepage hero must use the approved central message");
 assert.match(forestJs, /VEGANFARM Movement brings people together to support animal welfare, expand access to education and encourage a more compassionate world\./, "Homepage hero must use the approved supporting description");
