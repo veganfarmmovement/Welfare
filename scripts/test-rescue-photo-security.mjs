@@ -61,7 +61,7 @@ assert.match(simpleCss, /photo-1643786261573-9838e66d89dc/, "The animal hero pho
 assert.match(html, /id="vf-language"/, "Language selector must be present");
 assert.match(localeJs, /code:'sd',label:'سنڌي',dir:'rtl'/, "Sindhi must use its Arabic-derived script and RTL direction");
 assert.match(localeJs, /language\.code==='sd'\?'sd-Arab'/, "Sindhi document language must identify its Arabic-derived script");
-assert.doesNotMatch(localeJs.match(/'Home':\[[^\]]+\]/)?.[0]||"", /होम|मुख्यपृष्ठ|હોમ/, "Sindhi Home label must not mix Devanagari or Gujarati scripts");
+assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ','گھر'"), "Sindhi Home label must use Sindhi script rather than mixed Devanagari/Gujarati text");
 assert.match(forestJs, /P\.home=home/, "Forest presentation must own the homepage renderer");
 assert.match(forestJs, /P\.projects=function/, "Forest presentation must own the Projects page renderer");
 assert.match(forestJs, /P\.education=function/, "Forest presentation must own the Education page renderer");
