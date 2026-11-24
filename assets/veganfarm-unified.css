@@ -12,7 +12,7 @@ nav .wrap{min-height:78px}
 .logo{color:var(--vf-leaf);font-weight:800}
 .hero{
   min-height:min(700px,calc(100svh - 78px));padding:clamp(90px,12vw,155px) 0;
-  background-image:linear-gradient(90deg,rgba(12,35,20,.91) 0%,rgba(17,54,29,.75) 47%,rgba(17,54,29,.12) 100%),url("https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=2200&q=85");
+  background-image:linear-gradient(90deg,rgba(12,35,20,.91) 0%,rgba(17,54,29,.75) 47%,rgba(17,54,29,.12) 100%),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=2200&q=85");
   background-position:center 48%;background-size:cover;border:0;isolation:isolate;
 }
 .hero:after{content:"";position:absolute;inset:16px;border:1px solid rgba(255,255,255,.22);border-radius:22px;pointer-events:none;z-index:-1}
@@ -1973,6 +1973,7 @@ nav .btn:hover{background:var(--vf-leaf)!important}
  position:relative;isolation:isolate;overflow:hidden;min-height:min(760px,calc(100svh - 78px));
  display:flex;align-items:center;background:var(--vf-forest)!important;color:var(--vf-ivory)!important;
 }
+#app .hero{background-image:linear-gradient(90deg,rgba(12,38,26,.88),rgba(12,38,26,.48) 58%,rgba(12,38,26,.12)),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=1800&q=82")!important;background-position:center 48%;background-size:cover}
 #app .hero:before,#app .vf-cinema:before,#app .vf-motion-hero:before,#app .vf-new-hero:before{
  content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(12,38,26,.88),rgba(12,38,26,.48) 58%,rgba(12,38,26,.12));
 }
@@ -2029,6 +2030,7 @@ footer h1,footer h2,footer h3,footer h4,footer p,footer li,footer span,footer sm
 footer a:hover{color:var(--vf-gold)!important}
 #toast,#nf .nc{background:var(--vf-forest)!important;color:var(--vf-ivory)!important;border:1px solid rgba(199,166,106,.5)!important;box-shadow:var(--vf-shadow)}
 @media(max-width:760px){
+ #app .hero{background-image:linear-gradient(90deg,rgba(12,38,26,.86),rgba(12,38,26,.56)),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=900&q=78")!important;background-position:58% center}
  .wrap{width:min(100% - 32px,1180px)}
  nav .wrap{min-height:68px}
  #app .hero,#app .vf-cinema,#app .vf-motion-hero,#app .vf-new-hero{min-height:640px;min-height:min(720px,calc(100svh - 68px))}
