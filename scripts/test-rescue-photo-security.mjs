@@ -59,13 +59,13 @@ assert.match(browserAudit,/englishOnlyCheck/,"Browser audit must verify English-
 assert.match(browserAudit,/team-access-desktop\.png/,"Browser audit must capture the Team access screen");
 
 assert.match(html,/window\.VF_QR=QR/,"Donation presentation must reuse the existing UPI QR data");
-assert.match(html,/function donSubmit\(event\)/,"The existing donation verification handler must remain connected");
-assert.match(html,/function fsub\(event/,"The existing Supabase-backed form submission handler must remain connected");
+assert.match(html,/function donSubmit\(e\)/,"The existing donation verification handler must remain connected");
+assert.match(html,/function fsub\(e,k/,"The existing Supabase-backed form submission handler must remain connected");
 assert.match(html,/vfTeamUnlock\(event\)/,"The existing server-verified Team unlock handler must remain connected");
 assert.match(html,/client\.functions\.invoke\(\x27veganfarm-team-gate\x27/,"The active shared-code Team portal must use the existing Edge Function");
 assert.match(html,/assets\/veganfarm-private-case-photos\.js/,"The private signed-photo loader must remain included");
 assert.ok(html.includes("if(window.vfRole!=='team')return;")&&html.indexOf("public_case_documents",html.indexOf("if(window.vfRole!=='team')return;"))>-1,"Anonymous visitors must not query restricted case attachments");
-assert.ok(html.includes("window.vfAfterLogin=function(){\n  if(window.vfRole!=='team')return Promise.resolve(baseAfterLogin&&baseAfterLogin());"),"Only authenticated Team sessions may load Team case attachments");
+assert.ok(html.includes("window.vfAfterLogin=function(){if(window.vfRole!=='team')return Promise.resolve();"),"Only authenticated Team sessions may load Team case attachments");
 assert.ok(html.includes("function enrichLoadedCases(){\n    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();"),"Anonymous visitors must not enrich private rescue-case records");
 
 const appUploads=[...html.matchAll(/(?:up|upload)\(['"](?:case-photos|rescue-case-photos)['"]/g)].map(m=>m[0]);
