@@ -1938,43 +1938,59 @@ currentUser().then(function(u){
   function animalChoices(){
     return '<option value="">Select animal type</option><option>Dog</option><option>Cat</option><option>Cow</option><option>Buffalo</option><option>Bird</option><option>Other</option>';
   }
-  function commonFields(){
-    return '<label>Animal or group name *</label><input name="n" required maxlength="120">'+
-      '<label>Animal type *</label><select name="animal_type" required>'+animalChoices()+'</select>'+
-      '<label>Rescue / service location *</label><input name="loc" required>'+
-      '<label>Upload animal or feeding photograph *</label><input name="photo" type="file" accept="image/jpeg,image/png" required>'+
-      '<label>Additional details *</label><textarea name="desc" rows="4" required placeholder="Explain the situation and the support required."></textarea>';
+  function caseField(label,control,wide){
+    return '<div class="vf-case-field'+(wide?' vf-case-wide':'')+'"><label>'+label+'</label>'+control+'</div>';
+  }
+  function caseSection(title,copy,fields){
+    return '<section class="vf-case-section"><div class="vf-case-section-head"><h4>'+title+'</h4>'+(copy?'<p>'+copy+'</p>':'')+'</div><div class="vf-case-grid">'+fields+'</div></section>';
+  }
+  function commonFields(feeding){
+    return caseSection('Animal and location','Tell us who needs support and where the work is taking place.',
+      caseField(feeding?'Animal group / feeding location name *':'Animal or group name *','<input name="n" required maxlength="120" placeholder="'+(feeding?'Example: Community dog feeding point':'Enter the animal or group name')+'">')+
+      caseField('Animal type *','<select name="animal_type" required>'+animalChoices()+'</select>')+
+      caseField(feeding?'Feeding location *':'Rescue / service location *','<input name="loc" required placeholder="Area, city and state">')+
+      caseField(feeding?'Upload feeding photograph *':'Upload animal photograph *','<input name="photo" type="file" accept="image/jpeg,image/png" required><small>JPG or PNG · Required</small>',true)+
+      caseField('Additional details *','<textarea name="desc" rows="4" required placeholder="'+(feeding?'Describe the feeding activity, need and how the animals are currently supported.':'Explain the situation, symptoms or injury and the support required.')+'"></textarea>',true)
+    );
   }
   function contactFields(){
-    return '<h3 style="margin-top:22px">Your contact details (visible only to the Founder)</h3>'+
-      '<label>Your full name *</label><input name="vname" required>'+
-      '<label>Contact number *</label><input name="vphone" type="tel" pattern="[0-9+ ()\\-]{10,}" required>';
+    return caseSection('Your contact details','These details are shared only with the VEGANFARM Founder for verification.',
+      caseField('Your full name *','<input name="vname" required autocomplete="name" placeholder="Full name">')+
+      caseField('Contact number *','<input name="vphone" type="tel" autocomplete="tel" pattern="[0-9+ ()\\-]{10,}" required placeholder="Mobile number">')
+    );
   }
   function feedingForm(){
-    return '<form style="max-width:680px" onsubmit="tNew(event,\'Feeding\')"><h3>Feeding support details</h3>'+
-      commonFields().replace('<label>Animal or group name *</label>','<label>Animal group / feeding location name *</label>')+
-      '<label>Number of animals being fed *</label><input name="fn" type="number" min="1" step="1" required>'+
-      '<label>Food being provided *</label><input name="food_type" required placeholder="Example: dry food, cooked food, fodder">'+
-      '<label>Feeding frequency *</label><select name="frequency" required><option value="">Select frequency</option><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Weekly</option><option>Emergency / one-time</option></select>'+
-      '<label>Daily feeding cost (₹) *</label><input name="fdaily" type="number" min="1" step="0.01" required>'+
-      '<label>Supporting photos, bills, invoices or feeding proof (optional, multiple files)</label><input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple>'+
-      '<p class="mut">Upload up to 8 supporting JPG, PNG, PDF or video files (10 MB each). Files stay private and are visible only to the Founder during review.</p>'+
-      '<p class="mut">The Founder will set the official campaign target after reviewing the request. Estimated monthly feeding cost is calculated from the daily cost.</p>'+
-      contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Feeding case for Founder review</button></form>';
+    return '<form class="vf-case-form" onsubmit="tNew(event,\'Feeding\')"><header class="vf-case-form-intro"><span class="vf-case-kicker">SUPPORT REQUEST</span><h3>Feeding support details</h3><p>Share the feeding activity and its recurring requirements. The Founder reviews the information before any appeal is published.</p></header>'+
+      commonFields(true)+
+      caseSection('Feeding requirements','Give a clear picture of the number of animals and the regular cost.',
+        caseField('Number of animals being fed *','<input name="fn" type="number" min="1" step="1" required placeholder="e.g. 12">')+
+        caseField('Food being provided *','<input name="food_type" required placeholder="e.g. dry food, cooked food, fodder">')+
+        caseField('Feeding frequency *','<select name="frequency" required><option value="">Select frequency</option><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Weekly</option><option>Emergency / one-time</option></select>')+
+        caseField('Daily feeding cost (₹) *','<input name="fdaily" type="number" min="1" step="0.01" required placeholder="Enter amount in rupees">')
+      )+
+      caseSection('Supporting documents','Upload proof that can help the Founder review the request.',
+        caseField('Photos, bills, invoices or feeding proof (optional)','<input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple><small>Up to 8 files · JPG, PNG, PDF or video · 10 MB each</small>',true)
+      )+
+      '<p class="vf-case-note">The Founder will set the official campaign target after reviewing the request. Estimated monthly feeding cost is calculated from the daily cost. Uploaded files remain private during review.</p>'+
+      contactFields()+'<p id="vf-case-error" class="vf-case-error" role="alert" aria-live="polite"></p><button class="btn vf-case-submit" type="submit">Submit feeding request for review <span aria-hidden="true">→</span></button></form>';
   }
   function treatmentForm(){
-    return '<form style="max-width:680px" onsubmit="tNew(event,\'Treatment\')"><h3>Treatment support details</h3>'+
-      commonFields()+
-      '<label>Hospital / veterinary clinic name *</label><input name="hosp" required>'+
-      '<label>Medical condition or injury *</label><input name="cond" required>'+
-      '<label>Treatment required *</label><textarea name="treat" rows="3" required></textarea>'+
-      '<label>Estimated treatment cost (₹) *</label><input name="amt" type="number" min="1" step="0.01" required>'+
-      '<label>Medical report (optional)</label><input name="rep" type="file" accept="image/jpeg,image/png,application/pdf">'+
-      '<label>Veterinary bill / estimate (optional)</label><input name="bill" type="file" accept="image/jpeg,image/png,application/pdf">'+
-      '<label>Case video (optional)</label><input name="case_video" type="file" accept="video/mp4,video/webm,video/quicktime">'+
-      '<label>Additional supporting photos, bills, invoices or documents (optional, multiple files)</label><input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple>'+
-      '<p class="mut">Upload up to 8 additional JPG, PNG, PDF or video files (10 MB each). Medical documents, bills and videos remain private until the Founder reviews them. The Founder verifies the medical details and sets the official fundraising target before publication.</p>'+
-      contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Treatment case for Founder review</button></form>';
+    return '<form class="vf-case-form" onsubmit="tNew(event,\'Treatment\')"><header class="vf-case-form-intro"><span class="vf-case-kicker">SUPPORT REQUEST</span><h3>Treatment support details</h3><p>Provide the veterinary details and estimated costs so the Founder can review the case before publication.</p></header>'+
+      commonFields(false)+
+      caseSection('Veterinary and treatment details','Add the clinic, medical condition and treatment plan.',
+        caseField('Hospital / veterinary clinic name *','<input name="hosp" required placeholder="Name of hospital or veterinary clinic">')+
+        caseField('Medical condition or injury *','<input name="cond" required placeholder="e.g. fracture, infection, accident injury">')+
+        caseField('Treatment required *','<textarea name="treat" rows="4" required placeholder="Describe the recommended treatment, tests, medicines or procedure."></textarea>',true)+
+        caseField('Estimated treatment cost (₹) *','<input name="amt" type="number" min="1" step="0.01" required placeholder="Enter estimated amount in rupees">')
+      )+
+      caseSection('Medical records and supporting files','Medical documents and videos remain private until the Founder reviews the request.',
+        caseField('Medical report (optional)','<input name="rep" type="file" accept="image/jpeg,image/png,application/pdf"><small>JPG, PNG or PDF</small>')+
+        caseField('Veterinary bill / estimate (optional)','<input name="bill" type="file" accept="image/jpeg,image/png,application/pdf"><small>JPG, PNG or PDF</small>')+
+        caseField('Case video (optional)','<input name="case_video" type="file" accept="video/mp4,video/webm,video/quicktime"><small>MP4, WebM or MOV</small>')+
+        caseField('Additional photos, bills, invoices or documents (optional)','<input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple><small>Up to 8 files · 10 MB each</small>',true)
+      )+
+      '<p class="vf-case-note">The Founder verifies the medical details and sets the official fundraising target before publication. Please do not upload unrelated or unnecessary personal documents.</p>'+
+      contactFields()+'<p id="vf-case-error" class="vf-case-error" role="alert" aria-live="polite"></p><button class="btn vf-case-submit" type="submit">Submit treatment request for review <span aria-hidden="true">→</span></button></form>';
   }
   function teamHome(){
     var who=(window.vfUser&&(window.vfUser.display_name||window.vfUser.email))||'Approved Team member';
