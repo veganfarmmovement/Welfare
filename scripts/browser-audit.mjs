@@ -131,18 +131,13 @@ try {
   await page.setViewportSize({width:390,height:844});
   await page.goto(base+'#team',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('#vf-team-code').waitFor({state:'visible',timeout:15000});
-  // Wait for the final stylesheet to win the cascade; visibility alone is not a CSS-ready signal.
+  // Confirm the final stylesheet has loaded, then inspect the actual rendered cascade.
   await page.waitForFunction(()=>{
-    const card=document.querySelector('.vf-team-access-card');
-    const input=document.querySelector('#vf-team-code');
-    const button=document.querySelector('.vf-team-access-submit');
-    if(!card||!input||!button)return false;
-    const c=getComputedStyle(card),i=getComputedStyle(input),b=getComputedStyle(button);
-    return c.backgroundColor==='rgb(255, 255, 255)' &&
-      i.backgroundColor==='rgb(255, 255, 255)' &&
-      b.backgroundColor==='rgb(23, 61, 43)' &&
-      b.color==='rgb(255, 253, 245)';
+    const link=Array.from(document.querySelectorAll('link[rel="stylesheet"]')).find(x=>x.href.includes('veganfarm-simple-colour-system.css'));
+    if(!link||!link.sheet)return false;
+    try{return link.sheet.cssRules.length>0}catch(_e){return false}
   },undefined,{timeout:10000});
+  await page.waitForTimeout(250);
   const teamLogin=await page.evaluate(()=>{
     const card=document.querySelector('.vf-team-access-card');
     const input=document.querySelector('#vf-team-code');
