@@ -225,3 +225,26 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - GitHub Actions run 45361059135 completed successfully.
 - Passed: parse of all active inline JavaScript, existing rescue-photo security assertions, new curated-photo source assertions, responsive `srcset` and lazy-loading assertions, footer attribution/license assertions, hero image and mobile-size assertions, reduced-motion and CSS brace checks, private-photo helper syntax, and Deno Team Edge Function type-check.
 - This is static/source validation. It does not verify the Unsplash CDN from a real browser, mobile cropping, visual quality at deployed breakpoints, accessibility with assistive technology, or page-load performance metrics.
+
+
+## Continuation — four-language selector and Team access interface (24 November 2026)
+
+### Implemented on `development/platform-transformation`
+- Reduced the language selector and active locale configuration to exactly English (`en`), Hindi (`hi`), Marathi (`mr`) and Gujarati (`gu`).
+- Removed Sindhi, Urdu, French, Spanish, Korean and Arabic from the active selector and locale configuration.
+- Unsupported previously saved locale values now safely fall back to English.
+- Kept the selected supported locale in local storage and retained in-page language switching.
+- Added an explicit shared-string coverage report. The locale dictionary contains 18 shared navigation/common strings per language. This count is not whole-site coverage.
+- The language module explicitly reports full-interface translation as NOT COMPLETE. Page copy, forms, dynamic records, Team portal and Founder dashboard still need complete translation and linguistic review.
+- Rebuilt the active Team Member sign-in screen with a labelled name/email form, ivory access card, visible input borders/placeholders, clear status region, keyboard focus treatment and responsive styling.
+- Preserved the existing secure email-link handler, Team approval flow, authentication and role logic.
+- Removed the now-unused Arabic/Urdu/Sindhi RTL font/direction overrides from the active final theme.
+- Updated browser regression coverage for the four supported locales and added checks for the Team sign-in visual surface, field labels and keyboard focus.
+- Updated stylesheet and locale-module cache keys.
+
+### Validation evidence
+- GitHub Actions browser run 45382446018 passed on the earlier four-language implementation: 161 route/viewport checks, all four locale direction/persistence checks, mobile menu open, zero browser/page errors, zero failed HTTP responses and 26 screenshots. This run predates the Team sign-in visual redesign and its new browser assertions.
+- GitHub Actions static run 45382446109 passed on the four-language implementation before the later Team sign-in CSS assertions were added.
+- The latest Team sign-in redesign and its added browser/static assertions have not yet been verified by a subsequent CI run. No current screenshot is claimed for the redesigned Team sign-in screen.
+- No authenticated Team or Founder account was used. Live Supabase role isolation and dashboard workflows remain NOT TESTED/BLOCKED without a safe staging project and authorised staging accounts.
+- No production deployment, database mutation, Supabase migration, Storage/RLS change, payment destination change or QR change was made.
