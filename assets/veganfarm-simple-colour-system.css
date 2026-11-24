@@ -147,3 +147,12 @@ footer{border-top:1px solid var(--vf-simple-line)!important}
 #app .vf-route-masthead p{color:rgba(255,253,245,.84)!important}
 #app .vf-route-kicker{color:#d8bd8d!important}
 #app .vf-route-index{color:rgba(255,253,245,.66)!important}
+
+
+/* Preserve the cinematic animal-photo hero and readable foreground copy. */
+#app .vf-motion-hero{background-color:#173d2b!important;color:#fffdf5!important}
+#app .vf-motion-hero .vf-motion-backdrop{opacity:1!important}
+#app .vf-motion-hero .vf-hero-copy h1,#app .vf-motion-hero .vf-hero-copy p,#app .vf-motion-hero .vf-founder-signature,#app .vf-motion-hero .vf-hero-side-note,#app .vf-motion-hero .vf-hero-bottom{color:#fffdf5!important}
+#app .vf-motion-hero .vf-overline,#app .vf-motion-hero .vf-overline i{color:#e3c995!important}
+#app .vf-motion-hero .vf-button-gold{background:#c7a66a!important;color:#173d2b!important;border-color:#c7a66a!important}
+#app .vf-motion-hero .vf-button-glass{background:rgba(23,61,43,.22)!important;color:#fffdf5!important;border-color:rgba(255,253,245,.75)!important}
