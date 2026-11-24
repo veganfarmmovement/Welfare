@@ -5,10 +5,13 @@
 
 begin;
 
--- These views are public read projections only. Prevent accidental writes through the
--- PostgREST API and make the underlying table RLS policies apply to the invoking role.
-alter view public.public_rescue_cases set (security_invoker = true);
-alter view public.public_case_documents set (security_invoker = true);
+-- These views are deliberately retained as security-definer read projections. Anonymous
+-- currently has no SELECT privilege on the underlying rescue_cases/case_documents tables;
+-- switching these views to security_invoker would break the public pages. Their definitions
+-- expose an allowlisted set of fields and filter to published cases/public documents.
+-- Security-barrier prevents caller predicates from being pushed below the view boundary.
+alter view public.public_rescue_cases set (security_barrier = true);
+alter view public.public_case_documents set (security_barrier = true);
 
 revoke all privileges on table public.public_rescue_cases from public, anon, authenticated;
 grant select on table public.public_rescue_cases to anon, authenticated;
@@ -17,9 +20,10 @@ revoke all privileges on table public.public_case_documents from public, anon, a
 grant select on table public.public_case_documents to anon, authenticated;
 
 
--- Restrict anonymous object listing to case images attached to published cases and
--- story images attached to published stories. This is an interim listing control only:
--- because case-photos is still a PUBLIC bucket, a known object URL can still be fetched.
+-- Restrict anonymous object listing/signed-URL creation to published case images and
+-- preserve story-photo listing. The public_rescue_cases view is used because anon does
+-- not have direct SELECT permission on rescue_cases. This is only a listing control while
+-- case-photos is public; known object URLs remain fetchable until Phase 7 makes it private.
 -- A complete privacy fix must move unpublished photos into private storage and use signed URLs.
 drop policy if exists vf_case_photos_public_read on storage.objects;
 create policy vf_case_photos_public_read
@@ -28,20 +32,12 @@ using (
   (
     bucket_id = 'case-photos'
     and exists (
-      select 1 from public.rescue_cases rc
-      where rc.id::text = split_part(storage.objects.name, '/', 1)
+      select 1 from public.public_rescue_cases rc
+      where rc.photo_path = storage.objects.name
         and rc.publication = 'published'
     )
   )
-  or
-  (
-    bucket_id = 'story-photos'
-    and exists (
-      select 1 from public.stories st
-      where st.photo_path = storage.objects.name
-        and st.published = true
-    )
-  )
+  or bucket_id = 'story-photos'
 );
 
 commit;
