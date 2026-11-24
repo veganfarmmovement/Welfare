@@ -9,6 +9,7 @@ The following editorial photographs are used in the VEGANFARM website. Each sour
 | Street cat shelter | Tunahan Kuzgun | https://unsplash.com/photos/makeshift-shelter-with-tarps-and-wood-pallets-oYtETwr8L4o |
 | Education / learning | Towfiqu barbhuiya | https://unsplash.com/photos/a-person-writing-on-a-notebook-with-a-pencil-c9NlNPByu_o |
 | Plant-based food / vegan awareness | Iñigo De la Maza | https://unsplash.com/photos/vegetables-and-fruits-s285sDw5Ikc |
+| Community volunteering / volunteer page | Vitaly Gariev | https://unsplash.com/photos/person-in-gloves-writing-on-clipboard-with-volunteers-in-background-HpW0eYZi0QI |
 
 ## License
 
