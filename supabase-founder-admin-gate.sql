@@ -90,3 +90,23 @@ revoke all on function public.vf_founder_gate_revoke(text) from public, anon, au
 grant execute on function public.vf_founder_gate_verify(text,text,text) to service_role;
 grant execute on function public.vf_founder_gate_session_valid(text) to service_role;
 grant execute on function public.vf_founder_gate_revoke(text) to service_role;
+
+create or replace function public.vf_founder_pin_change(p_new_pin text)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $function$
+begin
+  if p_new_pin is null or length(p_new_pin) < 8 or length(p_new_pin) > 100 then
+    raise exception 'Founder code must be 8 to 100 characters';
+  end if;
+  update public.vf_admin_pin
+  set pin_hash=extensions.crypt(p_new_pin,extensions.gen_salt('bf')),
+      updated_at=now()
+  where id=true;
+  return found;
+end;
+$function$;
+revoke all on function public.vf_founder_pin_change(text) from public, anon, authenticated;
+grant execute on function public.vf_founder_pin_change(text) to service_role;
