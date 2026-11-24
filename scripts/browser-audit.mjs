@@ -112,7 +112,7 @@ try {
     report.screenshots.push(file);
   }
   await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
-  await page.locator('#vf-language').waitFor({state:'visible',timeout:15000});
+  await page.locator('#app').waitFor({state:'attached',timeout:15000});
   const menuButton=page.locator('#mb');
   if(await menuButton.isVisible()){
     await menuButton.click();
