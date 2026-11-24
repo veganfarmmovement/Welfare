@@ -50,8 +50,8 @@ assert.match(simpleCss, /--vf-simple-text:#1d2c21/, "All text must use the singl
 assert.match(simpleCss, /--vf-forest:#173d2b/, "Primary actions must use the restrained forest accent");
 assert.match(simpleCss, /--vf-leaf:#286b36/, "Progress indicators must use the leaf accent");
 assert.match(simpleCss, /--vf-gold:#c7a66a/, "Decorative details must use the champagne accent");
-assert.match(simpleCss, /background:var\\(--vf-forest\\)!important/, "Primary buttons must use the forest accent");
-assert.match(simpleCss, /background:var\\(--vf-leaf\\)!important/, "Progress fills must use the leaf accent");
+assert.ok(simpleCss.includes("background:var(--vf-forest)!important"), "Primary buttons must use the forest accent");
+assert.ok(simpleCss.includes("background:var(--vf-leaf)!important"), "Progress fills must use the leaf accent");
 assert.match(simpleCss, /background-color:transparent!important/, "Nested text and card surfaces must not introduce separate colour blocks");
 assert.match(simpleCss, /#app \.hero \*/, "Hero copy must follow the same dark text colour");
 assert.match(simpleCss, /photo-1643786261573-9838e66d89dc/, "The animal hero photograph must remain visible");
