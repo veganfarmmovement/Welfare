@@ -83,6 +83,12 @@ function decoratePrivate(){
 }
 function afterRoute(){
  buildHeader();buildFooter();decoratePrivate();
+ var route=(location.hash||'#home').slice(1);
+ if(route.indexOf('case-')===0&&route!=='case-archived'&&!app.querySelector('.vf2-page-hero')){
+  var meta={eyebrow:'ANIMAL WELFARE · CASE DETAIL',title:'Rescue case details',copy:'Review the published case information and verified support details.',image:'photo-1552053831-71594a27632d'};
+  var content=app.innerHTML;app.innerHTML='<div class="vf2-page vf2-page-case-detail">'+hero(meta,'case-detail')+'<div class="vf2-page-content vf2-shell">'+content+'</div></div>';
+ }
+
  if(app){
   app.classList.remove('vf2-enter');void app.offsetWidth;app.classList.add('vf2-enter');
   app.querySelectorAll('img').forEach(function(img){img.loading=img.loading||'lazy';img.decoding='async'});
@@ -91,6 +97,6 @@ function afterRoute(){
 window.go=function(keep){coreGo(keep);afterRoute()};
 window.addEventListener('hashchange',function(){setTimeout(afterRoute,0)});
 document.addEventListener('DOMContentLoaded',afterRoute,{once:true});
-afterRoute();
+coreGo(true);afterRoute();
 window.VeganFarmPresentation={version:2,owner:'assets/veganfarm-frontend-v2.js'};
 })();
