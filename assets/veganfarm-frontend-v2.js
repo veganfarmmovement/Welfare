@@ -1,8 +1,8 @@
 /* VEGANFARM Frontend V2 — one presentation owner, existing data/auth/payment layer retained. */
 (function(){
 'use strict';
-if(!window.P||typeof window.go!=='function')return;
-var P=window.P, coreGo=window.go, app=document.getElementById('app');
+if(typeof P==='undefined'||typeof go!=='function')return;
+var coreGo=go, app=document.getElementById('app');
 var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var routeMeta={
  about:{eyebrow:'THE MOVEMENT',title:'Care should be visible in what we do.',copy:'An independent welfare movement working across animal welfare, education and compassionate living.',image:'photo-1450778869180-41d0601e046e'},
@@ -97,6 +97,6 @@ function afterRoute(){
 window.go=function(keep){coreGo(keep);afterRoute()};
 window.addEventListener('hashchange',function(){setTimeout(afterRoute,0)});
 document.addEventListener('DOMContentLoaded',afterRoute,{once:true});
-coreGo(true);afterRoute();
+coreGo(true);coreGo(true);afterRoute();
 window.VeganFarmPresentation={version:2,owner:'assets/veganfarm-frontend-v2.js'};
 })();
