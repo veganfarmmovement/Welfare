@@ -188,12 +188,6 @@ body>nav .btn,body>nav .button,body>nav button{background:#173d2b!important;colo
 body>nav #mb{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
 
 
-/* Arabic-derived scripts: prefer Naskh/Noto shaping with platform fallback. */
-html[lang^="ar"],html[lang^="ur"],html[lang^="sd"]{font-family:"Noto Naskh Arabic","Noto Sans Arabic","Noto Sans",Tahoma,sans-serif}
-html[lang^="ar"] body,html[lang^="ur"] body,html[lang^="sd"] body,
-html[lang^="ar"] #app,html[lang^="ur"] #app,html[lang^="sd"] #app{font-family:"Noto Naskh Arabic","Noto Sans Arabic","Noto Sans",Tahoma,sans-serif;line-height:1.75}
-html[dir="rtl"] #app :is(h1,h2,h3,h4,p,li,label,button,a,small,span){text-align:inherit}
-html[dir="rtl"] #app input,html[dir="rtl"] #app textarea{direction:rtl;text-align:right}
 
 
 /* Dedicated Team sign-in surface: high-contrast ivory card and explicit field states. */
