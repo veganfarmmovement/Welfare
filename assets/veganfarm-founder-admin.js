@@ -120,8 +120,8 @@ async function handleForm(e){
 }
 function route(){
  var h=(location.hash||'#home').slice(1);
- if(h.startsWith('admin')){if(getToken())refresh();else login();return true;}
- return false;
+ if(h.startsWith('admin')){document.body.classList.add('vf-admin-active');if(getToken())refresh();else login();return true;}
+ document.body.classList.remove('vf-admin-active');return false;
 }
 var originalGo=window.go;
 if(typeof originalGo==='function'){
