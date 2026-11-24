@@ -82,8 +82,8 @@
   wrapLoader('vfLoadPublicMore');
   wrapLoader('vfLoadFounderMore');
   wrapLoader('vfAfterLogin');
-  // Persist the legacy Founder "Remove photograph" action to the rescue_cases row.
-  // The object is intentionally retained in private storage for a later audited cleanup.
+  // Clear the case reference first, then delete the unreferenced object from private storage.
+  // Shared objects are retained; failed Storage deletes are reported for Founder cleanup.
   window.rmPhoto=function(caseCode){
     var item=appCases().find(function(record){return String(record.id)===String(caseCode);});
     if(!item||!item.dbId){notify('This case is not linked to a saved record.');return;}
