@@ -1,6 +1,6 @@
 # VEGANFARM Luxury Cinematic Overhaul
 
-Status: implementation branch; browser and CI verification pending.
+Status: browser and static CI verification passed on the implementation branch.
 
 ## Approved design direction
 
@@ -25,11 +25,16 @@ The rescue explorer uses approximate city-level positions only for locations alr
 
 The existing core router, donation submission handler, QR and UPI payment information, Founder authentication, Team access flow, signed private-photo handling and Supabase data model remain the source of truth.
 
-## Verification required
+## Verification results
 
-- JavaScript syntax checks for both presentation scripts.
-- Existing rescue-photo security regression checks.
-- Browser audit across all existing routes and seven viewport widths.
-- English-only, mobile navigation, donation form/QR, Team gate and unauthenticated Founder-gate checks.
-- Confirm that all map and dashboard values derive from public records only.
-- Do not merge or deploy if the browser audit reports route, overflow, image, network or access-control failures.
+- JavaScript syntax checks passed for both presentation scripts and the browser audit.
+- Rescue-photo static security checks passed; the existing Team Edge Function type-check passed.
+- Chromium browser audit passed 161 route/viewport checks across seven widths (360, 390, 430, 768, 1024, 1440 and 1920 px).
+- Zero browser/page errors, broken images, horizontal overflow errors or failed network responses were reported.
+- English-only check passed: `lang=en`, `dir=ltr`, no language controls, no translation scripts and no non-English selector options.
+- Mobile navigation passed; donation form and QR were present; Team access gate passed its visual contrast/focus checks; unauthenticated Founder access remained gated.
+- Scroll-reveal checks passed and the audit generated 28 screenshots.
+
+## Verification boundary
+
+The browser audit tests the unauthenticated Team access screen and Founder sign-in gate. It does not sign in as a real Team member or Founder, submit a real donation, or make a payment. Authenticated workflows and live payment settlement still require a controlled staging test. No Supabase schema, records, RLS policies, Edge Functions, authentication settings or storage objects were modified by this presentation work.
