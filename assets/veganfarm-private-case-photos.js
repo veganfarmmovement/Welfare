@@ -104,6 +104,7 @@
 
   window.vfSignPrivateCasePhotos=signLoadedCases;
   window.addEventListener('vf-public-appeals-loaded',signLoadedCases);
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')signLoadedCases();});
   window.setTimeout(signLoadedCases,900);
   window.setInterval(function(){
     if(document.visibilityState!=='hidden')signLoadedCases();
