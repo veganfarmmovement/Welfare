@@ -23,14 +23,13 @@ Read-only production inspection found:
 - Founder replacement uploads are allowed by \`private.is_founder()\`; Founder preview uses a short-lived signed URL.
 - If no replacement file is selected, the existing path remains unchanged.
 
-### Authenticated Team portal
-- Final Team submit/edit handlers use the same private upload helper.
-- New objects are stored under the authenticated Team member's UID folder.
-- New Team rows store \`submitted_by = auth.uid()\`.
-- An approved Team member can sign only their own draft/pending-review image.
+### Individual-auth Team code path (retained but superseded)
+- The HTML still contains the older individual-auth Team submit/edit implementation. The later shared-code Team portal overrides its Team page and submit handler, so this is not the active visitor flow.
+- Its upload helper was also redirected to the private bucket. If this legacy path is re-enabled, objects are stored under the authenticated Team member's UID folder, rows store \`submitted_by = auth.uid()\`, and the policies allow only that approved Team member to sign their own draft/pending-review image.
 - Team insert policy requires the first object-path segment to equal the caller's UID and \`private.is_team()\` to be true.
 
-### Shared-code Team Edge Function
+### Active shared-code Team portal and Edge Function
+- The active Team page uses a server-verified shared code and calls \`client.functions.invoke('veganfarm-team-gate')\`. It does not create an individual Supabase user session.
 - Production Edge Function still uploads to public \`case-photos\`; it has not been modified.
 - Development copy uploads to private \`rescue-case-photos\` using the service-role client, under \`<case-uuid>/animal-<uuid>.<ext>\`.
 - It stores \`rescue-case-photos/<object-key>\` in the database.
@@ -63,7 +62,7 @@ The old permanent \`/object/public/\` URLs will stop working once the legacy buc
 
 ## Files
 
-- \`index.html\`: six active case-photo upload call sites use the private bucket; helper prefixes stored paths and scopes direct Team uploads to the user's UID.
+- \`index.html\`: six case-photo upload code occurrences (including the superseded individual-auth path) use the private bucket; helper prefixes stored paths and scopes direct Team uploads to the user's UID.
 - \`assets/veganfarm-private-case-photos.js\`: 5-minute signed URLs, 4-minute refresh, lexical APP access, live-snapshot update and loader wrapping.
 - \`supabase/functions/veganfarm-team-gate/index.ts\`: staged Edge Function source for private uploads and file-signature validation.
 - \`supabase-phase7-private-case-photo-storage.sql\`: staging-only forward migration.
