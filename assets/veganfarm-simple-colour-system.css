@@ -530,3 +530,36 @@ html body #app.vf-page-team .vf-route-body .vf-team-access-footnote{
 @media(prefers-reduced-motion:reduce){
   #app .vf-motion-hero .vf-motion-backdrop{animation:none!important;transform:none!important}
 }
+
+
+/* Final high-specificity hero type authority: supersedes legacy layered colour declarations. */
+html body main#app .vf-motion-hero .vf-hero-copy :is(h1,p,span,strong,small){
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.42)!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy h1 em{
+  color:#d8c69a!important;
+  -webkit-text-fill-color:#d8c69a!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy .vf-founder-signature strong{
+  color:#d5ef6b!important;
+  -webkit-text-fill-color:#d5ef6b!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy .vf-overline{
+  color:#e6d5ad!important;
+  -webkit-text-fill-color:#e6d5ad!important;
+}
+html body main#app .vf-motion-hero .vf-hero-side-note :is(span,b,small),
+html body main#app .vf-motion-hero .vf-hero-bottom span{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.48)!important;
+}
+html body main#app .vf-motion-hero .vf-hero-side-note{
+  background:rgba(7,29,20,.52)!important;
+  border:1px solid rgba(255,253,245,.18)!important;
+  border-radius:14px!important;
+  padding:20px 22px!important;
+  backdrop-filter:blur(12px)!important;
+}
