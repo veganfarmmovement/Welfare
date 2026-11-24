@@ -143,7 +143,7 @@ try {
     const wrap=document.querySelector('.vf-team-access-wrap');
     const input=document.querySelector('#vf-team-code');
     const button=document.querySelector('.vf-team-access-submit');
-    const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor,display:s.display}};
+    const style=el=>{const s=getComputedStyle(el);return {color:s.color,textFill:s.webkitTextFillColor,background:s.backgroundColor,border:s.borderColor,display:s.display}};
     const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
     const contrast=(fg,bg)=>{
       const rgb=s=>{const m=s.match(/[\d.]+/g)||[];return m.slice(0,3).map(Number)};
