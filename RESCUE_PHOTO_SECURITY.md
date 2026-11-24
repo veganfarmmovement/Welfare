@@ -110,3 +110,21 @@ Verify:
 6. Run rollback SQL. It aborts if new-bucket objects remain or if a prefixed DB path has no matching legacy object. It then restores old paths, public access and the original admin policies.
 
 Do not run rollback SQL against production. It intentionally restores public access.
+
+
+## Follow-up implementation status — 24 November 2026
+
+### Founder deletion hardening
+- Founder removal clears `photo_path` and `photo_url`, checks whether another case still references the same stored path, and deletes the unreferenced object from its private bucket.
+- The helper resolves the bucket from the stored path, supporting prefixed `rescue-case-photos/` objects and legacy unprefixed `case-photos` objects.
+- If the reference check or Storage deletion fails, the case reference remains cleared and the object remains private for Founder cleanup.
+- Regression assertions cover the Storage remove call, the shared-reference guard and the deletion-failure path.
+
+### Scope still not implemented
+- The current data model and case UI still use one `photo_path` per rescue case. Multi-photo uploads, persisted galleries, per-image approval and batch deletion are not implemented.
+- The shared-code Team submission Edge Function still accepts one animal photograph.
+- Live Storage DELETE permissions and actual object deletion have not been tested. These require an authorised Founder session against a separate staging environment.
+
+### Validation boundary
+- GitHub Actions static checks validate source structure and syntax only. They do not execute SQL, call Storage APIs, verify role isolation or prove that signed URLs expire and refresh correctly.
+- No production Supabase setting, migration, object, database row or Edge Function was changed.
