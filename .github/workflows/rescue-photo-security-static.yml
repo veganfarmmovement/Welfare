@@ -2,11 +2,13 @@ name: Rescue photo security static checks
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development/platform-transformation]
     paths:
       - "index.html"
       - "assets/veganfarm-platform-system.css"
       - "assets/veganfarm-unified.css"
+      - "assets/veganfarm-frontend-v2.css"
+      - "assets/veganfarm-frontend-v2.js"
       - "assets/veganfarm-simple-colour-system.css"
       - "PHOTO_CREDITS.md"
       - "assets/veganfarm-private-case-photos.js"
