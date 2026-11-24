@@ -7,6 +7,8 @@ const html=read("../index.html");
 const photoAsset=read("../assets/veganfarm-private-case-photos.js");
 const frontendJs=read("../assets/veganfarm-frontend-v2.js");
 const frontendCss=read("../assets/veganfarm-frontend-v2.css");
+const luxuryJs=read("../assets/veganfarm-luxury-cinematic.js");
+const luxuryCss=read("../assets/veganfarm-luxury-cinematic.css");
 const browserAudit=read("./browser-audit.mjs");
 const edge=read("../supabase/functions/veganfarm-team-gate/index.ts");
 const migration=read("../supabase-phase7-private-case-photo-storage.sql");
@@ -21,16 +23,22 @@ for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){
 }
 assert.ok(inlineCount>=15,"Existing core application modules must remain present and parse");
 new vm.Script(frontendJs,{filename:"veganfarm-frontend-v2.js"});
+new vm.Script(luxuryJs,{filename:"veganfarm-luxury-cinematic.js"});
 new vm.Script(photoAsset,{filename:"veganfarm-private-case-photos.js"});
 
 assert.match(html,/<html lang="en" dir="ltr">/,"The site must be English and left-to-right");
 assert.match(html,/assets\/veganfarm-frontend-v2\.css/,"The new frontend design system must load");
 assert.match(html,/assets\/veganfarm-frontend-v2\.js/,"The new frontend renderer must load");
+assert.ok(html.includes("assets/veganfarm-luxury-cinematic.css"),"The luxury stylesheet must load");
+assert.ok(html.includes("assets/veganfarm-luxury-cinematic.js"),"The luxury presentation script must load");
+assert.match(luxuryJs,/P\.home=homepage/,"The cinematic layer must own the final homepage");
+assert.ok(luxuryJs.includes("city-level locations only"),"The rescue explorer must disclose approximate city-level locations");
+assert.match(luxuryCss,/prefers-reduced-motion:reduce/,"The luxury layer must respect reduced-motion preferences");
 assert.doesNotMatch(html,/veganfarm-unified\.css|veganfarm-simple-colour-system\.css|modern-upgrade\.js|veganfarm-editorial-redesign\.js|veganfarm-forest-luxury\.js/,"Legacy presentation layers must not be active");
 assert.doesNotMatch(html,/vf-language|veganfarm-languages/,"Language selectors and translation scripts must not be active");
 assert.doesNotMatch(html,/veganfarm-piano\.js/,"The old music player must not be part of the public website template");
 assert.match(frontendCss,/\.vf2-menu a\[href="#admin"\]/,"Private administration links must not clutter the public navigation");
-assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1,"Only the new frontend stylesheet should control the application");
+assert.equal((html.match(/rel="stylesheet"/g)||[]).length,2,"The frontend foundation and luxury override stylesheet should control the application");
 assert.match(frontendJs,/P\.home=home/,"V2 must own the homepage renderer");
 assert.match(frontendJs,/P\.projects=function/,"V2 must provide a dedicated Projects template");
 assert.match(frontendJs,/P\.education=function/,"V2 must provide a dedicated Education template");
