@@ -645,3 +645,89 @@ html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-a
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
   backdrop-filter:blur(12px)!important;
 }
+
+
+/* Editorial polish — final presentation layer, keeping the established renderer and routes. */
+:root{
+  font-synthesis:none;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{font-family:"Instrument Sans",Arial,sans-serif;letter-spacing:-.008em}
+#app :is(h1,h2,h3,h4,.vf-route-masthead h1,.vf-section-intro h2){
+  font-family:"Newsreader",Georgia,serif;
+  font-weight:600;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+#app p{line-height:1.72}
+nav{
+  background:rgba(255,253,245,.94)!important;
+  border-bottom:1px solid rgba(29,44,33,.10)!important;
+  box-shadow:0 8px 30px rgba(29,44,33,.055)!important;
+  backdrop-filter:blur(18px);
+}
+nav .wrap{min-height:76px!important;gap:clamp(12px,1.8vw,24px)!important}
+nav .logo{font-family:"Newsreader",Georgia,serif!important;font-size:1.42rem!important;letter-spacing:-.035em}
+nav .menu{gap:clamp(12px,1.55vw,22px)!important;align-items:center}
+nav a.l{font-size:.82rem!important;font-weight:600;letter-spacing:.005em}
+#app .vf-route-masthead{
+  min-height:clamp(270px,31vw,390px);
+  display:flex;
+  align-items:center;
+  padding:clamp(58px,8vw,104px) max(24px,calc((100vw - 1160px)/2))!important;
+  overflow:hidden;
+  position:relative;
+}
+#app .vf-route-masthead-inner{position:relative;z-index:1;max-width:850px}
+#app .vf-route-masthead h1{font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.055em}
+#app .vf-route-masthead p{max-width:58ch;font-size:clamp(1rem,1.5vw,1.16rem);line-height:1.7}
+#app .vf-route-mark{opacity:.22;transform:scale(1.08)}
+#app .vf-route-body{padding-top:clamp(28px,4vw,56px);padding-bottom:clamp(48px,7vw,88px)}
+#app .vf-route-body .wrap{max-width:1160px}
+#app :is(.vf-focus-card,.vf-project-card,.vf-choice-card,.vf-photo,.vf-payment-panel,.vf-donate-form-panel,.vf-form-aside){
+  border-radius:10px;
+  overflow:hidden;
+}
+#app :is(.vf-focus-card,.vf-project-card,.vf-choice-card,.vf-photo,.vf-payment-panel,.vf-donate-form-panel){
+  box-shadow:0 12px 34px rgba(29,44,33,.055);
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+}
+#app :is(.vf-project-card,.vf-choice-card,.vf-payment-panel,.vf-donate-form-panel):hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 42px rgba(29,44,33,.095);
+}
+#app :is(.vf-button,.btn,button.btn){
+  min-height:46px;
+  font-family:"Instrument Sans",Arial,sans-serif;
+  font-weight:650;
+  letter-spacing:.005em;
+  transition:transform .22s ease,box-shadow .22s ease,background-color .22s ease;
+}
+#app :is(.vf-button,.btn,button.btn):focus-visible,
+nav a:focus-visible,footer a:focus-visible{
+  outline:3px solid #c7a66a!important;
+  outline-offset:4px!important;
+}
+#app :is(input,select,textarea){
+  min-height:46px;
+  font-family:"Instrument Sans",Arial,sans-serif;
+  line-height:1.5;
+}
+#app textarea{min-height:120px}
+footer{padding-top:clamp(46px,6vw,76px)!important}
+footer .wrap{max-width:1160px}
+@media(max-width:760px){
+  html{scroll-padding-top:76px}
+  nav .wrap{min-height:68px!important}
+  #app .vf-route-masthead{min-height:260px;padding:52px 24px!important}
+  #app .vf-route-masthead h1{font-size:clamp(2.65rem,12vw,4rem)}
+  #app .vf-route-body{padding-top:26px;padding-bottom:48px}
+  #app :is(.vf-project-card,.vf-choice-card,.vf-payment-panel,.vf-donate-form-panel):hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  #app *,#app *:before,#app *:after,nav,footer{transition:none!important;animation:none!important}
+}
