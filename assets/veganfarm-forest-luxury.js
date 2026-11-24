@@ -61,8 +61,9 @@ function decorateRoute(){
  if(!meta&&route.indexOf('case-')===0)meta={k:'ANIMAL WELFARE · CASE DETAIL',t:'Rescue case details',d:'Review the published case information, treatment needs and verified support details.',v:'case-detail'};
  if(!meta&&route.indexOf('admin-')===0)meta={k:'PRIVATE FOUNDER WORKSPACE',t:'Founder operations',d:'Authenticated Founder tools and records.',v:'admin'};
  if(!meta&&route.indexOf('policy-')===0)meta={k:'GOVERNANCE',t:'Policies and information',d:'Read the applicable VEGANFARM policy and contact the movement with questions.',v:'policy'};
- if(!meta){app.classList.remove('vf-page-experience');app.removeAttribute('data-vf-page-route');return;}
- if(app.dataset.vfPageRoute===route)return;
+ if(!meta){Array.from(app.classList).filter(function(x){return x.indexOf('vf-page-')===0}).forEach(function(x){app.classList.remove(x)});app.removeAttribute('data-vf-page-route');return;}
+ if(app.dataset.vfPageRoute===route&&app.querySelector('.vf-route-masthead'))return;
+ Array.from(app.classList).filter(function(x){return x.indexOf('vf-page-')===0}).forEach(function(x){app.classList.remove(x)});
  app.dataset.vfPageRoute=route;app.classList.add('vf-page-experience','vf-page-'+meta.v);
  var intro=document.createElement('header');intro.className='vf-route-masthead vf-route-'+meta.v;
  intro.innerHTML='<div class="vf-route-masthead-inner"><span class="vf-route-kicker">'+escHtml(meta.k)+'</span><h1>'+escHtml(meta.t)+'</h1><p>'+escHtml(meta.d)+'</p><span class="vf-route-index">VEGANFARM MOVEMENT <i>·</i> INDIA</span></div><span class="vf-route-mark" aria-hidden="true"></span>';
