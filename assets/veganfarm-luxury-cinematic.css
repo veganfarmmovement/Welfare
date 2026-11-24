@@ -294,3 +294,10 @@ body>footer .vf2-footer-grid{width:min(1240px,calc(100% - 56px))!important;displ
 
 .vf-admin-active nav,.vf-admin-active #tick,.vf-admin-active #ann,.vf-admin-active #wa,.vf-admin-active footer{display:none!important}
 .vf-admin-active #app{min-height:100vh}
+
+/* Prevent box-model overflow in the private workspace on narrow screens */
+.vf-admin-active #app,.vf-admin-active #app *{box-sizing:border-box}
+.vf-admin-active #app{width:100%;max-width:100vw;overflow-x:clip}
+.vf-admin-login{width:100%;max-width:100vw;overflow-x:clip}
+.vf-admin-login-card{width:min(100%,480px);max-width:100%;box-sizing:border-box}
+.vf-admin-shell{width:100%;max-width:100vw;overflow-x:clip}
