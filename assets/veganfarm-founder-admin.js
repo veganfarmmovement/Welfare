@@ -73,7 +73,7 @@ function content(route){
  if(route==='admin-cases')return caseCards();
  if(route==='admin-donations')return donations();
  if(route==='admin-expenses')return expenses();
- if(route==='admin-volunteers')return genericTable('Volunteers',data.volunteers||[],['Name','Email','Phone','Status','Created at'],r=>'<button data-vf-action="volunteer-review" data-id="'+esc(r.id)+'" data-status="reviewed">Mark reviewed</button> <button class="danger" data-vf-action="volunteer-reject" data-id="'+esc(r.id)+'" data-status="rejected">Reject</button>');
+ if(route==='admin-volunteers')return genericTable('Volunteers',data.volunteers||[],['Name','Email','Phone','Status','Created at'],r=>'<button data-vf-action="volunteer-review" data-id="'+esc(r.id)+'">Mark reviewed</button> <button data-vf-action="volunteer-approve" data-id="'+esc(r.id)+'">Approve</button> <button class="danger" data-vf-action="volunteer-reject" data-id="'+esc(r.id)+'">Reject</button>');
  if(route==='admin-messages')return genericTable('Messages',data.messages||[],['Name','Email','Phone','Handled','Created at'],r=>'<button data-vf-action="message-toggle" data-id="'+esc(r.id)+'" data-handled="'+String(!r.handled)+'">'+(r.handled?'Reopen':'Mark handled')+'</button>');
  if(route==='admin-stories')return genericTable('Stories',data.stories||[],['Title','Location','Published','Created at'],r=>'<button data-vf-action="story-toggle" data-id="'+esc(r.id)+'" data-published="'+String(!r.published)+'">'+(r.published?'Unpublish':'Publish')+'</button>');
  if(route==='admin-team')return genericTable('Team accounts',data.profiles||[],['Display name','Email','Role','Status','Created at'],r=>'<select id="role-'+esc(r.id)+'"><option value="team" '+(r.role==='team'?'selected':'')+'>Team</option><option value="founder" '+(r.role==='founder'?'selected':'')+'>Founder</option></select> <select id="status-'+esc(r.id)+'"><option>pending</option><option '+(r.status==='approved'?'selected':'')+'>approved</option><option '+(r.status==='rejected'?'selected':'')+'>rejected</option><option '+(r.status==='suspended'?'selected':'')+'>suspended</option></select> <button data-vf-action="profile-save" data-id="'+esc(r.id)+'">Save</button>');
@@ -103,8 +103,8 @@ async function handleAction(e){
    await api('donation_review',{id:id,status:status});
   }else if(action.startsWith('expense-')){
    await api('expense_review',{id:id,status:action==='expense-approve'?'approved':'rejected'});
-  }else if(action==='volunteer-review'||action==='volunteer-reject'){
-   await api('volunteer_review',{id:id,status:action==='volunteer-review'?'reviewed':'rejected'});
+  }else if(action==='volunteer-review'||action==='volunteer-approve'||action==='volunteer-reject'){
+   await api('volunteer_review',{id:id,status:action==='volunteer-review'?'reviewed':action==='volunteer-approve'?'approved':'rejected'});
   }else if(action==='message-toggle'){
    await api('message_handled',{id:id,handled:b.dataset.handled==='true'});
   }else if(action==='story-toggle'){
