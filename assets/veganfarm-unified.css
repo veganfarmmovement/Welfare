@@ -1351,7 +1351,7 @@ body{background:linear-gradient(145deg,#f3f1e5 0%,#e5ecd9 48%,#d8e5d0 100%)!impo
 #app .vf-motion-card .vf-motion-link{font-size:14px!important}
 #app .vf-motion-icon{background:rgba(247,247,230,.94)!important;box-shadow:0 10px 28px rgba(0,0,0,.18)!important}
 #app .vf-motion-card.vf-care{background-image:url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1200&q=85')!important}
-#app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=85')!important}
+#app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1633442495686-e8b67cffab53?auto=format&fit=crop&w=1200&q=85')!important}
 #app .vf-motion-card.vf-vegan{background-image:url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1200&q=85')!important}
 #app .vf-motion-card:hover{transform:translateY(-10px) rotateX(1.5deg)!important;box-shadow:0 28px 56px rgba(30,55,32,.2),0 6px 0 rgba(61,92,43,.1)!important}
 #app .vf-impact-section,#app .vf-transparency-section,#app .vf-contact-strip{background:linear-gradient(140deg,#e6ecd9,#f2f0e2 55%,#dce8d2)!important;color:#17251a!important}
@@ -1404,7 +1404,7 @@ body{background:linear-gradient(145deg,#f3f1e5 0%,#e5ecd9 48%,#d8e5d0 100%)!impo
 #app .vf-motion-grid{gap:22px!important}
 #app .vf-motion-card{position:relative!important;isolation:isolate!important;min-height:440px!important;overflow:hidden!important;background-size:cover!important;background-position:center!important;border-radius:28px!important;box-shadow:0 24px 48px rgba(25,55,30,.18)!important}
 #app .vf-motion-card.vf-care{background-image:url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1400&q=88')!important;background-position:center 38%!important}
-#app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=88')!important;background-position:center 40%!important}
+#app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1633442495686-e8b67cffab53?auto=format&fit=crop&w=1400&q=88')!important;background-position:center 40%!important}
 #app .vf-motion-card.vf-vegan{background-image:url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1400&q=88')!important;background-position:center 48%!important}
 #app .vf-motion-card:before{content:""!important;position:absolute!important;inset:0!important;z-index:0!important;pointer-events:none!important;background:linear-gradient(180deg,rgba(247,247,232,.06) 0%,rgba(247,247,232,.16) 38%,rgba(247,247,232,.91) 100%)!important;opacity:1!important}
 #app .vf-motion-card>*{position:relative!important;z-index:2!important}
