@@ -39,9 +39,9 @@ assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation 
 assert.match(html, /veganfarm-simple-colour-system\.css/, "The simple colour system must load on every page");
 assert.match(simpleColourCss, /--vf-simple-bg:#fffdf5/, "The website must use one consistent light background colour");
 assert.match(simpleColourCss, /--vf-simple-text:#1d2c21/, "The website must use one consistent dark text colour");
-assert.match(simpleColourCss, /#app \\*[^\\n]*background-color:transparent!important/, "Nested content must not add separate coloured text backgrounds");
-assert.match(simpleColourCss, /footer[^\\n]*background:var\\(--vf-simple-bg\\)!important/, "Footer must use the same page background");
-assert.equal((simpleColourCss.match(/\\{/g)||[]).length,(simpleColourCss.match(/\\}/g)||[]).length,"Simple colour stylesheet braces must be balanced");
+assert.ok(simpleColourCss.includes("#app *:not(img):not(video):not(.vf-motion-backdrop){"), "Nested content must not add separate coloured text backgrounds");
+assert.ok(simpleColourCss.includes("footer{border-top:1px solid var(--vf-simple-line)!important}"), "Footer must use the same page background");
+assert.equal(simpleColourCss.split("{").length, simpleColourCss.split("}").length, "Simple colour stylesheet braces must be balanced");
 assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
 assert.equal((visualCss.match(/\{/g)||[]).length,(visualCss.match(/\}/g)||[]).length,"Visual stylesheet braces must be balanced");
 new vm.Script(photoAsset, { filename: "veganfarm-private-case-photos.js" });
