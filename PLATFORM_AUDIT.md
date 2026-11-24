@@ -55,7 +55,7 @@ This means archived/rejected case photos and future pending-case photos may be p
 
 The views `public_rescue_cases` and `public_case_documents` are security-definer views. Anonymous role currently has SELECT, INSERT, UPDATE and DELETE privileges on both. Their definitions are read projections and should be read-only.
 
-A proposed migration is included as `supabase-phase6-public-view-hardening.sql`. It switches those two VEGANFARM views to `security_invoker` and grants SELECT only. It has **not** been applied to production and must first be tested against the existing public and Founder workflows.
+A proposed migration is included as `supabase-phase6-public-view-hardening.sql`. It switches those two VEGANFARM views to `security_invoker`, grants SELECT only, and narrows object listing to published case/story photos. It has **not** been applied to production and must first be tested against the existing public and Founder workflows. The storage policy only limits listing: because `case-photos` remains a public bucket, a known object URL can still be fetched. Private storage migration is still required for full confidentiality.
 
 The separate `trust_project_fundraising_totals` view belongs to the separate Trust data model and was intentionally not changed.
 
@@ -83,7 +83,7 @@ The active website's public content must continue to describe VEGANFARM as an in
 
 ## Changes implemented on this development branch
 
-1. Added `assets/veganfarm-platform-system.css`, a unified light palette with light text containers, medium-green text, accessible form states, responsive layouts and reduced-motion handling.
+1. Added `assets/veganfarm-platform-system.css`, a unified light palette with light text containers, medium-green text, accessible form states, responsive layouts, reduced-motion handling and a floating music-control style.
 2. Updated `index.html` to load the new theme last and removed the previous inline-style MutationObserver that changed colours dynamically.
 3. Rebuilt `impact-enhancements.js` to remove hard-coded sample cases and financial amounts. It now uses published records from the existing live data layer and displays an honest empty state.
 4. Added `supabase-phase6-public-view-hardening.sql` for review; it is not executed.
