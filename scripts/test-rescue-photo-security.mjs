@@ -88,6 +88,7 @@ assert.match(forestJs, /id="fcon"><\/p><p id="socf"><\/p>/, "Presentation footer
 assert.ok(html.includes("if(window.vfRole!=='team')return;") && html.indexOf("public_case_documents", html.indexOf("if(window.vfRole!=='team')return;")) > -1, "Anonymous visitors must not query restricted public case attachments");
 assert.match(forestJs, /vf-public-data-warning/, "Public data permission failures must be disclosed without exposing private case data");
 assert.ok(html.includes("window.vfAfterLogin=function(){\n  if(window.vfRole!=='team')return Promise.resolve(baseAfterLogin&&baseAfterLogin());"), "Only authenticated Team sessions may load Team case attachments");
+assert.ok(html.includes("function enrichLoadedCases(){\n    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();"), "Anonymous visitors must not enrich cases from the private rescue_cases table");
 assert.match(visualCss, /#vf-piano-volume\{flex:1 1 110px;width:auto;min-width:0;max-width:100%/, "Optional piano controls must not create mobile horizontal overflow");
 assert.match(forestJs, /go=function\(keep\)/, "Forest presentation must wrap the core route function once");
 assert.doesNotMatch(editorialJs, /P\.home\s*=|go\s*=|navItems|innerHTML/, "Retired editorial renderer must not mutate pages, navigation or routes");
