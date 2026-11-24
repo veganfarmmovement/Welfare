@@ -2298,8 +2298,9 @@ currentUser().then(function(u){
     }
     return '<section class="sec"><div class="wrap" style="max-width:920px">'+
       '<div class="row" style="justify-content:space-between;align-items:center;gap:12px">'+
-      '<div><h1 style="font-size:2.1rem">VEGANFARM Team</h1><p class="mut">Case submission access. Every submission goes to the Founder for review.</p></div>'+
+      '<div><h1 style="font-size:2.1rem">VEGANFARM Team</h1><p class="mut">Private case-submission workspace. Every appeal is reviewed by the Founder before publication.</p></div>'+
       '<button class="btn out sm" type="button" onclick="vfTeamLogout()">Lock portal</button></div>'+
+      '<div id="vf-team-live-summary" class="vf-team-live-summary"><div class="vf-team-live-loading">Loading your submission overview…</div></div>'+
       '<div class="card" style="margin:18px 0"><div class="b">'+
       '<h2>Case submissions</h2><p class="mut">Choose the correct form. Submitted cases remain pending until the Founder reviews and approves them.</p>'+
       '<div class="row" style="flex-wrap:wrap">'+
@@ -2336,6 +2337,24 @@ currentUser().then(function(u){
   };
 
   window.vfTeamLogout=function(){setGateToken('');if(typeof go==='function')go(true);};
+
+  window.vfTeamRefresh=async function(){
+    var target=document.getElementById('vf-team-live-summary');
+    if(!target||!gateToken())return;
+    target.innerHTML='<div class="vf-team-live-loading">Refreshing live submissions…</div>';
+    try{
+      var result=await client.functions.invoke('veganfarm-team-gate',{body:{action:'my_submissions',token:gateToken()}});
+      if(result.error)throw result.error;
+      var rows=result.data&&result.data.submissions||[];
+      var pending=rows.filter(function(x){return ['pending_review','draft'].includes(x.publication)}).length;
+      var published=rows.filter(function(x){return x.publication==='published'}).length;
+      var rejected=rows.filter(function(x){return x.publication==='rejected'}).length;
+      var esc=window.escapeHtml||function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+      target.innerHTML='<div class="vf-team-live-stats"><div><strong>'+rows.length+'</strong><span>Total submissions</span></div><div><strong>'+pending+'</strong><span>Awaiting Founder</span></div><div><strong>'+published+'</strong><span>Published</span></div><div><strong>'+rejected+'</strong><span>Rejected</span></div></div><div class="vf-team-live-list"><div class="vf-team-live-list-head"><b>Recent submissions</b><button type="button" onclick="vfTeamRefresh()">Refresh</button></div>'+(rows.length?'<div class="vf-team-live-table">'+rows.slice(0,8).map(function(x){return '<div><span><b>'+esc(x.case_code||'Case')+'</b> · '+esc(x.animal_name||'')+'<small>'+esc(x.kind||'Treatment')+' · '+esc(x.location||'')+'</small></span><span class="vf-team-live-status">'+esc(x.publication||'pending_review')+'</span><small>'+esc(x.review_note||'Awaiting Founder review')+'</small></div>'}).join('')+'</div>':'<p class="mut">No submissions yet. Choose Feeding Form or Treatment Form below to create your first case.</p>')+'</div>';
+    }catch(error){target.innerHTML='<p class="note">Could not load submission status. '+esc(error&&error.message||'Please refresh and try again.')+'</p>';}
+  };
+  window.addEventListener('hashchange',function(){if((location.hash||'').slice(1)==='veganfarm-team')setTimeout(window.vfTeamRefresh,150);});
+  setTimeout(window.vfTeamRefresh,500);
 
   async function edgeError(error){
     try{
