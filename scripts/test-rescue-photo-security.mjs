@@ -71,6 +71,12 @@ assert.equal((html.match(/<option value="(?:en|hi|mr|gu)">/g)||[]).length, 4, "E
 assert.doesNotMatch(html, /option value="(?:sd|ur|fr|es|ko|ar)"/, "Unsupported languages must not appear in the selector");
 assert.deepEqual([...localeJs.matchAll(/code:'([a-z]+)'/g)].map(m=>m[1]), ['en','hi','mr','gu'], "Locale configuration must contain exactly English, Hindi, Marathi and Gujarati");
 assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ'"), "Shared Home navigation labels must be provided for all three requested Indian languages");
+assert.match(html, /class="vf-team-access"/, "Team sign-in must use its dedicated accessible light-theme layout");
+assert.match(html, /id="vf-team-login-name"/, "Team sign-in must expose a labelled name field");
+assert.match(html, /id="vf-team-login-email"/, "Team sign-in must expose a labelled email field");
+assert.match(visualCss, /#app \.vf-team-access-card[\s\S]*?background:#fff!important/, "Team sign-in card must use a high-contrast white surface");
+assert.match(visualCss, /#app \.vf-team-access-form input::placeholder\{color:#68766a!important/, "Team sign-in placeholders must remain readable");
+assert.match(visualCss, /#app \.vf-team-access-form input:focus-visible/, "Team sign-in fields must have visible keyboard focus");
 assert.match(forestJs, /Compassion is not just a belief\./, "Homepage hero must use the approved central message");
 assert.match(forestJs, /VEGANFARM Movement brings people together to support animal welfare, expand access to education and encourage a more compassionate world\./, "Homepage hero must use the approved supporting description");
 assert.match(forestJs, /INDEPENDENT WELFARE MOVEMENT · INDIA/, "Homepage must show the required identity descriptor");
