@@ -62,8 +62,9 @@ async function load() {
   const cases=result.cases as Record<string,unknown>[];
   for(const c of cases) {
     const p=String(c.photo_path||"");
-    const path=p.startsWith("rescue-case-photos/")?p.slice("rescue-case-photos/".length):p;
-    if(path) c.photo_url=await signed("rescue-case-photos",path);
+    if(p.startsWith("rescue-case-photos/")) c.photo_url=await signed("rescue-case-photos",p.slice("rescue-case-photos/".length));
+    else if(p.startsWith("case-photos/")) c.photo_url=await signed("case-photos",p.slice("case-photos/".length));
+    else if(p) c.photo_url=await signed("rescue-case-photos",p);
   }
   return result;
 }
