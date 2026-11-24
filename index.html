@@ -2592,15 +2592,16 @@ currentUser().then(function(u){
   function gatePage(){
     if(!client)return '<section class="sec"><div class="wrap" style="max-width:480px"><h1>VEGANFARM Team</h1><p class="note">The secure service is unavailable. Refresh this page and try again.</p></div></section>';
     if(!gateToken()){
-      return '<section class="sec vf-team-access"><div class="wrap vf-team-access-panel" style="max-width:560px">'+
-        '<p class="vf-team-kicker">SECURE TEAM ACCESS</p>'+
-        '<h1 style="font-size:2.2rem">VEGANFARM Team</h1>'+
-        '<p class="mut">Enter the Team access code to open the case-submission forms. Access is limited to Feeding and Treatment case submissions.</p>'+
-        '<form onsubmit="vfTeamUnlock(event)">'+
+      return '<section class="sec vf-team-access"><div class="wrap vf-team-access-wrap">'+
+        '<div class="vf-team-access-intro"><span class="vf-team-access-kicker">VEGANFARM · PRIVATE TEAM PORTAL</span>'+
+        '<h1>Team Member Access</h1>'+
+        '<p>Enter the shared Team access code to open the Feeding and Treatment case-submission forms. All submissions remain pending until Founder review.</p></div>'+
+        '<div class="vf-team-access-card"><form class="vf-team-access-form" onsubmit="vfTeamUnlock(event)">'+
         '<label for="vf-team-code">Team access code</label>'+
-        '<input id="vf-team-code" name="code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required>'+
-        '<p id="vf-team-gate-status" role="status" aria-live="polite" class="mut" style="min-height:26px;margin:10px 0"></p>'+
-        '<button class="btn" type="submit">Unlock case forms</button></form>'+
+        '<input id="vf-team-code" name="code" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required placeholder="Enter your Team access code">'+
+        '<p id="vf-team-gate-status" class="vf-team-access-status" role="status" aria-live="polite"></p>'+
+        '<button class="btn vf-team-access-submit" type="submit">Unlock case forms</button></form></div>'+
+        '<p class="vf-team-access-footnote">Access is verified securely. Do not share the Team access code outside the authorised team.</p>'+
         '</div></section>';
     }
     return '<section class="sec"><div class="wrap" style="max-width:920px">'+
