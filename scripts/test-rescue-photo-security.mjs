@@ -43,8 +43,8 @@ assert.match(photoAsset, /window\.syncCases\(\)/, "Public case cards must be reb
 assert.match(photoAsset, /update\(\{photo_path:null,photo_url:null\}\)/, "Founder photo removal must persist to the database");
 assert.match(photoAsset, /typeof toast===\x27function\x27/, "Founder photo removal must use the app\x27s lexical toast binding");
 
-assert.match(photoAsset, /client\\.storage\\.from\\(source\\.bucket\\)\\.remove\\(\\[source\\.path\\]\\)/, "Founder photo removal must delete the unreferenced private Storage object");
-assert.match(photoAsset, /eq\\('photo_path',storedPath\\)\\.neq\\('id',item\\.dbId\\)/, "Founder deletion must check for other case references before deleting an object");
+assert.match(photoAsset, /client\.storage\.from\(source\.bucket\)\.remove\(\[source\.path\]\)/, "Founder photo removal must delete the unreferenced private Storage object");
+assert.match(photoAsset, /eq\('photo_path',storedPath\)\.neq\('id',item\.dbId\)/, "Founder deletion must check for other case references before deleting an object");
 assert.match(photoAsset, /storage-delete-failed/, "Storage deletion failures must be surfaced for manual cleanup");
 
 
