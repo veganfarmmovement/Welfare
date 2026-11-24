@@ -535,3 +535,75 @@ body>footer{background:#172A27}
  .vf2-home-inner h1{font-size:clamp(3.05rem,13.5vw,4.3rem)}
  .vf2-nav-cta,.vf2-button{letter-spacing:.06em}
 }
+
+
+/* 2026-11-24 — clean editorial text treatment: no background plates behind copy. */
+:root{
+  --vf2-ivory:#F8F8F5;
+  --vf2-ink:#1B2925;
+  --vf2-forest:#24463D;
+  --vf2-leaf:#647B6D;
+  --vf2-gold:#A88A65;
+  --vf2-muted:#65716B;
+  --vf2-line:#E0E4DE;
+}
+html,body,#app{background:var(--vf2-ivory);color:var(--vf2-ink)}
+/* Copy and text-bearing wrappers remain transparent; colour is carried by type, not boxes. */
+#app :is(h1,h2,h3,h4,h5,h6,p,small,label,figcaption,blockquote,
+  .vf2-eyebrow,.vf2-intro-heading,.vf2-intro-copy,.vf2-section-heading,
+  .vf2-focus-copy,.vf2-project-copy,.vf2-about-text,.vf2-cta-inner,
+  .vf2-page-content .note,.vf2-page-content .card,.vf2-page-content .stats>div,
+  .vf2-principle-grid article,.vf2-about-legal,.vf2-impact-empty,
+  .vf2-impact-note,.vf2-projects-cta,.vf2-education-facts>div,
+  .vf2-live-stats>div,.vf2-live-content){
+  background-color:transparent!important;
+  box-shadow:none!important;
+}
+#app :is(.vf2-focus-card,.vf2-project-card){
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+#app :is(.vf2-focus-copy,.vf2-project-copy){padding:24px 0 0!important}
+#app :is(.vf2-focus-card,.vf2-project-card):hover{transform:translateY(-2px);box-shadow:none!important}
+#app :is(.vf2-page-content .note,.vf2-about-legal,.vf2-impact-note,.vf2-projects-cta){
+  border:0!important;
+  border-left:0!important;
+  padding-inline:0!important;
+}
+#app .vf2-education-facts>div{border-bottom:1px solid var(--vf2-line);padding:18px 0}
+#app .vf2-live-stats>div{border-bottom:1px solid var(--vf2-line);padding:18px 0}
+#app .vf2-page-content th{background:transparent!important;border-bottom:1px solid var(--vf2-line)}
+#app .vf2-page-content td{background:transparent!important}
+#app .vf2-page-content input,#app .vf2-page-content select,#app .vf2-page-content textarea{
+  background:#fff!important;border:1px solid var(--vf2-line)!important;
+}
+#app .vf2-page-content button,#app .vf2-button,#app .vf2-nav-cta{
+  background:var(--vf2-forest)!important;color:#fff!important;
+}
+#app .vf2-button-gold{background:#C2AD89!important;color:#182923!important}
+#app .vf2-home-hero,#app .vf2-page-hero,#app .vf2-rescue-band{background:#172A27}
+#app .vf2-home-overlay{background:linear-gradient(90deg,rgba(15,34,30,.76),rgba(15,34,30,.32) 62%,rgba(15,34,30,.04)),linear-gradient(0deg,rgba(15,34,30,.24),transparent 44%)}
+#app .vf2-focus-section,#app .vf2-project-teaser,#app .vf2-cta-band{background:var(--vf2-ivory)!important}
+#app .vf2-intro-section,#app .vf2-about-split,#app .vf2-impact-section,
+#app .vf2-focus-section,#app .vf2-project-teaser,#app .vf2-cta-band{
+  border:0!important;
+}
+#app :is(.vf2-intro-heading h2,.vf2-section-heading h2,.vf2-about-text h2,
+  .vf2-project-teaser h2,.vf2-cta-inner h2){max-width:15ch}
+#app :is(.vf2-focus-copy p,.vf2-project-copy p,.vf2-about-text p,
+  .vf2-intro-copy p,.vf2-section-heading>p){color:var(--vf2-muted)}
+#app .vf2-eyebrow{color:var(--vf2-gold)}
+#app .vf2-home-inner h1,#app .vf2-hero-copy h1{max-width:12ch}
+#app .vf2-focus-image,#app .vf2-project-image,#app .vf2-about-photo,
+#app .vf2-project-teaser-image{border-radius:0!important;overflow:hidden}
+#app .vf2-focus-image img,#app .vf2-project-image img,
+#app .vf2-about-photo img,#app .vf2-project-teaser-image img{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+#app :is(.vf2-focus-card,.vf2-project-card):hover img{transform:scale(1.025)}
+#app .vf2-team .vf-team-access-card{background:#fff!important}
+#app .vf2-private .side{background:#F0F2ED!important}
+@media(max-width:640px){
+  #app :is(.vf2-focus-copy,.vf2-project-copy){padding-top:18px!important}
+  #app :is(.vf2-intro-section,.vf2-about-split,.vf2-impact-section){padding-block:64px}
+}
