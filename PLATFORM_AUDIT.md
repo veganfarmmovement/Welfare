@@ -53,9 +53,9 @@ This means archived/rejected case photos and future pending-case photos may be p
 
 ### 2. Public rescue/document views have unnecessary write grants
 
-The views `public_rescue_cases` and `public_case_documents` are security-definer views. Anonymous role currently has SELECT, INSERT, UPDATE and DELETE privileges on both. Their definitions are read projections and should be read-only.
+The views `public_rescue_cases` and `public_case_documents` are security-definer views. Anonymous currently has SELECT, INSERT, UPDATE and DELETE privileges on both. Their definitions are allowlisted read projections; the migration revokes public DML and adds a security-barrier boundary.
 
-A proposed migration is included as `supabase-phase6-public-view-hardening.sql`. It switches those two VEGANFARM views to `security_invoker`, grants SELECT only, and narrows object listing to published case/story photos. It has **not** been applied to production and must first be tested against the existing public and Founder workflows. The storage policy only limits listing: because `case-photos` remains a public bucket, a known object URL can still be fetched. Private storage migration is still required for full confidentiality.
+A read-only privilege check found that anonymous has no direct SELECT privilege on the underlying `rescue_cases` or `case_documents` tables. Therefore, changing these views to `security_invoker` would break public reads unless carefully scoped column grants and RLS were added. The Phase 6 migration now retains the safe projections as security-definer views, grants SELECT only, and uses `public_rescue_cases` for anonymous case-photo checks. It has **not** been applied to production. The Phase 7 migration makes case-photo buckets private and applies the published/Founder/Team-owner access rules.
 
 The separate `trust_project_fundraising_totals` view belongs to the separate Trust data model and was intentionally not changed.
 
