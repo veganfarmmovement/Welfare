@@ -1271,7 +1271,7 @@ if(r.error){console.error('Public rescue appeals could not be loaded:',r.error);
 APP.length=0;(r.data||[]).forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases();go(true)})};
 /* Load approved appeals for every visitor, without requiring Founder or Team sign-in. */
 function refreshPublicAppeals(){return window.vfRefreshPublicData?window.vfRefreshPublicData():window.vfLoadPublicMore()}
-window.vfLoadPublicMore().then(function(){window.dispatchEvent(new Event('vf-public-appeals-loaded'))});
+/* Public case data is loaded after auth/role resolution below. */
 /* Keep the public dashboard fresh while the page remains open. */
 if(window.vfPublicRefreshTimer)clearInterval(window.vfPublicRefreshTimer);
 window.vfPublicRefreshTimer=setInterval(function(){if(document.visibilityState!=='hidden')refreshPublicAppeals()},30000);
@@ -1446,7 +1446,12 @@ function loadFounderCaseExtras(){
 window.vfLoadFounderMore=function(){return Promise.resolve(baseMore&&baseMore()).then(restoreFounderState).then(loadFounderCaseExtras);};
 window.vfReload=function(){return Promise.resolve(window.vfLoadFounder&&window.vfLoadFounder()).then(window.vfLoadFounderMore).then(function(){go(true);});};
 window.vfLoadPublicMore=function(){
-  // Founder-published active cases and their uploaded treatment documents are public.
+  // Do not query a view that currently lacks an anonymous SELECT grant. No private-table fallback.
+  if(!window.vfRole){
+    window.vfPublicDataError=true;
+    window.dispatchEvent(new Event('vf:publicdataerror'));
+    return Promise.resolve();
+  }
   return Promise.resolve(basePublicMore&&basePublicMore()).then(function(){
     APP.splice(0,APP.length,...APP.filter(function(a){return !a.completed&&!/^(Completed|Recovered|Closed)$/i.test(String(a.status||''));}));
     if(typeof syncCases==='function')syncCases();
