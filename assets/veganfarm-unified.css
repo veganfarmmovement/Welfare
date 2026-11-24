@@ -1617,7 +1617,7 @@ body>nav .btn,body>nav .button{background:#f5d928!important;color:#17251a!import
 #app .vf-choice-card h3,#app .vf-choice-card p,#app .vf-choice-card .vf-choice-label,#app .vf-choice-card>a,#app .vf-choice-card .vf-choice-symbol{color:#17251a!important}
 #app .vf-choice-card:before{content:"";display:block;height:150px;margin:-35px -35px 24px;background-size:cover;background-position:center}
 #app .vf-choice-animal:before{background-image:linear-gradient(0deg,rgba(246,247,237,.12),transparent),url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1000&q=82')}
-#app .vf-choice-human:before{background-image:linear-gradient(0deg,rgba(246,247,237,.12),transparent),url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1000&q=82')}
+#app .vf-choice-human:before{background-image:linear-gradient(0deg,rgba(246,247,237,.12),transparent),url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=82')}
 #app .vf-transparency-layout h2,#app .vf-transparency-layout h2 em,#app .vf-transparency-layout>div:first-child>p,#app .vf-transparency-steps strong,#app .vf-transparency-steps small,#app .vf-transparency-steps>div>b{color:#17251a!important}
 #app .vf-transparency-steps{background:#f6f7ed!important;border-color:rgba(23,37,26,.2)!important}
 #app .vf-transparency-steps>div{border-color:rgba(23,37,26,.18)!important}
@@ -1789,7 +1789,7 @@ body>nav :is(.btn,.button,button){background:#e8bd58!important;color:#252720!imp
 #app .vf-choice-card{overflow:hidden!important;min-height:400px!important}
 #app .vf-choice-card:before{height:175px!important;margin:-35px -35px 24px!important;background-size:cover!important;background-position:center!important}
 #app .vf-choice-animal:before{background-image:url('https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1100&q=88')!important}
-#app .vf-choice-human:before{background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1100&q=88')!important}
+#app .vf-choice-human:before{background-image:url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1100&q=88')!important}
 #app .vf-choice-card>a{display:inline-flex!important;background:#c56c48!important;color:#fffaf0!important;padding:12px 18px!important;border-radius:999px!important}
 #app .vf-project-photo{height:245px!important;overflow:hidden!important}
 #app .vf-project-photo img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
@@ -2151,5 +2151,5 @@ html[dir="rtl"] #app table{direction:rtl}
 
 
 /* Keep programme and education imagery free of food/product photography. */
-#app .vf-motion-card.vf-learn{background-image:none!important;background-color:#f2efe7!important}
-#app .vf-choice-human:before{background-image:none!important;background-color:#f2efe7!important}
+#app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=85')!important;background-color:#f2efe7!important}
+#app .vf-choice-human:before{background-image:linear-gradient(0deg,rgba(246,247,237,.12),transparent),url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=82')!important}
