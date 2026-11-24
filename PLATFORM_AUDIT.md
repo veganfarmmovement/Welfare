@@ -227,33 +227,34 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - This is static/source validation. It does not verify the Unsplash CDN from a real browser, mobile cropping, visual quality at deployed breakpoints, accessibility with assistive technology, or page-load performance metrics.
 
 
-## Continuation — four-language selector and Team access interface (24 November 2026)
+
+## Final design reset and verification — 24 November 2026
 
 ### Implemented on `development/platform-transformation`
-- Reduced the language selector and active locale configuration to exactly English (`en`), Hindi (`hi`), Marathi (`mr`) and Gujarati (`gu`).
-- Removed Sindhi, Urdu, French, Spanish, Korean and Arabic from the active selector and locale configuration.
-- Unsupported previously saved locale values now safely fall back to English.
-- Kept the selected supported locale in local storage and retained in-page language switching.
-- Added an explicit shared-string coverage report. The locale dictionary contains 18 shared navigation/common strings per language. This count is not whole-site coverage.
-- The language module explicitly reports full-interface translation as NOT COMPLETE. Page copy, forms, dynamic records, Team portal and Founder dashboard still need complete translation and linguistic review.
-- Rebuilt the active Team Member sign-in screen with a labelled name/email form, ivory access card, visible input borders/placeholders, clear status region, keyboard focus treatment and responsive styling.
-- Preserved the existing secure email-link handler, Team approval flow, authentication and role logic.
-- Removed the now-unused Arabic/Urdu/Sindhi RTL font/direction overrides from the active final theme.
-- Updated browser regression coverage for the four supported locales and added checks for the Team sign-in visual surface, field labels and keyboard focus.
-- Updated stylesheet and locale-module cache keys.
+- Kept exactly four selectable locales: English (`en`), Hindi (`hi`), Marathi (`mr`) and Gujarati (`gu`). English remains the default; unsupported saved locale values fall back to English.
+- The shared language dictionary has 18 common navigation/interface strings per language. Full page copy, forms, dynamic records, Team portal and Founder dashboard are not fully translated. The language module discloses partial translation status and the need for native-speaker review.
+- Reworked the active shared-code Team gate into one clear route masthead and one opaque ivory access card. The outer route wrapper is transparent; the access-code field is labelled; keyboard focus is visible; the unlock action has verified high-contrast rendered text.
+- Preserved the existing `vfTeamUnlock(event)` handler and server-side `veganfarm-team-gate` verification. No access code, session-token behaviour, role rule or approval rule was changed.
+- Isolated private Team and Founder routes from the public donation enquiry/QR section, floating donation widget and optional piano player. The global donation and music features remain available on public routes.
+- Corrected hidden-state rendering so elements with the native `hidden` attribute are actually hidden.
+- Reworked the homepage hero with a cinematic forest overlay, readable ivory foreground text, champagne-gold primary action and glass secondary action while retaining the existing animal photograph.
+- Added stable element IDs and browser assertions for Team card visibility, rendered text contrast, route widget isolation, mobile overlap, hero typography and CTA contrast.
+- Updated the final theme stylesheet cache key.
 
-### Validation evidence
-- GitHub Actions browser run 45382446018 passed on the earlier four-language implementation: 161 route/viewport checks, all four locale direction/persistence checks, mobile menu open, zero browser/page errors, zero failed HTTP responses and 26 screenshots. This run predates the Team sign-in visual redesign and its new browser assertions.
-- GitHub Actions static run 45382446109 passed on the four-language implementation before the later Team sign-in CSS assertions were added.
-- GitHub Actions static run 45384226094 passed after the active shared-code gate markup and four-language assertions were aligned.
-- Browser regression run 45384225898 was launched for the active shared-code gate and its desktop/mobile screenshots; its result was still pending when this note was written. No screenshot is claimed until that run completes.
-- No authenticated Team or Founder account was used. Live Supabase role isolation and dashboard workflows remain NOT TESTED/BLOCKED without a safe staging project and authorised staging accounts.
-- No production deployment, database mutation, Supabase migration, Storage/RLS change, payment destination change or QR change was made.
+### Latest validation evidence
+- **Static security workflow — run 45392853465: PASSED.** Rescue-photo security assertions, signed-photo asset syntax, four-locale configuration and Deno type-check of the Team Edge Function all completed successfully.
+- **Chromium browser regression — run 45392853253: PASSED.** 161 route/viewport checks across seven viewport widths; four language persistence/direction checks passed; mobile navigation opened; 30 screenshots captured; zero browser audit errors and zero failed network responses.
+- Team access visual checks passed: one page heading, visible label, white card, transparent outer wrapper, white input, keyboard focus, button text contrast ratio 11.86:1, no floating CTA overlap, and no public enquiry/music/floating donation widgets on the private route.
+- Homepage hero checks passed for rendered heading/body text fill and primary/secondary CTA contrast. Desktop (1440px) and mobile (390px) screenshots were captured.
+- The browser run is Chromium-based. Firefox, Safari, physical-device testing, assistive-technology testing and deployed GitHub Pages performance testing have not been performed.
 
+### Explicitly not verified / blocked
+- Authenticated Team submission workflows and authenticated Founder dashboard workflows were not exercised. A safe staging Supabase project and authorised staging accounts are required.
+- Live Supabase RLS/Storage isolation, production persistence and end-to-end donation receipt verification remain NOT TESTED. No live payment was initiated.
+- Full Hindi, Marathi and Gujarati translation across every page, form and dynamic record remains INCOMPLETE and requires translation work plus native-speaker review.
 
-### Team gate CSS conflict correction — 24 November 2026
-- Browser regression identified that the legacy unified stylesheet still applied a dark forest background and dark input surface through `:has(#vf-team-code)` selectors, overriding the new light access card.
-- Removed the obsolete dark Team gate rules and retired panel styles from `assets/veganfarm-unified.css`.
-- Kept the new ivory access card and form styling in the final theme stylesheet, which loads after the unified stylesheet.
-- Bumped the unified stylesheet cache key so browsers receive the corrected CSS.
-- Browser run 45384357154 correctly exposed the legacy dark override; that CSS was removed and the unified stylesheet cache key refreshed. Static run 45385005603 PASSED after the removal. Browser run 45385005611 is in progress with active Team gate screenshot/style checks; the final visual fix remains NOT TESTED until that run completes.
+### Production protection
+- No production database reset, deletion or mutation was performed.
+- No Supabase migration, RLS policy, Storage policy, authentication setting or Edge Function deployment was performed in this continuation.
+- No payment link, QR destination or beneficiary payment detail was changed.
+- No production deployment or merge was performed. PR #6 remains open and in draft.
