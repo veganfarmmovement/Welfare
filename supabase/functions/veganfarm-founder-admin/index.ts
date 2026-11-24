@@ -62,11 +62,8 @@ async function load() {
   const cases=result.cases as Record<string,unknown>[];
   for(const c of cases) {
     const p=String(c.photo_path||"");
-    const path=p.startsWith("case-photos/")?p.slice("case-photos/".length):p;
-    if(path) {
-      const {data}=db!.storage.from("case-photos").getPublicUrl(path);
-      c.photo_url=data.publicUrl;
-    }
+    const path=p.startsWith("rescue-case-photos/")?p.slice("rescue-case-photos/".length):p;
+    if(path) c.photo_url=await signed("rescue-case-photos",path);
   }
   return result;
 }
