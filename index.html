@@ -2367,6 +2367,7 @@ currentUser().then(function(u){
 
   /* Enrich records with the separate Feeding/Treatment answers for Founder and public views. */
   function enrichLoadedCases(){
+    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();
     return client.from('rescue_cases').select('id,kind,animal_type,extra').then(function(r){
       if(r.error)throw r.error;
       var byId={};(r.data||[]).forEach(function(x){byId[String(x.id)]=x;});
