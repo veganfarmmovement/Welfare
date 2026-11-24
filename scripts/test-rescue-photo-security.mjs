@@ -32,7 +32,7 @@ assert.match(html, /vfProjectPhoto\(p\[0\]\)/, "Project cards must select a rele
 assert.match(html, /Photography credits/, "Website footer must expose photographer credits");
 assert.match(html, /unsplash.com\/license/, "Website must link the image license");
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the curated rescue-dog photograph");
-assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^}]*w=900/, "Mobile hero must use a smaller image variant");
+assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
