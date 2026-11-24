@@ -1455,7 +1455,14 @@ window.vfLoadPublicMore=function(){
     return sb.from('public_case_documents').select('case_id,document_type,file_path,is_public').in('case_id',ids).then(function(r){
       if(r.error)throw r.error;var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};a.docsPub=a.docsPub||{};a.docsPath=a.docsPath||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';a.docsPath[k]=d.file_path;jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(s.error)throw s.error;a.docs[k]=s.data.signedUrl;a.docsPub[k]=true;}));});return Promise.all(jobs).then(function(){if(typeof syncCases==='function')syncCases();if(typeof go==='function')go(true);});
     });
-  }).catch(function(error){console.error('Public rescue appeals or approved documents could not be loaded:',error);throw error;});
+  }).catch(function(error){
+    // Keep public browsing available when the published-view grant is unavailable.
+    // Do not fall back to querying the private rescue_cases table as anon.
+    window.vfPublicDataError=error;
+    console.warn('Public rescue case data is unavailable to anonymous visitors; private case data was not queried.',error);
+    window.dispatchEvent(new Event('vf:publicdataerror'));
+    return null;
+  });
 };
 window.vfAfterLogin=function(){
   return Promise.resolve(baseAfterLogin&&baseAfterLogin()).then(function(){
