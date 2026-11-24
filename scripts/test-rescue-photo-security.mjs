@@ -89,6 +89,7 @@ assert.match(simpleCss, /html body #app\.vf-page-team \.vf-route-body \.vf-team-
 assert.ok(simpleCss.includes("html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-wrap{"), "The Team wrapper must not become a second nested card");
 assert.ok(simpleCss.includes("-webkit-text-fill-color:#fffdf5!important"), "Private portal primary actions must force readable button text");
 assert.match(browserAudit, /team-login-wrapper-not-transparent/, "Browser audit must detect nested Team card surfaces");
+assert.match(browserAudit, /textFill:s\.webkitTextFillColor/, "Browser contrast checks must measure the rendered text fill");
 assert.match(simpleCss, /vf-team-access-submit\{[\s\S]*?background-color:#173d2b!important;[\s\S]*?color:#fffdf5!important/, "The Team unlock button must have explicit high-contrast colours");
 assert.match(simpleCss, /#wa\[hidden\]\{display:none!important\}/, "Hidden donation enquiry content must respect the native hidden attribute");
 assert.match(simpleCss, /#app\.vf-page-team ~ #vf-floating-donate/, "Floating donation controls must be isolated from the private Team portal");
