@@ -16,7 +16,7 @@ const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleF
 page.on('pageerror',e=>report.errors.push({type:'pageerror',message:e.message,route:activeRoute,width:activeWidth}));
 page.on('console',m=>{if(m.type()==='error')report.errors.push({type:'console',message:m.text(),route:activeRoute,width:activeWidth})});
 page.on('response',r=>{if(r.status()>=400)report.networkFailures.push({status:r.status(),url:r.url(),route:activeRoute,width:activeWidth})});
-const save=async(name,fullPage=true)=>{const file=path.join(out,'screenshots',name);await page.screenshot({path:file,fullPage,animations:'disabled'});report.screenshots.push(name)};
+const save=async(name,fullPage=true)=>{await page.locator('#app img[loading="lazy"]').evaluateAll(imgs=>imgs.forEach(img=>img.loading='eager'));await page.waitForFunction(()=>Array.from(document.querySelectorAll('#app img')).every(img=>img.complete),{timeout:10000}).catch(()=>{});const file=path.join(out,'screenshots',name);await page.screenshot({path:file,fullPage,animations:'disabled'});report.screenshots.push(name)};
 try{
  for(const width of widths){
   activeWidth=width;await page.setViewportSize({width,height:1000});
