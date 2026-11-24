@@ -40,8 +40,8 @@ assert.match(html, /Photography credits/, "Website footer must expose photograph
 assert.match(html, /unsplash.com\/license/, "Website must link the image license");
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the curated rescue-dog photograph");
 assert.doesNotMatch(visualCss, /photo-1509062522246-3755977927d7/, "Education imagery must not use the classroom apple photograph");
-assert.match(visualCss, /vf-motion-card\.vf-learn\{background-image:none!important/,"Education card must not use food photography");
-assert.match(visualCss, /vf-choice-human:before\{background-image:none!important/,"Programme card must not use food photography");
+assert.match(visualCss, /vf-motion-card\.vf-learn\{background-image:url\('https:\/\/images\.unsplash\.com\/photo-1524178232363-1fb2b075b655/,"Education card must use classroom learning imagery");
+assert.match(visualCss, /vf-choice-human:before\{background-image:linear-gradient/,"Programme card must use non-food education imagery");
 assert.match(forestJs, /photo-1524178232363-1fb2b075b655/, "Education card must use the selected illustrative classroom photograph");
 assert.doesNotMatch(forestJs, /photo-1503676260728-1c00da094a0b/, "Remove the apple classroom photograph from the presentation layer");
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
