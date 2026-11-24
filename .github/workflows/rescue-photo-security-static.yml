@@ -7,13 +7,13 @@ on:
       - "index.html"
       - "assets/veganfarm-platform-system.css"
       - "assets/veganfarm-unified.css"
-      - "assets/veganfarm-languages.js"
       - "assets/veganfarm-simple-colour-system.css"
       - "PHOTO_CREDITS.md"
       - "assets/veganfarm-private-case-photos.js"
       - "supabase/functions/veganfarm-team-gate/**"
       - "supabase-phase7-private-case-photo-storage*.sql"
       - "scripts/test-rescue-photo-security.mjs"
+      - "scripts/browser-audit.mjs"
       - ".github/workflows/rescue-photo-security-static.yml"
 
 permissions:
@@ -33,8 +33,8 @@ jobs:
         run: node scripts/test-rescue-photo-security.mjs
       - name: Parse signed-photo asset
         run: node --check assets/veganfarm-private-case-photos.js
-      - name: Parse locale selector
-        run: node --check assets/veganfarm-languages.js
+      - name: Parse browser audit script
+        run: node --check scripts/browser-audit.mjs
       - name: Set up Deno
         uses: denoland/setup-deno@v2
         with:
