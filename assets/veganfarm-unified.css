@@ -2115,3 +2115,36 @@ html[dir="rtl"] #app table{direction:rtl}
 #vf-piano-player .vf-piano-status,#vf-piano-player .vf-piano-volume-label{font-size:12px;color:#1d2c21}
 #vf-piano-volume{flex:1 1 110px;width:auto;min-width:0;max-width:100%;margin:0;padding:0;box-sizing:border-box}
 .vf-public-data-warning{margin:14px 0;padding:13px 16px;border:1px solid #c7a66a;border-left:3px solid #c7a66a;border-radius:6px;background:#f2efe7;color:#1d2c21;font-size:.9rem;line-height:1.55}
+
+
+/* About page: mission-led editorial layout rather than a generic card stack. */
+#app .vf-about-editorial{display:grid;gap:clamp(38px,6vw,76px)}
+#app .vf-about-lead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center}
+#app .vf-about-lead-image{position:relative;min-width:0}
+#app .vf-about-lead-image img{display:block;width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:8px}
+#app .vf-about-lead-image>span{display:block;margin-top:9px;color:#7a796f;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase}
+#app .vf-about-lead-copy h2{font:600 clamp(2rem,4vw,3.25rem)/1.08 "Newsreader",Georgia,serif;margin:12px 0 18px}
+#app .vf-about-lead-copy h2 em,#app .vf-about-section-title h2 em,#app .vf-rescue-intro h2 em{color:#286b36;font-style:italic}
+#app .vf-about-lead-copy p{max-width:60ch}
+#app .vf-about-status{margin-top:24px;padding-top:14px;border-top:1px solid #c7a66a;color:#6d6658;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase}
+#app .vf-about-section-title{max-width:650px;margin-bottom:24px}
+#app .vf-about-principles-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #e6e2d8;border-bottom:1px solid #e6e2d8}
+#app .vf-about-principle{padding:22px clamp(14px,2.5vw,30px);border-right:1px solid #e6e2d8}
+#app .vf-about-principle:first-child{padding-left:0}
+#app .vf-about-principle:last-child{border-right:0}
+#app .vf-about-principle span{color:#a17e49;font-size:.68rem;font-weight:750;letter-spacing:.15em}
+#app .vf-about-principle p{margin:12px 0 0;line-height:1.7}
+#app .vf-about-practice{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,70px);padding:clamp(22px,4vw,42px);background:#f2efe7;border-left:3px solid #c7a66a;border-radius:6px}
+#app .vf-about-practice h2{font:600 clamp(1.5rem,2.6vw,2.2rem)/1.12 "Newsreader",Georgia,serif;margin:12px 0}
+#app .vf-about-legal{padding-top:18px;border-top:1px solid #e6e2d8;color:#6d6658;font-size:.84rem}
+#app .vf-rescue-directory{display:grid;gap:30px}
+#app .vf-rescue-intro{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);align-items:end;gap:28px;padding-bottom:22px;border-bottom:1px solid #e6e2d8}
+#app .vf-rescue-intro h2{font:600 clamp(2rem,4vw,3.2rem)/1.08 "Newsreader",Georgia,serif;margin:12px 0 0}
+#app .vf-rescue-intro>p{margin:0;color:#656b62}
+#app .vf-rescue-list>.grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px}
+#app .vf-rescue-list .card{height:100%;border:1px solid #e6e2d8;border-radius:8px;overflow:hidden}
+#app .vf-rescue-list .card .b{padding:20px}
+#app .vf-rescue-footnote{padding:16px 18px;border-left:3px solid #c7a66a;background:#f2efe7;color:#625f56;font-size:.84rem}
+#app .vf-rescue-empty{padding:clamp(24px,5vw,52px);background:#f2efe7;border:1px solid #e6e2d8;border-radius:8px}
+#app .vf-rescue-empty h2{font:600 clamp(1.6rem,3vw,2.3rem)/1.12 "Newsreader",Georgia,serif;margin:12px 0}
+@media(max-width:760px){#app .vf-about-lead,#app .vf-about-practice,#app .vf-rescue-intro{grid-template-columns:1fr}#app .vf-about-principles-grid{grid-template-columns:1fr}#app .vf-about-principle{padding:18px 0;border-right:0;border-bottom:1px solid #e6e2d8}#app .vf-about-principle:last-child{border-bottom:0}#app .vf-rescue-intro{gap:12px}}
