@@ -607,3 +607,41 @@ html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-a
   font:800 13px 'Instrument Sans',Arial,sans-serif!important;
   letter-spacing:.08em!important;
 }
+
+
+/* Explicit ID-level colour authority for legacy selectors with higher :is() specificity. */
+#app #vf-team-unlock-button{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  border-color:#173d2b!important;
+}
+#app #vf-home-hero-title,
+#app #vf-home-hero-description,
+#app #vf-home-hero-kicker,
+#app #vf-home-hero-signature,
+#app #vf-home-hero-side-note,
+#app #vf-home-hero-bottom{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.42)!important;
+}
+#app #vf-home-hero-title em{color:#d8c69a!important;-webkit-text-fill-color:#d8c69a!important}
+#app #vf-home-hero-kicker{color:#e6d5ad!important;-webkit-text-fill-color:#e6d5ad!important}
+#app #vf-home-hero-signature strong{color:#d5ef6b!important;-webkit-text-fill-color:#d5ef6b!important}
+#app #vf-home-hero-primary{
+  background:linear-gradient(135deg,#e0ca94,#c5a96c)!important;
+  color:#17251a!important;
+  -webkit-text-fill-color:#17251a!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+#app #vf-home-hero-secondary{
+  background:rgba(255,255,255,.10)!important;
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  border:1px solid rgba(255,253,245,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(12px)!important;
+}
