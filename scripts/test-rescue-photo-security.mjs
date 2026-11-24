@@ -37,6 +37,7 @@ assert.match(photoAsset, /SIGNED_URL_TTL=300/, "Signed URLs must expire after fi
 assert.match(photoAsset, /RENEW_AFTER_MS=240000/, "Signed URLs must refresh before expiry");
 assert.match(photoAsset, /item\.live\.photo=item\.photo/, "Public live snapshot must receive the signed URL");
 assert.match(photoAsset, /window\.syncCases\(\)/, "Public case cards must be rebuilt after signing");
+assert.match(photoAsset, /update\(\{photo_path:null,photo_url:null\}\)/, "Founder photo removal must persist to the database");
 
 assert.match(edge, /from\("rescue-case-photos"\)\.upload/, "Team Edge Function must upload to the private bucket");
 assert.match(edge, /photo_path: \`rescue-case-photos\/\$\{photoPath\}\`/, "Team Edge Function must persist the bucket prefix");
