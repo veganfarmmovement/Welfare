@@ -95,6 +95,18 @@ Deno.serve(async (req: Request) => {
   if (contentType.includes("application/json")) {
     let payload: Record<string, unknown>;
     try { payload = await req.json(); } catch (_error) { return json({ error: "Invalid request." }, 400); }
+    if (payload.action === "my_submissions" && typeof payload.token === "string") {
+      const tokenValue = payload.token.trim();
+      if (!/^[0-9a-f]{64}$/.test(tokenValue)) return json({ error: "Team access has expired. Enter the code again." }, 401);
+      const { data: validSession, error: validError } = await db.rpc("vf_team_gate_session_valid", { p_token_hash: await sha256(tokenValue) });
+      if (validError || validSession !== true) return json({ error: "Team access has expired. Enter the code again." }, 401);
+      const { data: submissions, error: submissionsError } = await db.from("rescue_cases")
+        .select("id,case_code,animal_name,animal_type,location,kind,status,publication,review_note,created_at,updated_at")
+        .contains("extra", { submitted_via: "VEGANFARM Team" })
+        .order("created_at", { ascending: false });
+      if (submissionsError) return json({ error: "Could not load Team submissions." }, 500);
+      return json({ ok: true, submissions: submissions || [] });
+    }
     if (payload.action !== "verify" || typeof payload.code !== "string") {
       return json({ error: "Invalid request." }, 400);
     }
@@ -187,10 +199,18 @@ Deno.serve(async (req: Request) => {
     return json({ error: "Case video must be MP4, WebM or MOV and no larger than 50 MB." }, 400);
   }
 
-  for (const file of [photo, report, bill, video]) {
-    if (file && !(await validFileSignature(file))) {
-      return json({ error: "One of the uploaded files does not match its declared file type." }, 400);
-    }
+  // Optional supporting evidence is accepted for both Feeding and Treatment submissions.
+  const attachmentEntries = form.getAll("attachments").filter((entry): entry is File => entry instanceof File && entry.size > 0);
+  if (attachmentEntries.length > 8) return json({ error: "Upload a maximum of 8 supporting files." }, 400);
+  const attachments: File[] = [];
+  for (const entry of attachmentEntries) {
+    const accepted = validFile(entry, 10 * 1024 * 1024, ["image/jpeg", "image/png", "application/pdf", "video/mp4", "video/webm", "video/quicktime"]);
+    if (!accepted) return json({ error: "Supporting files must be JPG, PNG, PDF, MP4, WebM or MOV and no larger than 10 MB each." }, 400);
+    attachments.push(accepted);
+  }
+
+  for (const file of [photo, report, bill, video, ...attachments]) {
+    if (file && !(await validFileSignature(file))) return json({ error: "One of the uploaded files does not match its declared file type." }, 400);
   }
 
   const caseId = crypto.randomUUID();
@@ -199,12 +219,12 @@ Deno.serve(async (req: Request) => {
 
   try {
     const photoPath = `${caseId}/animal-${crypto.randomUUID()}.${extension(photo.type)}`;
-    const photoUpload = await db.storage.from("rescue-case-photos").upload(photoPath, photo, {
+    const photoUpload = await db.storage.from("case-photos").upload(photoPath, photo, {
       contentType: photo.type,
       upsert: false,
     });
     if (photoUpload.error) throw new Error("Animal photograph upload failed: " + photoUpload.error.message);
-    uploaded.push({ bucket: "rescue-case-photos", path: photoPath });
+    uploaded.push({ bucket: "case-photos", path: photoPath });
 
     const extra = {
       case_type: kind,
@@ -235,7 +255,7 @@ Deno.serve(async (req: Request) => {
       publication_status: "Pending",
       target_amount: null,
       fundraising_target: null,
-      photo_path: `rescue-case-photos/${photoPath}`,
+      photo_path: photoPath,
       submitted_by: null,
       urgent: false,
       is_urgent: false,
@@ -266,6 +286,23 @@ Deno.serve(async (req: Request) => {
       documents.push({
         case_id: caseId,
         document_type: documentType,
+        file_path: path,
+        is_public: false,
+        created_by: null,
+      });
+    }
+
+    for (const doc of attachments) {
+      const path = `${caseId}/supporting-${crypto.randomUUID()}.${extension(doc.type)}`;
+      const upload = await db.storage.from("case-documents").upload(path, doc, {
+        contentType: doc.type,
+        upsert: false,
+      });
+      if (upload.error) throw new Error("Supporting evidence upload failed: " + upload.error.message);
+      uploaded.push({ bucket: "case-documents", path });
+      documents.push({
+        case_id: caseId,
+        document_type: "supporting_attachment",
         file_path: path,
         is_public: false,
         created_by: null,
