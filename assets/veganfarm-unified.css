@@ -2045,11 +2045,6 @@ footer a:hover{color:var(--vf-gold)!important}
 }
 
 /* Language selector */
-html[dir="rtl"] body{text-align:start}
-html[dir="rtl"] nav .wrap{direction:rtl}
-html[dir="rtl"] #app .adm{direction:rtl}
-html[dir="rtl"] #app input,html[dir="rtl"] #app textarea{direction:rtl;text-align:right}
-html[dir="rtl"] #app table{direction:rtl}
 
 /* Fundraising panel: keep all text on a clean, consistent light surface. */
 #app .vf-funding{background:var(--vf-stone)!important;color:var(--vf-charcoal)!important;border:1px solid var(--vf-line)!important;border-radius:4px!important;box-shadow:none!important}
