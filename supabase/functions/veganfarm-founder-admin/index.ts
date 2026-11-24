@@ -163,7 +163,7 @@ Deno.serve(async (req:Request)=>{
   if(action==="volunteer_review") {
     const id=safe(body.id,80),status=safe(body.status,20);
     if(!id||!["new","reviewed","approved","rejected"].includes(status))return reply({error:"Invalid volunteer review."},400);
-    const {error}=await db.from("volunteer_applications").update({status}).eq("id",id);
+    const {error}=await db.from("volunteer_applications").update({status,reviewed_at:new Date().toISOString(),reviewed_by:null}).eq("id",id);
     if(error)return reply({error:error.message},400);
     await audit("Volunteers","Volunteer "+status,id,"Founder reviewed volunteer application");
     return reply({ok:true});
