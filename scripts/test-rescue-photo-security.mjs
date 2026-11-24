@@ -40,11 +40,18 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile he
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.match(html, /veganfarm-unified\.css/, "The consolidated stylesheet must load");
+assert.match(html, /<link rel="stylesheet" href="assets\\/veganfarm-unified\\.css\\?v=[^"]+">/, "Unified stylesheet link must be a complete valid HTML tag");
+assert.match(html, /<link rel="stylesheet" href="assets\\/veganfarm-simple-colour-system\\.css\\?v=[^"]+">/, "Simple theme stylesheet link must be a complete valid HTML tag");
 assert.match(html, /veganfarm-simple-colour-system\.css\?v=20261124-2/, "The simple two-colour override must load");
 assert.ok(html.indexOf("veganfarm-unified.css") < html.indexOf("veganfarm-simple-colour-system.css"), "The simple colour system must load after the full design bundle");
 assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\\.css/, "Legacy stylesheets must not load independently");
 assert.match(simpleCss, /--vf-simple-bg:#fffdf5/, "The page background must use the single ivory token");
 assert.match(simpleCss, /--vf-simple-text:#1d2c21/, "All text must use the single dark text token");
+assert.match(simpleCss, /--vf-forest:#173d2b/, "Primary actions must use the restrained forest accent");
+assert.match(simpleCss, /--vf-leaf:#286b36/, "Progress indicators must use the leaf accent");
+assert.match(simpleCss, /--vf-gold:#c7a66a/, "Decorative details must use the champagne accent");
+assert.match(simpleCss, /background:var\\(--vf-forest\\)!important/, "Primary buttons must use the forest accent");
+assert.match(simpleCss, /background:var\\(--vf-leaf\\)!important/, "Progress fills must use the leaf accent");
 assert.match(simpleCss, /background-color:transparent!important/, "Nested text and card surfaces must not introduce separate colour blocks");
 assert.match(simpleCss, /#app \.hero \*/, "Hero copy must follow the same dark text colour");
 assert.match(simpleCss, /photo-1643786261573-9838e66d89dc/, "The animal hero photograph must remain visible");
