@@ -87,7 +87,7 @@ async function refresh(){
  catch(e){if(/session expired/i.test(e.message)){setToken('');login();}else{app.innerHTML='<section class="vf-admin-login"><div class="vf-admin-login-card"><h2>Dashboard could not load</h2><p>'+esc(e.message)+'</p><button class="vf-admin-primary" id="vf-admin-retry">Try again</button></div></section>';document.getElementById('vf-admin-retry').onclick=refresh;}}
  finally{busy=false;}
 }
-async function logout(){setToken('');data=null;login();}
+async function logout(){try{if(getToken())await api('logout',{});}catch(e){}setToken('');data=null;login();}
 async function handleAction(e){
  var b=e.currentTarget,id=b.dataset.id,action=b.dataset.vfAction;
  try{
