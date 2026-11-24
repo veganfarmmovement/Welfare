@@ -142,3 +142,24 @@ The active website's public content must continue to describe VEGANFARM as an in
 4. Verify legacy published case images still render through signed URLs and that archived/rejected legacy images cannot be signed by anonymous users.
 5. Test the Phase 6 read-only view migration separately; do not combine it with Phase 7 until the public case pages and Founder workflow pass.
 6. Complete browser tests, QR scanning, auth, donations, approvals, mobile layout and refresh reliability before production deployment.
+
+
+## Phase 7 follow-up — workflow review and static CI (24 November 2026)
+
+A further read-only review covered all active rescue-photo flows and the existing private bucket:
+
+- The private `rescue-case-photos` bucket was already private and had 0 objects. Its four existing policies were based on `auth.jwt()->app_metadata.role = 'admin'` (view, upload, update, delete). The Phase 7 migration now explicitly drops all four and replaces them with the application's approved-profile role checks.
+- The legacy public `case-photos` bucket has 5 JPEG objects (693,656 bytes): 3 attached to published cases, 1 archived and 1 rejected. The 5 object keys and database paths remain unchanged by the migration; the bucket becomes private.
+- Three other published case records have external `photo_url` values and no Storage path. These are external Wikimedia/GitHub assets, not bucket objects; they remain public only through the published public projection.
+- The authenticated Founder editor, direct authenticated Team submit/edit handlers, and shared-code Team Edge Function were traced. All six active browser upload call sites now use `rescue-case-photos`. The Team Edge Function development copy also uses that bucket, but the production Edge Function remains unchanged.
+- Direct Team uploads are scoped to an `auth.uid()` folder and associated with `submitted_by`. Shared-code Edge Function submissions have `submitted_by=NULL`; they are service-role uploads and therefore only Founder may sign/preview their pending images.
+- The signed-photo helper now reads the top-level lexical `APP` binding (not `window.APP`), updates the public `live` snapshot as well as the source record, refreshes 5-minute URLs after 4 minutes, and persists the Founder Remove Photograph action by clearing both photo fields on the case row. Removed objects are retained privately for reviewed cleanup.
+- A read-only preflight SQL file and a guarded rollback SQL file were added. The rollback requires new-bucket objects to be copied and verified in the legacy bucket before it rewrites prefixed paths or restores public access.
+
+### New static validation
+- Added `scripts/test-rescue-photo-security.mjs` to parse all inline app scripts and assert upload targets, no public case-photo URL generation, signed URL behaviour, Edge Function path consistency, policy requirements and rollback guards.
+- Added `.github/workflows/rescue-photo-security-static.yml` to run these checks on PR changes. The first CI run is being checked; its final result will be recorded separately.
+- No paid Supabase branch was created. No production storage, policy, Edge Function, object or database row was modified.
+
+### Staging-only test cases still outstanding
+Anonymous access, Founder previews across every publication state, Team owner isolation, shared-code Edge Function uploads, URL expiry/refresh, object replacement/removal and rejection/archive denial still require a separate Supabase environment and browser sessions. These are not claimed as passed.
