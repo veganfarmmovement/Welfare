@@ -43,6 +43,8 @@ assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veg
 assert.match(unifiedCss, /--vf-forest:#173D2B/, "The bundled stylesheet must contain the luxury palette");
 assert.match(platformCss, /--vf-forest:#173D2B/, "Luxury forest palette must be defined");
 assert.match(platformCss, /--vf-ivory:#FFFDF5/, "Luxury ivory palette must be defined");
+assert.match(platformCss, /#app \.vf-funding\{background:var\(--vf-stone\)!important/, "Fundraising panels must use the shared light surface");
+assert.match(platformCss, /#app \.vf-funding \*\{background-color:transparent!important/, "Fundraising text must not sit on separate background blocks");
 assert.match(html, /id="vf-language"/, "Language selector must be present");
 assert.match(localeJs, /code:'sd'/, "Sindhi must be offered in the locale selector");
 assert.match(localeJs, /code:'ur',label:'اردو',dir:'rtl'/, "Urdu must use RTL");
