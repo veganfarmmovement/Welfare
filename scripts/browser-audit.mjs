@@ -212,7 +212,7 @@ try {
     };
   });
   if(report.heroContrast.headingFill!=='rgb(255, 253, 245)'||report.heroContrast.bodyFill!=='rgb(255, 253, 245)')report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
-  if(report.heroContrast.primaryColor!=='rgb(23, 37, 26)'||!String(report.heroContrast.primaryBackground).includes('rgb(224, 202, 148)'))report.errors.push({type:'hero-primary-button-contrast',actual:report.heroContrast});
+  if(report.heroContrast.primaryColor!=='rgb(23, 37, 26)'||report.heroContrast.primaryTextFill!=='rgb(23, 37, 26)'||!String(report.heroContrast.primaryBackground).includes('rgb(224, 202, 148)'))report.errors.push({type:'hero-primary-button-contrast',actual:report.heroContrast});
   if(report.heroContrast.secondaryTextFill!=='rgb(255, 253, 245)')report.errors.push({type:'hero-secondary-button-contrast',actual:report.heroContrast});
   await page.setViewportSize({width:390,height:844});
   await page.screenshot({path:path.join(out,'screenshots','home-hero-mobile-390.png'),fullPage:false,animations:'disabled'});
