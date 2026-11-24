@@ -162,7 +162,7 @@ try {
       codeLabel:!!document.querySelector('label[for="vf-team-code"]'),
       card:card?style(card):null,wrapper:wrap?style(wrap):null,input:input?style(input):null,button:button?style(button):null,
       cardRect:card?rect(card):null,inputRect:ir,buttonRect:button?rect(button):null,
-      buttonContrast:button?contrast(getComputedStyle(button).color,getComputedStyle(button).backgroundColor):0,
+      buttonContrast:button?contrast(getComputedStyle(button).webkitTextFillColor||getComputedStyle(button).color,getComputedStyle(button).backgroundColor):0,
       floatingVisible:visible(floating),musicVisible:visible(music),
       publicEnquiriesVisible:visible(enquiries),floatingOverlapsInput:overlap
     };
@@ -174,7 +174,7 @@ try {
   if(!teamLogin.card||teamLogin.card.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-card-not-light',actual:teamLogin.card});
   if(!teamLogin.wrapper||teamLogin.wrapper.background!=='rgba(0, 0, 0, 0)')report.errors.push({type:'team-login-wrapper-not-transparent',actual:teamLogin.wrapper});
   if(!teamLogin.input||teamLogin.input.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-input-not-light',actual:teamLogin.input});
-  if(!teamLogin.button||teamLogin.button.background!=='rgb(23, 61, 43)'||teamLogin.button.color!=='rgb(255, 253, 245)'||teamLogin.buttonContrast<4.5)report.errors.push({type:'team-login-button-contrast',actual:teamLogin.button,contrast:teamLogin.buttonContrast});
+  if(!teamLogin.button||teamLogin.button.background!=='rgb(23, 61, 43)'||teamLogin.button.textFill!=='rgb(255, 253, 245)'||teamLogin.buttonContrast<4.5)report.errors.push({type:'team-login-button-contrast',actual:teamLogin.button,contrast:teamLogin.buttonContrast});
   if(teamLogin.floatingVisible||teamLogin.musicVisible||teamLogin.publicEnquiriesVisible)report.errors.push({type:'team-private-route-public-widget-visible',floating:teamLogin.floatingVisible,music:teamLogin.musicVisible,enquiries:teamLogin.publicEnquiriesVisible});
   if(teamLogin.floatingOverlapsInput)report.errors.push({type:'team-floating-cta-overlaps-input'});
   await page.locator('#vf-team-code').focus();
@@ -205,15 +205,15 @@ try {
     const ps=primary?getComputedStyle(primary):null,ss=secondary?getComputedStyle(secondary):null;
     return {
       heading:h?getComputedStyle(h).color:null,body:p?getComputedStyle(p).color:null,
-      headingFill:h?getComputedStyle(h).webkitTextFillColor:null,
-      primaryColor:ps?ps.color:null,primaryBackground:ps?ps.backgroundImage:null,
-      secondaryColor:ss?ss.color:null,secondaryBackground:ss?ss.backgroundColor:null,
+      headingFill:h?getComputedStyle(h).webkitTextFillColor:null,bodyFill:p?getComputedStyle(p).webkitTextFillColor:null,
+      primaryColor:ps?ps.color:null,primaryTextFill:ps?ps.webkitTextFillColor:null,primaryBackground:ps?ps.backgroundImage:null,
+      secondaryColor:ss?ss.color:null,secondaryTextFill:ss?ss.webkitTextFillColor:null,secondaryBackground:ss?ss.backgroundColor:null,
       backdrop:bg?getComputedStyle(bg).backgroundImage:null,matchedRules:matched.slice(-25)
     };
   });
-  if(report.heroContrast.heading!=='rgb(255, 253, 245)'||!String(report.heroContrast.body).includes('255, 253, 245'))report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
+  if(report.heroContrast.headingFill!=='rgb(255, 253, 245)'||report.heroContrast.bodyFill!=='rgb(255, 253, 245)')report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
   if(report.heroContrast.primaryColor!=='rgb(23, 37, 26)'||!String(report.heroContrast.primaryBackground).includes('rgb(224, 202, 148)'))report.errors.push({type:'hero-primary-button-contrast',actual:report.heroContrast});
-  if(report.heroContrast.secondaryColor!=='rgb(255, 253, 245)')report.errors.push({type:'hero-secondary-button-contrast',actual:report.heroContrast});
+  if(report.heroContrast.secondaryTextFill!=='rgb(255, 253, 245)')report.errors.push({type:'hero-secondary-button-contrast',actual:report.heroContrast});
   await page.setViewportSize({width:390,height:844});
   await page.screenshot({path:path.join(out,'screenshots','home-hero-mobile-390.png'),fullPage:false,animations:'disabled'});
   await page.setViewportSize({width:1440,height:1000});
