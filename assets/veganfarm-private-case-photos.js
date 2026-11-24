@@ -88,17 +88,33 @@
     var item=appCases().find(function(record){return String(record.id)===String(caseCode);});
     if(!item||!item.dbId){notify('This case is not linked to a saved record.');return;}
     if(window.vfRole!=='founder'){notify('Founder sign-in required.');return;}
+    var storedPath=String(item.photoPath||item.ppath||'');
+    var source=sourceFor(storedPath);
     client.from('rescue_cases').update({photo_path:null,photo_url:null}).eq('id',item.dbId).select('id').single().then(function(result){
       if(result.error)throw result.error;
       item.photo='';item.photoUrl='';item.photoPath='';item.ppath='';item.photoSignedAt=null;
       if(item.live){item.live.photo='';item.live.photoUrl='';}
-      return window.vfReload?window.vfReload():signLoadedCases();
-    }).then(function(){
-      notify('Case photograph removed from the public and Founder case record.');
-      if(typeof window.go==='function')window.go(true);
+      if(!source)return {removed:false,reason:'external'};
+      // Do not remove an object that another case row still references.
+      return client.from('rescue_cases').select('id').eq('photo_path',storedPath).neq('id',item.dbId).limit(1).then(function(refs){
+        if(refs.error)return {removed:false,reason:'reference-check-failed',error:refs.error};
+        if((refs.data||[]).length)return {removed:false,reason:'still-referenced'};
+        return client.storage.from(source.bucket).remove([source.path]).then(function(deleted){
+          if(deleted.error)return {removed:false,reason:'storage-delete-failed',error:deleted.error};
+          return {removed:true};
+        });
+      });
+    }).then(function(outcome){
+      return Promise.resolve(window.vfReload?window.vfReload():signLoadedCases()).then(function(){
+        if(outcome&&outcome.removed)notify('Case photograph and private storage object deleted.');
+        else if(outcome&&outcome.reason==='still-referenced')notify('Case photograph removed. The shared storage object was retained because another case still references it.');
+        else if(outcome&&outcome.reason==='external')notify('External photograph removed from the case record.');
+        else notify('Case photograph removed from the case record. A private storage object may need Founder cleanup.');
+        if(typeof window.go==='function')window.go(true);
+      });
     }).catch(function(error){
       console.error('Founder photo removal failed:',error);
-      notify('Photo was not removed: '+(error&&error.message?error.message:'Please try again.'));
+      notify('Photo removal failed: '+(error&&error.message?error.message:'Please try again.'));
     });
   };
 
