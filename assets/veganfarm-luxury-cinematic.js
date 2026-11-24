@@ -85,7 +85,7 @@ document.addEventListener('click',function(e){
  var marker=e.target.closest&&e.target.closest('[data-vf-city]');
  if(marker){var city=marker.getAttribute('data-vf-city');app.querySelectorAll('[data-vf-city]').forEach(function(b){b.setAttribute('aria-pressed',String(b===marker))});app.querySelectorAll('[data-vf-case-city]').forEach(function(row){row.hidden=!(row.getAttribute('data-vf-case-city')===city||row.getAttribute('data-vf-case-city')==='other')})}
 });
-function afterRender(){decorateRoute();reveal()}
+function afterRender(){app.classList.add('vf-lx-motion-ready');decorateRoute();reveal()}
 var observer=new MutationObserver(function(){afterRender()});
 observer.observe(app,{childList:true,subtree:true});
 window.addEventListener('hashchange',function(){setTimeout(afterRender,0)});
