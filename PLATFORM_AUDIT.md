@@ -163,3 +163,10 @@ A further read-only review covered all active rescue-photo flows and the existin
 
 ### Staging-only test cases still outstanding
 Anonymous access, Founder previews across every publication state, Team owner isolation, shared-code Edge Function uploads, URL expiry/refresh, object replacement/removal and rejection/archive denial still require a separate Supabase environment and browser sessions. These are not claimed as passed.
+
+
+### Static CI result
+- GitHub Actions workflow `Rescue photo security static checks` completed successfully on the development PR branch.
+- The Node static test parsed all 16 non-empty inline JavaScript blocks in active `index.html`, parsed the private-photo asset, and passed assertions for all six photo-upload code occurrences, private-bucket path prefixing, no case-photo `getPublicUrl`, the active shared-code Edge Function call, signed URL TTL/refresh, Founder photo removal, Edge Function bucket/prefix/signature checks, SQL policy requirements and rollback guards.
+- `node --check assets/veganfarm-private-case-photos.js` passed.
+- These checks are source-level only; they do not execute SQL, call Storage APIs or test role-based access.
