@@ -42,7 +42,7 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the c
 assert.doesNotMatch(visualCss, /photo-1509062522246-3755977927d7/, "Education imagery must not use the classroom apple photograph");
 assert.match(visualCss, /vf-motion-card\.vf-learn\{background-image:url\('https:\/\/images\.unsplash\.com\/photo-1524178232363-1fb2b075b655/,"Education card must use classroom learning imagery");
 assert.match(visualCss, /vf-choice-human:before\{background-image:linear-gradient/,"Programme card must use non-food education imagery");
-assert.match(html, /vf-team-access-panel/,"Team access gate must use a dedicated semantic wrapper");
+assert.match(html, /vf-team-access-card/,"Team access gate must use a dedicated light-theme card");
 assert.match(visualCss, /vf-team-access-panel\{background:#fff!important;color:#1d2c21!important/,"Team access panel must keep credentials readable");
 assert.match(visualCss, /#app\.vf-page-team \.sec\{background:#fffdf5!important;color:#1d2c21!important/,"Team route must preserve readable contrast across legacy shells");
 assert.match(forestJs, /photo-1524178232363-1fb2b075b655/, "Education card must use the selected illustrative classroom photograph");
