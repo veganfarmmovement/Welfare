@@ -139,3 +139,11 @@ footer{border-top:1px solid var(--vf-simple-line)!important}
 @media(prefers-reduced-motion:reduce){
   #app *,#app *:before,#app *:after{animation:none!important;transition:none!important}
 }
+
+
+/* Keep dedicated route mastheads legible above the ivory page surfaces. */
+#app .vf-route-masthead{background:linear-gradient(118deg,#173d2b 0%,#214d36 62%,#2c5a3d 100%)!important;color:#fffdf5!important}
+#app .vf-route-masthead h1{color:#fffdf5!important}
+#app .vf-route-masthead p{color:rgba(255,253,245,.84)!important}
+#app .vf-route-kicker{color:#d8bd8d!important}
+#app .vf-route-index{color:rgba(255,253,245,.66)!important}
