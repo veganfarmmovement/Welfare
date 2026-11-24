@@ -841,3 +841,10 @@ body{font-size:16px!important;line-height:1.65!important}
 
 /* Preserve a pale scan-safe quiet zone around UPI QR images */
 #app img[alt*="QR"],#app img[alt*="qr"]{background:#f8faf2!important;border:1px solid rgba(23,37,26,.2)!important;padding:8px!important;object-fit:contain!important}
+
+/* Apply the dark-ink rule to all page-level widgets, not only the main app root */
+body *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe){color:#17251a!important}
+body *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe)::before,
+body *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe)::after{color:#17251a!important}
+#toast,#ann,#tick{background:#e2ebd8!important;color:#17251a!important;border:1px solid rgba(23,37,26,.18)!important}
+#toast * ,#ann * ,#tick *{color:#17251a!important}
