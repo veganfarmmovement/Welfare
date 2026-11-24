@@ -344,3 +344,189 @@ body .vf-team-access-card{
 body .vf-team-access-card :is(h1,h2,h3,h4,p,label,small,b,strong,span){
   color:#1d2c21!important;
 }
+
+
+/* FINAL PRESENTATION OVERRIDES — private portal clarity, correct hidden semantics and cinematic hero contrast. */
+/* The public donation enquiry region uses the native hidden attribute on private routes. */
+#wa[hidden]{display:none!important}
+
+/* Keep public conversion controls out of authenticated/private workspaces. */
+#app.vf-page-team ~ #wa,
+#app.vf-page-admin ~ #wa{display:none!important}
+#app.vf-page-team ~ #vf-floating-donate,
+#app.vf-page-admin ~ #vf-floating-donate,
+#app.vf-page-team ~ #vf-piano-player,
+#app.vf-page-admin ~ #vf-piano-player{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Team portal: explicit opaque surface and high-contrast controls, with route-level specificity. */
+html body #app.vf-page-team .vf-route-body .vf-team-access{
+  background:#fffdf5!important;
+  color:#1d2c21!important;
+  padding:clamp(54px,7vw,88px) 0!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-wrap{
+  width:min(100% - 36px,560px)!important;
+  max-width:560px!important;
+  margin-inline:auto!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  background-color:#fff!important;
+  background-image:none!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:20px!important;
+  padding:clamp(24px,5vw,40px)!important;
+  box-shadow:0 22px 60px rgba(29,44,33,.10)!important;
+  opacity:1!important;
+  isolation:isolate!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  margin:0 0 26px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head h2{
+  margin:0 0 4px!important;
+  color:#1d2c21!important;
+  font:600 1.5rem/1.15 'Newsreader',Georgia,serif!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head p{
+  margin:0!important;
+  color:#647267!important;
+  font-size:13px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form{
+  display:grid!important;
+  gap:10px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form label{
+  display:block!important;
+  margin:0 0 2px!important;
+  color:#26382a!important;
+  font-size:13px!important;
+  font-weight:700!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:54px!important;
+  margin:0!important;
+  padding:14px 16px!important;
+  border:1px solid #c9d0c7!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  background-color:#fff!important;
+  color:#1d2c21!important;
+  font:inherit!important;
+  box-shadow:0 1px 2px rgba(29,44,33,.04)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input::placeholder{
+  color:#68766a!important;
+  opacity:1!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input:focus-visible{
+  outline:3px solid rgba(199,166,106,.52)!important;
+  outline-offset:3px!important;
+  border-color:#173d2b!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-status{
+  min-height:24px!important;
+  margin:4px 0!important;
+  color:#435447!important;
+  font-size:13px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-submit{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:52px!important;
+  margin:4px 0 0!important;
+  border:1px solid #173d2b!important;
+  border-radius:10px!important;
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  color:#fffdf5!important;
+  font-weight:750!important;
+  letter-spacing:.01em!important;
+  box-shadow:0 8px 18px rgba(23,61,43,.16)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-submit:hover{
+  background:#245b3c!important;
+  color:#fff!important;
+  transform:translateY(-1px)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-footnote{
+  max-width:52ch!important;
+  margin:18px auto 0!important;
+  color:#647267!important;
+  font-size:12px!important;
+  line-height:1.6!important;
+  text-align:center!important;
+}
+@media(max-width:600px){
+  html body #app.vf-page-team .vf-route-body .vf-team-access{padding:36px 0!important}
+  html body #app.vf-page-team .vf-route-body .vf-team-access-card{padding:24px 20px!important;border-radius:16px!important}
+}
+
+/* Cinematic homepage hero: keep the animal image, restore a deep forest scrim and readable ivory type. */
+#app .vf-motion-hero{
+  background:#0b241a!important;
+  color:#fffdf5!important;
+}
+#app .vf-motion-hero .vf-motion-backdrop{
+  background-image:
+    linear-gradient(90deg,rgba(5,22,15,.94) 0%,rgba(5,22,15,.84) 44%,rgba(5,22,15,.34) 76%,rgba(5,22,15,.12) 100%),
+    linear-gradient(0deg,rgba(5,22,15,.48),transparent 52%),
+    url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=2200&q=88')!important;
+  background-position:center 48%!important;
+  filter:none!important;
+}
+#app .vf-motion-hero .vf-hero-copy h1,
+#app .vf-motion-hero .vf-hero-copy h1 em,
+#app .vf-motion-hero .vf-hero-copy p,
+#app .vf-motion-hero .vf-overline,
+#app .vf-motion-hero .vf-founder-signature,
+#app .vf-motion-hero .vf-founder-signature strong,
+#app .vf-motion-hero .vf-hero-side-note,
+#app .vf-motion-hero .vf-hero-side-note b,
+#app .vf-motion-hero .vf-hero-side-note small,
+#app .vf-motion-hero .vf-hero-bottom span{
+  color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.34)!important;
+}
+#app .vf-motion-hero .vf-hero-copy h1 em{color:#d8c69a!important}
+#app .vf-motion-hero .vf-founder-signature strong{color:#d5ef6b!important}
+#app .vf-motion-hero .vf-overline{color:#e6d5ad!important}
+#app .vf-motion-hero .vf-overline i{background:#d8c69a!important}
+#app .vf-motion-hero .vf-hero-copy p{color:rgba(255,253,245,.92)!important}
+#app .vf-motion-hero .vf-button-gold{
+  background:linear-gradient(135deg,#e0ca94,#c5a96c)!important;
+  color:#17251a!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+#app .vf-motion-hero .vf-button-glass{
+  background:rgba(255,255,255,.10)!important;
+  color:#fffdf5!important;
+  border:1px solid rgba(255,253,245,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(12px)!important;
+}
+#app .vf-motion-hero .vf-button-glass:hover{background:rgba(255,255,255,.18)!important}
+@media(prefers-reduced-motion:reduce){
+  #app .vf-motion-hero .vf-motion-backdrop{animation:none!important;transform:none!important}
+}
