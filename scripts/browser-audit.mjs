@@ -146,7 +146,7 @@ try {
     const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor,display:s.display}};
     const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
     const contrast=(fg,bg)=>{
-      const rgb=s=>{const m=s.match(/[\\d.]+/g)||[];return m.slice(0,3).map(Number)};
+      const rgb=s=>{const m=s.match(/[\d.]+/g)||[];return m.slice(0,3).map(Number)};
       const lum=s=>rgb(s).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
       const a=lum(fg),b=lum(bg);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
     };
