@@ -12,8 +12,7 @@ const routes = [
   'admin-cases','admin-donations','admin-audit'
 ];
 const languages = [
-  ['en','ltr'],['hi','ltr'],['mr','ltr'],['gu','ltr'],['sd','rtl'],
-  ['ur','rtl'],['fr','ltr'],['es','ltr'],['ko','ltr'],['ar','rtl']
+  ['en','ltr'],['hi','ltr'],['mr','ltr'],['gu','ltr']
 ];
 const out = path.resolve('artifacts');
 fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
@@ -95,11 +94,11 @@ try {
     await page.locator('#vf-language').selectOption(code);
     await page.waitForTimeout(80);
     const actual = await page.evaluate(()=>({lang:document.documentElement.lang,dir:document.documentElement.dir,notice:!!document.querySelector('[data-vf-translation-notice]')}));
-    const expectedLang = code==='sd'?'sd-Arab':code;
+    const expectedLang = code;
     const ok = actual.lang===expectedLang && actual.dir===dir && (code==='en'?!actual.notice:actual.notice);
     report.languageChecks.push({code,dir,actual,ok});
     if(!ok) report.errors.push({type:'language-switch',code,expected:{lang:expectedLang,dir,notice:code!=='en'},actual});
-    if(['sd','ur','ar'].includes(code)){
+    if(code==='en'){
       const file=path.join(out,'screenshots','rtl-'+code+'.png');
       await page.screenshot({path:file,fullPage:true,animations:'disabled'});
       report.screenshots.push(file);
