@@ -5,6 +5,7 @@ import vm from "node:vm";
 const read = (path) => fs.readFileSync(new URL(path, import.meta.url), "utf8");
 const html = read("../index.html");
 const photoAsset = read("../assets/veganfarm-private-case-photos.js");
+const visualCss = read("../assets/veganfarm-platform-system.css");
 const edge = read("../supabase/functions/veganfarm-team-gate/index.ts");
 const migration = read("../supabase-phase7-private-case-photo-storage.sql");
 const rollback = read("../supabase-phase7-private-case-photo-storage-rollback.sql");
@@ -19,6 +20,23 @@ for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
   new vm.Script(source, { filename: "index.html:inline-script-" + (++inlineCount) });
 }
 assert.ok(inlineCount >= 15, "Expected to parse the app's inline JavaScript modules");
+assert.match(html, /const VF_PHOTOS=/, "Homepage must define a curated editorial photo set");
+for (const photoId of ["photo-1643786261573-9838e66d89dc","photo-1710871329594-b962eb958bc9","photo-1762951002221-76fe0ce6b419","photo-1633442495686-e8b67cffab53","photo-1557844352-761f2565b576"]) {
+  assert.ok(html.includes(photoId), "Expected curated Unsplash photo asset: " + photoId);
+}
+assert.match(html, /srcset=/, "Editorial photos must offer responsive image sources");
+assert.match(html, /loading="lazy"/, "Editorial photos must lazy-load");
+assert.match(html, /decoding="async"/, "Editorial photos must decode asynchronously");
+assert.match(html, /vf-photo-story-grid/, "Homepage must include the editorial animal and vegan image gallery");
+assert.match(html, /vfProjectPhoto\(p\[0\]\)/, "Project cards must select a relevant photograph");
+assert.match(html, /Photography credits/, "Website footer must expose photographer credits");
+assert.match(html, /unsplash.com\/license/, "Website must link the image license");
+assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the curated rescue-dog photograph");
+assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^}]*w=900/, "Mobile hero must use a smaller image variant");
+assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
+assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
+assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
+assert.equal((visualCss.match(/\{/g)||[]).length,(visualCss.match(/\}/g)||[]).length,"Visual stylesheet braces must be balanced");
 new vm.Script(photoAsset, { filename: "veganfarm-private-case-photos.js" });
 
 const appUploads = [...html.matchAll(/(?:up|upload)\(['"](?:case-photos|rescue-case-photos)['"]/g)].map((m) => m[0]);
