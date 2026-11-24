@@ -245,6 +245,7 @@ Anonymous access, Founder previews across every publication state, Team owner is
 ### Validation evidence
 - GitHub Actions browser run 45382446018 passed on the earlier four-language implementation: 161 route/viewport checks, all four locale direction/persistence checks, mobile menu open, zero browser/page errors, zero failed HTTP responses and 26 screenshots. This run predates the Team sign-in visual redesign and its new browser assertions.
 - GitHub Actions static run 45382446109 passed on the four-language implementation before the later Team sign-in CSS assertions were added.
-- The latest Team sign-in redesign and its added browser/static assertions have not yet been verified by a subsequent CI run. No current screenshot is claimed for the redesigned Team sign-in screen.
+- GitHub Actions static run 45384226094 passed after the active shared-code gate markup and four-language assertions were aligned.
+- Browser regression run 45384225898 was launched for the active shared-code gate and its desktop/mobile screenshots; its result was still pending when this note was written. No screenshot is claimed until that run completes.
 - No authenticated Team or Founder account was used. Live Supabase role isolation and dashboard workflows remain NOT TESTED/BLOCKED without a safe staging project and authorised staging accounts.
 - No production deployment, database mutation, Supabase migration, Storage/RLS change, payment destination change or QR change was made.
