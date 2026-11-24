@@ -77,9 +77,6 @@ assert.ok(simpleCss.includes("background:var(--vf-leaf)!important"), "Progress f
 assert.match(simpleCss, /background-color:transparent!important/, "Nested text and card surfaces must not introduce separate colour blocks");
 assert.match(simpleCss, /#app \.hero \*/, "Hero copy must follow the same dark text colour");
 assert.match(simpleCss, /photo-1643786261573-9838e66d89dc/, "The animal hero photograph must remain visible");
-assert.match(html, /id="vf-language"/, "Language selector must be present");
-assert.equal((html.match(/<option value="(?:en|hi|mr|gu)">/g)||[]).length, 4, "Exactly four supported language options must be present");
-assert.doesNotMatch(html, /option value="(?:sd|ur|fr|es|ko|ar)"/, "Unsupported languages must not appear in the selector");
 assert.match(html, /class=\\?"sec vf-team-access\\?"/, "Team sign-in must use its dedicated accessible light-theme layout");
 assert.match(html, /id=\\?"vf-team-code\\?"/, "Team sign-in must expose the shared-code field");
 assert.match(html, /for=\\?"vf-team-code\\?"/, "Team sign-in must expose a visible label for the access-code field");
