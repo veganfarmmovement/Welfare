@@ -211,3 +211,9 @@ body.vf2-private-route #vf-piano-player,body.vf2-private-route #vf-back-top{disp
 .vf2-page-content .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:24px 0}
 .vf2-page-content .stats>div{padding:22px;background:#fff;border:1px solid var(--vf2-line);border-radius:4px;color:var(--vf2-muted);font-size:.78rem}
 .vf2-page-content .stats b{display:block;color:var(--vf2-forest);font:500 2rem var(--vf2-serif);margin-bottom:6px}
+
+/* Keep private administration entry points out of public primary navigation. */
+.vf2-menu a[href="#admin"],.vf2-menu a[href^="#admin-"],.vf2-menu a[href="#team"],.vf2-menu a[href="#veganfarm-team"]{display:none!important}
+#vf-piano-player{display:none!important}
+#vf-back-top{position:fixed!important;left:auto!important;right:24px!important;bottom:24px!important;z-index:95!important;width:46px!important;height:46px!important;border:0!important;border-radius:50%!important;background:var(--vf2-forest)!important;color:#fff!important;box-shadow:0 8px 24px rgba(23,61,43,.22)!important;font-size:1.25rem!important;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#vf-back-top.is-visible{opacity:1;pointer-events:auto}
