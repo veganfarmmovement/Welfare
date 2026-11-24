@@ -77,7 +77,7 @@ Static checks cannot prove Postgres RLS or Storage API behaviour. No staging bra
 
 ### Automated/static checks
 - Parse every inline JavaScript block in active \`index.html\`.
-- Parse the signed-photo asset with Node.
+- Parse the signed-photo asset with Node and type-check the Team Edge Function with Deno.
 - Verify all six app upload call sites target \`rescue-case-photos\`.
 - Verify no rescue-photo path uses \`getPublicUrl\`.
 - Verify Edge Function private bucket and stored prefix.
