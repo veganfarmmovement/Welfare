@@ -67,9 +67,10 @@ assert.match(simpleCss, /background-color:transparent!important/, "Nested text a
 assert.match(simpleCss, /#app \.hero \*/, "Hero copy must follow the same dark text colour");
 assert.match(simpleCss, /photo-1643786261573-9838e66d89dc/, "The animal hero photograph must remain visible");
 assert.match(html, /id="vf-language"/, "Language selector must be present");
-assert.match(localeJs, /code:'sd',label:'سنڌي',dir:'rtl'/, "Sindhi must use its Arabic-derived script and RTL direction");
-assert.match(localeJs, /language\.code==='sd'\?'sd-Arab'/, "Sindhi document language must identify its Arabic-derived script");
-assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ','گھر'"), "Sindhi Home label must use Sindhi script rather than mixed Devanagari/Gujarati text");
+assert.equal((html.match(/<option value="(?:en|hi|mr|gu)">/g)||[]).length, 4, "Exactly four supported language options must be present");
+assert.doesNotMatch(html, /option value="(?:sd|ur|fr|es|ko|ar)"/, "Unsupported languages must not appear in the selector");
+assert.deepEqual([...localeJs.matchAll(/code:'([a-z]+)'/g)].map(m=>m[1]), ['en','hi','mr','gu'], "Locale configuration must contain exactly English, Hindi, Marathi and Gujarati");
+assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ'"), "Shared Home navigation labels must be provided for all three requested Indian languages");
 assert.match(forestJs, /Compassion is not just a belief\./, "Homepage hero must use the approved central message");
 assert.match(forestJs, /VEGANFARM Movement brings people together to support animal welfare, expand access to education and encourage a more compassionate world\./, "Homepage hero must use the approved supporting description");
 assert.match(forestJs, /INDEPENDENT WELFARE MOVEMENT · INDIA/, "Homepage must show the required identity descriptor");
@@ -105,8 +106,9 @@ assert.match(editorialJs, /Retired presentation renderer/, "Retired renderer mus
 assert.match(modernJs, /function addMotionElements\(app\)/, "Modern upgrade must remain an interaction enhancement");
 assert.doesNotMatch(modernJs, /vf-modern-visuals|vf-donation-feature|Plant-based meal|Fresh plant-based meal/i, "Modern upgrade must not inject a competing homepage content renderer");
 assert.doesNotMatch(modernJs+forestJs, /photo-1512621776951-a57141f2eefd|photo-1540420773420-3366772f4999|plant-based meal/i, "Presentation scripts must not use food photography");
-assert.match(localeJs, /code:'ur',label:'اردو',dir:'rtl'/, "Urdu must use RTL");
-assert.match(localeJs, /code:'ar',label:'العربية',dir:'rtl'/, "Arabic must use RTL");
+assert.match(localeJs, /code:'hi',label:'हिन्दी',dir:'ltr'/, "Hindi must use left-to-right text direction");
+assert.match(localeJs, /code:'mr',label:'मराठी',dir:'ltr'/, "Marathi must use left-to-right text direction");
+assert.match(localeJs, /code:'gu',label:'ગુજરાતી',dir:'ltr'/, "Gujarati must use left-to-right text direction");
 assert.doesNotMatch(html, /photo-1557844352-761f2565b576|Plant-based food|Plant-based living/, "Food photography must not appear on the site");
 assert.equal(unifiedCss.split("{").length, unifiedCss.split("}").length, "Consolidated stylesheet braces must be balanced");
 assert.equal((visualCss.match(/\{/g)||[]).length,(visualCss.match(/\}/g)||[]).length,"Visual stylesheet braces must be balanced");
