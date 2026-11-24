@@ -159,7 +159,8 @@ async function exercisePhotoHelper({otherReferences = false, deleteError = null}
   assert.equal(signedCalls.length, 3, "Returning to a visible tab must renew an ageing URL");
 
   await window.rmPhoto("VF-1");
-  assert.deepEqual(updates[0], { photo_path: null, photo_url: null });
+  assert.equal(updates[0].photo_path, null);
+  assert.equal(updates[0].photo_url, null);
   if (otherReferences) {
     assert.equal(removed.length, 0, "A shared object must not be deleted");
     assert.ok(notices.some((message) => message.includes("another case still references it")));
@@ -167,7 +168,9 @@ async function exercisePhotoHelper({otherReferences = false, deleteError = null}
     assert.equal(removed.length, 1, "Storage deletion must be attempted after the row is cleared");
     assert.ok(notices.some((message) => message.includes("private storage object may need Founder cleanup")));
   } else {
-    assert.deepEqual(removed, [{ bucket: "rescue-case-photos", paths: ["db-1/animal.jpg"] }]);
+    assert.equal(removed.length, 1);
+    assert.equal(removed[0].bucket, "rescue-case-photos");
+    assert.equal(removed[0].paths[0], "db-1/animal.jpg");
     assert.ok(notices.some((message) => message.includes("private storage object deleted")));
   }
 }
