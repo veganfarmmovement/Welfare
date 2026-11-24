@@ -194,3 +194,142 @@ html[lang^="ar"] body,html[lang^="ur"] body,html[lang^="sd"] body,
 html[lang^="ar"] #app,html[lang^="ur"] #app,html[lang^="sd"] #app{font-family:"Noto Naskh Arabic","Noto Sans Arabic","Noto Sans",Tahoma,sans-serif;line-height:1.75}
 html[dir="rtl"] #app :is(h1,h2,h3,h4,p,li,label,button,a,small,span){text-align:inherit}
 html[dir="rtl"] #app input,html[dir="rtl"] #app textarea{direction:rtl;text-align:right}
+
+
+/* Dedicated Team sign-in surface: high-contrast ivory card and explicit field states. */
+#app .vf-team-access{
+  background:#fffdf5!important;
+  color:#1d2c21!important;
+  padding:clamp(48px,7vw,88px) 0!important;
+}
+#app .vf-team-access-wrap{
+  width:min(100% - 36px,560px)!important;
+  margin-inline:auto!important;
+}
+#app .vf-team-access-intro{text-align:center!important;margin:0 auto 28px!important}
+#app .vf-team-access-kicker{
+  display:inline-block!important;
+  color:#286b36!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:.16em!important;
+  margin-bottom:14px!important;
+}
+#app .vf-team-access-intro h1{
+  color:#1d2c21!important;
+  font-size:clamp(2.1rem,5vw,3.2rem)!important;
+  margin:0 0 12px!important;
+}
+#app .vf-team-access-intro p{
+  color:#4e5b50!important;
+  max-width:48ch!important;
+  margin:0 auto!important;
+}
+#app .vf-team-access-card{
+  background:#fff!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:18px!important;
+  padding:clamp(22px,5vw,36px)!important;
+  box-shadow:0 18px 48px rgba(29,44,33,.08)!important;
+}
+#app .vf-team-access-card-head{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  margin-bottom:24px!important;
+}
+#app .vf-team-access-mark{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 48px!important;
+  width:48px!important;
+  height:48px!important;
+  border-radius:14px!important;
+  background:#173d2b!important;
+  color:#fffdf5!important;
+  font-weight:800!important;
+  letter-spacing:.04em!important;
+}
+#app .vf-team-access-card-head h2{
+  color:#1d2c21!important;
+  font:600 1.35rem/1.2 'Newsreader',Georgia,serif!important;
+  margin:0 0 4px!important;
+}
+#app .vf-team-access-card-head p{
+  color:#647267!important;
+  font-size:13px!important;
+  margin:0!important;
+}
+#app .vf-team-access-form label{
+  display:block!important;
+  color:#26382a!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  margin:16px 0 7px!important;
+}
+#app .vf-team-access-form input{
+  display:block!important;
+  width:100%!important;
+  min-height:48px!important;
+  padding:12px 14px!important;
+  border:1px solid #c9d0c7!important;
+  border-radius:9px!important;
+  background:#fff!important;
+  color:#1d2c21!important;
+  font:inherit!important;
+  box-shadow:none!important;
+}
+#app .vf-team-access-form input::placeholder{color:#68766a!important;opacity:1!important}
+#app .vf-team-access-form input:focus-visible{
+  outline:3px solid rgba(199,166,106,.48)!important;
+  outline-offset:2px!important;
+  border-color:#173d2b!important;
+}
+#app .vf-team-access-status{
+  min-height:42px!important;
+  margin:12px 0 4px!important;
+  color:#435447!important;
+  font-size:13px!important;
+}
+#app .vf-team-access-submit{
+  display:flex!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:48px!important;
+  margin-top:6px!important;
+  border-radius:9px!important;
+  background:#173d2b!important;
+  color:#fff!important;
+}
+#app .vf-team-access-divider{
+  height:1px!important;
+  margin:24px 0 18px!important;
+  background:#e6e2d8!important;
+}
+#app .vf-team-access-help{
+  color:#4e5b50!important;
+  font-size:13px!important;
+  line-height:1.65!important;
+  margin:0 0 14px!important;
+}
+#app .vf-team-access-request{
+  display:inline-flex!important;
+  justify-content:center!important;
+  border-radius:9px!important;
+  min-height:42px!important;
+}
+#app .vf-team-access-footnote{
+  color:#647267!important;
+  font-size:12px!important;
+  text-align:center!important;
+  margin:18px auto 0!important;
+}
+@media(max-width:480px){
+  #app .vf-team-access{padding:38px 0!important}
+  #app .vf-team-access-card{border-radius:14px!important}
+  #app .vf-team-access-request{width:100%!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #app .vf-team-access *{transition:none!important;animation:none!important}
+}
