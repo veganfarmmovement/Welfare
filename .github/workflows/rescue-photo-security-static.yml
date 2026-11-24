@@ -1,0 +1,45 @@
+name: Rescue photo security static checks
+
+on:
+  pull_request:
+    branches: [main, development/platform-transformation]
+    paths:
+      - "index.html"
+      - "assets/veganfarm-platform-system.css"
+      - "assets/veganfarm-unified.css"
+      - "assets/veganfarm-frontend-v2.css"
+      - "assets/veganfarm-frontend-v2.js"
+      - "assets/veganfarm-simple-colour-system.css"
+      - "PHOTO_CREDITS.md"
+      - "assets/veganfarm-private-case-photos.js"
+      - "supabase/functions/veganfarm-team-gate/**"
+      - "supabase-phase7-private-case-photo-storage*.sql"
+      - "scripts/test-rescue-photo-security.mjs"
+      - "scripts/browser-audit.mjs"
+      - ".github/workflows/rescue-photo-security-static.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - name: Parse and assert rescue-photo security paths
+        run: node scripts/test-rescue-photo-security.mjs
+      - name: Parse signed-photo asset
+        run: node --check assets/veganfarm-private-case-photos.js
+      - name: Parse browser audit script
+        run: node --check scripts/browser-audit.mjs
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check Team Edge Function
+        run: deno check --no-lock supabase/functions/veganfarm-team-gate/index.ts

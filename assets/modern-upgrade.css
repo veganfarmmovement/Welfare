@@ -9,7 +9,7 @@ nav .wrap{min-height:78px}
 .logo{color:var(--vf-leaf);font-weight:800}
 .hero{
   min-height:min(700px,calc(100svh - 78px));padding:clamp(90px,12vw,155px) 0;
-  background-image:linear-gradient(90deg,rgba(12,35,20,.91) 0%,rgba(17,54,29,.75) 47%,rgba(17,54,29,.12) 100%),url("https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=2200&q=85");
+  background-image:linear-gradient(90deg,rgba(12,35,20,.91) 0%,rgba(17,54,29,.75) 47%,rgba(17,54,29,.12) 100%),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=2200&q=85");
   background-position:center 48%;background-size:cover;border:0;isolation:isolate;
 }
 .hero:after{content:"";position:absolute;inset:16px;border:1px solid rgba(255,255,255,.22);border-radius:22px;pointer-events:none;z-index:-1}

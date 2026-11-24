@@ -4,26 +4,8 @@
  var APP_ID='app';
  function byId(id){return document.getElementById(id)}
  function addHomeVisuals(){
-  var app=byId(APP_ID),hero=app&&app.querySelector('.hero');
-  if(!hero)return;
-  if(!byId('vf-modern-visuals')){
-   var section=document.createElement('section');
-   section.id='vf-modern-visuals';section.setAttribute('aria-label','VEGANFARM initiatives');
-   section.innerHTML='<div class="wrap"><div class="vf-visual-heading"><h2>Compassion in action</h2><p>Three connected areas of community-led work.</p></div><div class="vf-visual-grid">'+
-    '<a class="vf-visual-card" href="#cases"><img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=1000&q=85" alt="Dog outdoors" loading="lazy" decoding="async"><div class="vf-visual-copy"><span>Animal welfare</span><h3>Care for every life</h3></div></a>'+
-    '<a class="vf-visual-card" href="#education"><img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1000&q=85" alt="Notebook and writing materials" loading="lazy" decoding="async"><div class="vf-visual-copy"><span>Education</span><h3>Learning creates opportunity</h3></div></a>'+
-    '<a class="vf-visual-card" href="#projects"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1000&q=85" alt="Fresh plant-based meal" loading="lazy" decoding="async"><div class="vf-visual-copy"><span>Vegan awareness</span><h3>Choose compassion daily</h3></div></a></div></div>';
-   hero.insertAdjacentElement('afterend',section);
-  }
-  if(!byId('vf-donation-feature')){
-   var donation=document.createElement('section');
-   donation.id='vf-donation-feature';donation.className='wrap';
-   donation.setAttribute('aria-label','Support VEGANFARM initiatives');
-   donation.innerHTML='<div class="vf-donate-inner"><div><span class="vf-eyebrow">Turn compassion into action</span><h2>Small acts of care can change a life.</h2><p>Support an active animal-welfare or education initiative. Review the appeal details and payment information before contributing.</p><a class="btn gold" href="#donate">Explore donation options <span aria-hidden="true">↗</span></a></div><div class="vf-trust"><strong>Donation transparency matters.</strong><span>VEGANFARM is an independent, unregistered welfare movement. Check each appeal for its named beneficiary and payment instructions. Niswarth Seva 1008 Charitable Trust is a separate organisation.</span><a class="btn out" href="#donate">View donation details</a></div></div>';
-   var visual=byId('vf-modern-visuals');
-   if(visual)visual.insertAdjacentElement('afterend',donation);
-   else hero.insertAdjacentElement('afterend',donation);
-  }
+  var app=byId(APP_ID);
+  if(!app)return;
   addMotionElements(app);
  }
  function addMotionElements(app){
@@ -53,7 +35,7 @@
  }
  function setupReveal(root){
   if(!('IntersectionObserver'in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var nodes=root.querySelectorAll('.sec,.card,.stats,.kpi,#vf-donation-feature,#vf-modern-visuals .vf-visual-card');
+  var nodes=root.querySelectorAll('.sec,.card,.stats,.kpi');
   nodes.forEach(function(node,i){
    if(node.classList.contains('vf-reveal'))return;
    node.classList.add('vf-reveal');

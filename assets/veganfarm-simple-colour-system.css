@@ -1,0 +1,733 @@
+/* VEGANFARM — simple, consistent two-colour system
+   One page background and one text colour across public pages, appeals and admin.
+   Photography remains visible; this stylesheet changes presentation only. */
+:root{
+  color-scheme:light;
+  --vf-simple-bg:#fffdf5;
+  --vf-simple-text:#1d2c21;
+  --vf-simple-line:#e6e2d8;
+  --vf-forest:#173d2b;
+  --vf-leaf:#286b36;
+  --vf-gold:#c7a66a;
+  --vf-stone:#f2efe7;
+  --bg:var(--vf-simple-bg)!important;
+  --card:var(--vf-simple-bg)!important;
+  --ink:var(--vf-simple-text)!important;
+  --mut:var(--vf-simple-text)!important;
+  --line:var(--vf-simple-line)!important;
+  --g:var(--vf-simple-text)!important;
+  --g2:var(--vf-simple-text)!important;
+  --gold:var(--vf-simple-text)!important;
+  --sand:var(--vf-simple-bg)!important;
+}
+html,body,body:before,#app,#app>*,nav,footer,.ann,.tick{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+}
+body:before{display:none!important}
+#app *:not(img):not(video):not(.vf-motion-backdrop){
+  color:var(--vf-simple-text)!important;
+  background-color:transparent!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+#app *:not(img):not(video):not(.vf-motion-backdrop):not(.hero):not(.vf-motion-hero):not(.vf-cinema):not(.vf-new-hero){
+  background-image:none!important;
+}
+#app .hero *:not(img):not(video):not(.vf-motion-backdrop){
+  color:var(--vf-simple-text)!important;
+  background-color:transparent!important;
+  background-image:none!important;
+}
+#app :is(section,article,.card,.panel,.box,.tile,.vf-reimagined-home,.vf-live-panel,.vf-campaign-grid,.vf-campaign-grid>*,.vf-impact-hero,.vf-impact-hero-copy,.vf-impact-stat,.vf-project-card,.vf-focus-card,.vf-motion-card,.vf-choice-card,.vf-detail-hero,.vf-route-top,.vf-route-content,.adm,.side,.main),
+#app :is(section,article,.card,.panel,.box,.tile) :is(.b,.vf-project-body,.vf-project-foot){
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+#app :is(h1,h2,h3,h4,p,li,small,strong,b,label,span,a,summary,blockquote,figcaption),
+nav :is(a,.logo,.logo small),footer :is(a,p,b,h1,h2,h3,span,small,li){
+  color:var(--vf-simple-text)!important;
+}
+#app a,nav a,footer a{text-decoration-color:currentColor!important}
+#app :is(.btn,.button,button,.vf-button,.vf-cinema-btn),
+nav :is(.btn,.mbtn){
+  background:var(--vf-forest)!important;
+  background-image:none!important;
+  color:#fff!important;
+  border:1px solid var(--vf-forest)!important;
+  border-radius:6px!important;
+  box-shadow:none!important;
+}
+#app :is(.btn.secondary,.button.secondary,.btn.out,.btn.gold,.vf-button.secondary){
+  background:transparent!important;
+  color:var(--vf-forest)!important;
+  border-color:var(--vf-forest)!important;
+}
+nav a[aria-current="page"],nav a.on,nav a:hover{
+  text-decoration:underline!important;
+  text-decoration-color:var(--vf-gold)!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:6px!important;
+}
+#app :is(.bar i,.vf-progress-fill,.progress-fill){background:var(--vf-leaf)!important}
+#app :is(.tag,.eyebrow,.vf-eyebrow,.vf-photo-tag,.vf-project-kind,.vf-choice-label,.vf-founder-line){
+  border-bottom:1px solid var(--vf-gold)!important;
+}
+#app :is(input,select,textarea):focus{
+  outline:2px solid var(--vf-gold)!important;
+  outline-offset:2px!important;
+}
+#app :is(.tag,.eyebrow,.vf-eyebrow,.vf-photo-tag,.vf-project-kind,.vf-choice-label,.vf-founder-line),
+#app .vf-photo figcaption{
+  background:transparent!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+#app :is(input,select,textarea){
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border:1px solid var(--vf-simple-line)!important;
+  box-shadow:none!important;
+}
+#app :is(.bar,.vf-progress-track,.progress-track){
+  background:var(--vf-simple-bg)!important;
+  border:1px solid var(--vf-simple-line)!important;
+}
+#app :is(.bar i,.vf-progress-fill,.progress-fill){background:var(--vf-simple-text)!important}
+#app :is(.hero,.vf-motion-hero,.vf-live-section,.vf-donate-ribbon,.vf-volunteer-section,.vf-join-section,.vf-dark-section,.vf-quote-section,.vf-route-top){
+  background-color:var(--vf-simple-bg)!important;
+  background-image:none!important;
+  color:var(--vf-simple-text)!important;
+}
+#app .hero{
+  background-image:linear-gradient(90deg,rgba(255,253,245,.96),rgba(255,253,245,.78)),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=1600&q=80")!important;
+  background-position:center,68% 42%!important;
+  background-size:cover!important;
+}
+#app .vf-motion-backdrop{opacity:.12!important}
+#app :is(.vf-cinema,.vf-motion-hero-inner,.vf-hero-copy,.vf-live-panel,.vf-donate-ribbon-inner,.vf-volunteer-inner){
+  background:transparent!important;
+  color:var(--vf-simple-text)!important;
+}
+#app :is(.vf-cinema h1,.vf-motion-hero h1,.vf-hero-copy h1,.vf-cinema-copy>p,.vf-motion-hero p,.vf-live-section h2,.vf-live-section p,.vf-donate-ribbon h2,.vf-donate-ribbon p,.vf-volunteer-section h2,.vf-volunteer-section p,.vf-join-section h2,.vf-join-section p,.vf-dark-section h2,.vf-dark-section p){
+  color:var(--vf-simple-text)!important;
+}
+#app :is(.vf-focus-card img,.vf-project-photo img,.vf-photo img,.vf-photo-media img,.imgbox img,.img img,.completed-photo img,.vf-completed-photo img),
+#app img{background:transparent!important}
+#app :is(.vf-photo,.vf-project-photo,.vf-project-image-card,.vf-completed-card,.vf-focus-card,.vf-motion-card,.vf-impact-stat,.vf-impact-hero-copy){
+  border:1px solid var(--vf-simple-line)!important;
+  border-radius:8px!important;
+}
+#app :is(.stats,.stats div,.kpi,.scroll,.adm,.side,.main,.completed-section){
+  background:var(--vf-simple-bg)!important;
+  border-color:var(--vf-simple-line)!important;
+  color:var(--vf-simple-text)!important;
+}
+#app table,#app th,#app td,#app tr:hover td{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+footer{border-top:1px solid var(--vf-simple-line)!important}
+#toast,#nf .nc{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border:1px solid var(--vf-simple-line)!important;
+  box-shadow:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #app *,#app *:before,#app *:after{animation:none!important;transition:none!important}
+}
+
+
+/* Keep dedicated route mastheads legible above the ivory page surfaces. */
+#app .vf-route-masthead{background:linear-gradient(118deg,#173d2b 0%,#214d36 62%,#2c5a3d 100%)!important;color:#fffdf5!important}
+#app .vf-route-masthead h1{color:#fffdf5!important}
+#app .vf-route-masthead p{color:rgba(255,253,245,.84)!important}
+#app .vf-route-kicker{color:#d8bd8d!important}
+#app .vf-route-index{color:rgba(255,253,245,.66)!important}
+
+
+/* Preserve the cinematic animal-photo hero and readable foreground copy. */
+#app .vf-motion-hero{background-color:#173d2b!important;color:#fffdf5!important}
+#app .vf-motion-hero .vf-motion-backdrop{opacity:1!important}
+#app .vf-motion-hero .vf-hero-copy h1,#app .vf-motion-hero .vf-hero-copy p,#app .vf-motion-hero .vf-founder-signature,#app .vf-motion-hero .vf-hero-side-note,#app .vf-motion-hero .vf-hero-bottom{color:#fffdf5!important}
+#app .vf-motion-hero .vf-overline,#app .vf-motion-hero .vf-overline i{color:#e3c995!important}
+#app .vf-motion-hero .vf-button-gold{background:#c7a66a!important;color:#173d2b!important;border-color:#c7a66a!important}
+#app .vf-motion-hero .vf-button-glass{background:rgba(23,61,43,.22)!important;color:#fffdf5!important;border-color:rgba(255,253,245,.75)!important}
+
+
+/* The donation information strip sits outside #app and follows the same ivory/stone system. */
+#wa{background:#f2efe7!important;color:#1d2c21!important;border-top:1px solid #c7a66a!important;border-bottom:1px solid #e6e2d8!important}
+#wa h1,#wa h2,#wa h3,#wa p,#wa span,#wa small,#wa strong,#wa label{color:#1d2c21!important}
+#wa .wab{background:#173d2b!important;color:#fffdf5!important;border:1px solid #173d2b!important}
+footer{background:#fffdf5!important;color:#1d2c21!important}
+footer h1,footer h2,footer h3,footer p,footer span,footer small,footer a,footer b{color:#1d2c21!important}
+
+
+/* Final authority: footer stays ivory even when legacy #app footer rules are present. */
+#app footer,footer{background:#fffdf5!important;color:#1d2c21!important;border-top:1px solid #f2efe7!important}
+#app footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary),footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary){color:#1d2c21!important}
+#app footer a:hover,footer a:hover{color:#286b36!important}
+
+
+/* Navigation remains light; only the active underline and primary actions use accents. */
+body>nav,body>nav .wrap,body>nav #menu,body>nav .menu{background:#fffdf5!important;color:#1d2c21!important;border-color:#f2efe7!important}
+body>nav a,body>nav .logo,body>nav .logo small,body>nav .menu a.l{color:#1d2c21!important}
+body>nav .menu a.l{background:transparent!important;border-bottom:2px solid transparent!important}
+body>nav .menu a.l.on,body>nav .menu a.l[aria-current="page"]{color:#173d2b!important;border-bottom-color:#c7a66a!important;background:transparent!important}
+body>nav .menu a.l:hover{color:#286b36!important;background:#f2efe7!important}
+body>nav .btn,body>nav .button,body>nav button{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
+
+
+/* Beat legacy footer:not(#vf-never) specificity and clear nested green panels. */
+#app footer:not(#vf-never),footer:not(#vf-never),.footer:not(#vf-never){background:#fffdf5!important;color:#1d2c21!important;border-top:1px solid #f2efe7!important}
+#app footer:not(#vf-never) .wrap,footer:not(#vf-never) .wrap,.footer:not(#vf-never) .wrap{background:#fffdf5!important;color:#1d2c21!important}
+#app footer:not(#vf-never) :is(div,section),footer:not(#vf-never) :is(div,section),.footer:not(#vf-never) :is(div,section){background:transparent!important;color:#1d2c21!important}
+body>nav #mb{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
+
+
+
+
+/* Dedicated Team sign-in surface: high-contrast ivory card and explicit field states. */
+#app .vf-team-access{
+  background:#fffdf5!important;
+  color:#1d2c21!important;
+  padding:clamp(48px,7vw,88px) 0!important;
+}
+#app .vf-team-access-wrap{
+  width:min(100% - 36px,560px)!important;
+  margin-inline:auto!important;
+}
+#app .vf-team-access-intro{text-align:center!important;margin:0 auto 28px!important}
+#app .vf-team-access-kicker{
+  display:inline-block!important;
+  color:#286b36!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:.16em!important;
+  margin-bottom:14px!important;
+}
+#app .vf-team-access-intro h1{
+  color:#1d2c21!important;
+  font-size:clamp(2.1rem,5vw,3.2rem)!important;
+  margin:0 0 12px!important;
+}
+#app .vf-team-access-intro p{
+  color:#4e5b50!important;
+  max-width:48ch!important;
+  margin:0 auto!important;
+}
+#app .vf-team-access-card{
+  background:#fff!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:18px!important;
+  padding:clamp(22px,5vw,36px)!important;
+  box-shadow:0 18px 48px rgba(29,44,33,.08)!important;
+}
+#app .vf-team-access-card-head{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  margin-bottom:24px!important;
+}
+#app .vf-team-access-mark{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 48px!important;
+  width:48px!important;
+  height:48px!important;
+  border-radius:14px!important;
+  background:#173d2b!important;
+  color:#fffdf5!important;
+  font-weight:800!important;
+  letter-spacing:.04em!important;
+}
+#app .vf-team-access-card-head h2{
+  color:#1d2c21!important;
+  font:600 1.35rem/1.2 'Newsreader',Georgia,serif!important;
+  margin:0 0 4px!important;
+}
+#app .vf-team-access-card-head p{
+  color:#647267!important;
+  font-size:13px!important;
+  margin:0!important;
+}
+#app .vf-team-access-form label{
+  display:block!important;
+  color:#26382a!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  margin:16px 0 7px!important;
+}
+#app .vf-team-access-form input{
+  display:block!important;
+  width:100%!important;
+  min-height:48px!important;
+  padding:12px 14px!important;
+  border:1px solid #c9d0c7!important;
+  border-radius:9px!important;
+  background:#fff!important;
+  color:#1d2c21!important;
+  font:inherit!important;
+  box-shadow:none!important;
+}
+#app .vf-team-access-form input::placeholder{color:#68766a!important;opacity:1!important}
+#app .vf-team-access-form input:focus-visible{
+  outline:3px solid rgba(199,166,106,.48)!important;
+  outline-offset:2px!important;
+  border-color:#173d2b!important;
+}
+#app .vf-team-access-status{
+  min-height:42px!important;
+  margin:12px 0 4px!important;
+  color:#435447!important;
+  font-size:13px!important;
+}
+#app .vf-team-access-submit{
+  display:flex!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:48px!important;
+  margin-top:6px!important;
+  border-radius:9px!important;
+  background:#173d2b!important;
+  color:#fff!important;
+}
+#app .vf-team-access-divider{
+  height:1px!important;
+  margin:24px 0 18px!important;
+  background:#e6e2d8!important;
+}
+#app .vf-team-access-help{
+  color:#4e5b50!important;
+  font-size:13px!important;
+  line-height:1.65!important;
+  margin:0 0 14px!important;
+}
+#app .vf-team-access-request{
+  display:inline-flex!important;
+  justify-content:center!important;
+  border-radius:9px!important;
+  min-height:42px!important;
+}
+#app .vf-team-access-footnote{
+  color:#647267!important;
+  font-size:12px!important;
+  text-align:center!important;
+  margin:18px auto 0!important;
+}
+@media(max-width:480px){
+  #app .vf-team-access{padding:38px 0!important}
+  #app .vf-team-access-card{border-radius:14px!important}
+  #app .vf-team-access-request{width:100%!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #app .vf-team-access *{transition:none!important;animation:none!important}
+}
+
+
+/* Team access gate hardening: keep the credential card opaque even when legacy route wrappers differ. */
+body .vf-team-access-card{
+  display:block!important;
+  background-color:#fff!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:18px!important;
+  padding:clamp(22px,5vw,36px)!important;
+  box-shadow:0 18px 48px rgba(29,44,33,.08)!important;
+  opacity:1!important;
+  isolation:isolate;
+}
+body .vf-team-access-card :is(h1,h2,h3,h4,p,label,small,b,strong,span){
+  color:#1d2c21!important;
+}
+
+
+/* FINAL PRESENTATION OVERRIDES — private portal clarity, correct hidden semantics and cinematic hero contrast. */
+/* The public donation enquiry region uses the native hidden attribute on private routes. */
+#wa[hidden]{display:none!important}
+
+/* Keep public conversion controls out of authenticated/private workspaces. */
+#app.vf-page-team ~ #wa,
+#app.vf-page-admin ~ #wa{display:none!important}
+#app.vf-page-team ~ #vf-floating-donate,
+#app.vf-page-admin ~ #vf-floating-donate,
+#app.vf-page-team ~ #vf-piano-player,
+#app.vf-page-admin ~ #vf-piano-player{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Team portal: explicit opaque surface and high-contrast controls, with route-level specificity. */
+html body #app.vf-page-team .vf-route-body .vf-team-access{
+  background:#fffdf5!important;
+  color:#1d2c21!important;
+  padding:clamp(54px,7vw,88px) 0!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-wrap{
+  width:min(100% - 36px,560px)!important;
+  max-width:560px!important;
+  margin-inline:auto!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  background-color:#fff!important;
+  background-image:none!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:20px!important;
+  padding:clamp(24px,5vw,40px)!important;
+  box-shadow:0 22px 60px rgba(29,44,33,.10)!important;
+  opacity:1!important;
+  isolation:isolate!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head{
+  display:flex!important;
+  align-items:center!important;
+  gap:14px!important;
+  margin:0 0 26px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head h2{
+  margin:0 0 4px!important;
+  color:#1d2c21!important;
+  font:600 1.5rem/1.15 'Newsreader',Georgia,serif!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-card-head p{
+  margin:0!important;
+  color:#647267!important;
+  font-size:13px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form{
+  display:grid!important;
+  gap:10px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form label{
+  display:block!important;
+  margin:0 0 2px!important;
+  color:#26382a!important;
+  font-size:13px!important;
+  font-weight:700!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:54px!important;
+  margin:0!important;
+  padding:14px 16px!important;
+  border:1px solid #c9d0c7!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  background-color:#fff!important;
+  color:#1d2c21!important;
+  font:inherit!important;
+  box-shadow:0 1px 2px rgba(29,44,33,.04)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input::placeholder{
+  color:#68766a!important;
+  opacity:1!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-form input:focus-visible{
+  outline:3px solid rgba(199,166,106,.52)!important;
+  outline-offset:3px!important;
+  border-color:#173d2b!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-status{
+  min-height:24px!important;
+  margin:4px 0!important;
+  color:#435447!important;
+  font-size:13px!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-submit{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:52px!important;
+  margin:4px 0 0!important;
+  border:1px solid #173d2b!important;
+  border-radius:10px!important;
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  color:#fffdf5!important;
+  font-weight:750!important;
+  letter-spacing:.01em!important;
+  box-shadow:0 8px 18px rgba(23,61,43,.16)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-submit:hover{
+  background:#245b3c!important;
+  color:#fff!important;
+  transform:translateY(-1px)!important;
+}
+html body #app.vf-page-team .vf-route-body .vf-team-access-footnote{
+  max-width:52ch!important;
+  margin:18px auto 0!important;
+  color:#647267!important;
+  font-size:12px!important;
+  line-height:1.6!important;
+  text-align:center!important;
+}
+@media(max-width:600px){
+  html body #app.vf-page-team .vf-route-body .vf-team-access{padding:36px 0!important}
+  html body #app.vf-page-team .vf-route-body .vf-team-access-card{padding:24px 20px!important;border-radius:16px!important}
+}
+
+/* Cinematic homepage hero: keep the animal image, restore a deep forest scrim and readable ivory type. */
+#app .vf-motion-hero{
+  background:#0b241a!important;
+  color:#fffdf5!important;
+}
+#app .vf-motion-hero .vf-motion-backdrop{
+  background-image:
+    linear-gradient(90deg,rgba(5,22,15,.94) 0%,rgba(5,22,15,.84) 44%,rgba(5,22,15,.34) 76%,rgba(5,22,15,.12) 100%),
+    linear-gradient(0deg,rgba(5,22,15,.48),transparent 52%),
+    url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=2200&q=88')!important;
+  background-position:center 48%!important;
+  filter:none!important;
+}
+#app .vf-motion-hero .vf-hero-copy h1,
+#app .vf-motion-hero .vf-hero-copy h1 em,
+#app .vf-motion-hero .vf-hero-copy p,
+#app .vf-motion-hero .vf-overline,
+#app .vf-motion-hero .vf-founder-signature,
+#app .vf-motion-hero .vf-founder-signature strong,
+#app .vf-motion-hero .vf-hero-side-note,
+#app .vf-motion-hero .vf-hero-side-note b,
+#app .vf-motion-hero .vf-hero-side-note small,
+#app .vf-motion-hero .vf-hero-bottom span{
+  color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.34)!important;
+}
+#app .vf-motion-hero .vf-hero-copy h1 em{color:#d8c69a!important}
+#app .vf-motion-hero .vf-founder-signature strong{color:#d5ef6b!important}
+#app .vf-motion-hero .vf-overline{color:#e6d5ad!important}
+#app .vf-motion-hero .vf-overline i{background:#d8c69a!important}
+#app .vf-motion-hero .vf-hero-copy p{color:rgba(255,253,245,.92)!important}
+#app .vf-motion-hero .vf-button-gold{
+  background:linear-gradient(135deg,#e0ca94,#c5a96c)!important;
+  color:#17251a!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+#app .vf-motion-hero .vf-button-glass{
+  background:rgba(255,255,255,.10)!important;
+  color:#fffdf5!important;
+  border:1px solid rgba(255,253,245,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(12px)!important;
+}
+#app .vf-motion-hero .vf-button-glass:hover{background:rgba(255,255,255,.18)!important}
+@media(prefers-reduced-motion:reduce){
+  #app .vf-motion-hero .vf-motion-backdrop{animation:none!important;transform:none!important}
+}
+
+
+/* Final high-specificity hero type authority: supersedes legacy layered colour declarations. */
+html body main#app .vf-motion-hero .vf-hero-copy :is(h1,p,span,strong,small){
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.42)!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy h1 em{
+  color:#d8c69a!important;
+  -webkit-text-fill-color:#d8c69a!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy .vf-founder-signature strong{
+  color:#d5ef6b!important;
+  -webkit-text-fill-color:#d5ef6b!important;
+}
+html body main#app .vf-motion-hero .vf-hero-copy .vf-overline{
+  color:#e6d5ad!important;
+  -webkit-text-fill-color:#e6d5ad!important;
+}
+html body main#app .vf-motion-hero .vf-hero-side-note :is(span,b,small),
+html body main#app .vf-motion-hero .vf-hero-bottom span{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.48)!important;
+}
+html body main#app .vf-motion-hero .vf-hero-side-note{
+  background:rgba(7,29,20,.52)!important;
+  border:1px solid rgba(255,253,245,.18)!important;
+  border-radius:14px!important;
+  padding:20px 22px!important;
+  backdrop-filter:blur(12px)!important;
+}
+
+
+/* Remove the inherited .wrap panel so the Team portal has one clearly defined card. */
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-wrap{
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin-inline:auto!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card{
+  background:#fff!important;
+  background-color:#fff!important;
+  background-image:none!important;
+  border:1px solid #e6e2d8!important;
+  box-shadow:0 24px 70px rgba(29,44,33,.12)!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card .vf-team-access-submit{
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  border-color:#173d2b!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card .vf-team-access-submit:hover{
+  background:#245b3c!important;
+  background-color:#245b3c!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card-head .vf-team-access-mark{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 46px!important;
+  width:46px!important;
+  height:46px!important;
+  border-radius:14px!important;
+  background:#eef3e7!important;
+  color:#173d2b!important;
+  font:800 13px 'Instrument Sans',Arial,sans-serif!important;
+  letter-spacing:.08em!important;
+}
+
+
+/* Explicit ID-level colour authority for legacy selectors with higher :is() specificity. */
+#app #vf-team-unlock-button{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  border-color:#173d2b!important;
+}
+#app #vf-home-hero-title,
+#app #vf-home-hero-description,
+#app #vf-home-hero-kicker,
+#app #vf-home-hero-signature,
+#app #vf-home-hero-side-note,
+#app #vf-home-hero-bottom{
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  text-shadow:0 2px 22px rgba(0,0,0,.42)!important;
+}
+#app #vf-home-hero-title em{color:#d8c69a!important;-webkit-text-fill-color:#d8c69a!important}
+#app #vf-home-hero-kicker{color:#e6d5ad!important;-webkit-text-fill-color:#e6d5ad!important}
+#app #vf-home-hero-signature strong{color:#d5ef6b!important;-webkit-text-fill-color:#d5ef6b!important}
+#app #vf-home-hero-primary{
+  background:linear-gradient(135deg,#e0ca94,#c5a96c)!important;
+  color:#17251a!important;
+  -webkit-text-fill-color:#17251a!important;
+  border:1px solid rgba(255,255,255,.38)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.24)!important;
+}
+#app #vf-home-hero-secondary{
+  background:rgba(255,255,255,.10)!important;
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  border:1px solid rgba(255,253,245,.68)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
+  backdrop-filter:blur(12px)!important;
+}
+
+
+/* Editorial polish — final presentation layer, keeping the established renderer and routes. */
+:root{
+  font-synthesis:none;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{font-family:"Instrument Sans",Arial,sans-serif;letter-spacing:-.008em}
+#app :is(h1,h2,h3,h4,.vf-route-masthead h1,.vf-section-intro h2){
+  font-family:"Newsreader",Georgia,serif;
+  font-weight:600;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+#app p{line-height:1.72}
+nav{
+  background:rgba(255,253,245,.94)!important;
+  border-bottom:1px solid rgba(29,44,33,.10)!important;
+  box-shadow:0 8px 30px rgba(29,44,33,.055)!important;
+  backdrop-filter:blur(18px);
+}
+nav .wrap{min-height:76px!important;gap:clamp(12px,1.8vw,24px)!important}
+nav .logo{font-family:"Newsreader",Georgia,serif!important;font-size:1.42rem!important;letter-spacing:-.035em}
+nav .menu{gap:clamp(12px,1.55vw,22px)!important;align-items:center}
+nav a.l{font-size:.82rem!important;font-weight:600;letter-spacing:.005em}
+#app .vf-route-masthead{
+  min-height:clamp(270px,31vw,390px);
+  display:flex;
+  align-items:center;
+  padding:clamp(58px,8vw,104px) max(24px,calc((100vw - 1160px)/2))!important;
+  overflow:hidden;
+  position:relative;
+}
+#app .vf-route-masthead-inner{position:relative;z-index:1;max-width:850px}
+#app .vf-route-masthead h1{font-size:clamp(2.8rem,6vw,5.2rem);line-height:.98;letter-spacing:-.055em}
+#app .vf-route-masthead p{max-width:58ch;font-size:clamp(1rem,1.5vw,1.16rem);line-height:1.7}
+#app .vf-route-mark{opacity:.22;transform:scale(1.08)}
+#app .vf-route-body{padding-top:clamp(28px,4vw,56px);padding-bottom:clamp(48px,7vw,88px)}
+#app .vf-route-body .wrap{max-width:1160px}
+#app :is(.vf-focus-card,.vf-project-card,.vf-choice-card,.vf-photo,.vf-payment-panel,.vf-donate-form-panel,.vf-form-aside){
+  border-radius:10px;
+  overflow:hidden;
+}
+#app :is(.vf-focus-card,.vf-project-card,.vf-choice-card,.vf-photo,.vf-payment-panel,.vf-donate-form-panel){
+  box-shadow:0 12px 34px rgba(29,44,33,.055);
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+}
+#app :is(.vf-project-card,.vf-choice-card,.vf-payment-panel,.vf-donate-form-panel):hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 42px rgba(29,44,33,.095);
+}
+#app :is(.vf-button,.btn,button.btn){
+  min-height:46px;
+  font-family:"Instrument Sans",Arial,sans-serif;
+  font-weight:650;
+  letter-spacing:.005em;
+  transition:transform .22s ease,box-shadow .22s ease,background-color .22s ease;
+}
+#app :is(.vf-button,.btn,button.btn):focus-visible,
+nav a:focus-visible,footer a:focus-visible{
+  outline:3px solid #c7a66a!important;
+  outline-offset:4px!important;
+}
+#app :is(input,select,textarea){
+  min-height:46px;
+  font-family:"Instrument Sans",Arial,sans-serif;
+  line-height:1.5;
+}
+#app textarea{min-height:120px}
+footer{padding-top:clamp(46px,6vw,76px)!important}
+footer .wrap{max-width:1160px}
+@media(max-width:760px){
+  html{scroll-padding-top:76px}
+  nav .wrap{min-height:68px!important}
+  #app .vf-route-masthead{min-height:260px;padding:52px 24px!important}
+  #app .vf-route-masthead h1{font-size:clamp(2.65rem,12vw,4rem)}
+  #app .vf-route-body{padding-top:26px;padding-bottom:48px}
+  #app :is(.vf-project-card,.vf-choice-card,.vf-payment-panel,.vf-donate-form-panel):hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  #app *,#app *:before,#app *:after,nav,footer{transition:none!important;animation:none!important}
+}

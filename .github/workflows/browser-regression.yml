@@ -1,0 +1,59 @@
+name: VEGANFARM browser regression audit
+
+on:
+  pull_request:
+    branches: [main, development/platform-transformation]
+    paths:
+      - 'index.html'
+      - 'assets/**'
+      - 'scripts/browser-audit.mjs'
+      - 'scripts/test-rescue-photo-security.mjs'
+      - '.github/workflows/browser-regression.yml'
+  push:
+    branches: [development/platform-transformation, frontend/rebuild-v2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chromium-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out development branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Validate frontend and browser audit syntax
+        run: |
+          node --check assets/veganfarm-frontend-v2.js
+          node --check assets/veganfarm-luxury-cinematic.js
+          node --check scripts/browser-audit.mjs
+      - name: Start local static preview
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory . > /tmp/veganfarm-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/veganfarm-preview.log
+          exit 1
+      - name: Test routes, seven viewport widths, language direction and access gate
+        run: node scripts/browser-audit.mjs
+      - name: Upload screenshots and browser audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: veganfarm-browser-audit
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14
