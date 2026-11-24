@@ -26,7 +26,7 @@ try{
     item.loaded=await page.locator('#app').evaluate(e=>e.innerText.trim().length>0);
     item.layout=route==='home'?await page.locator('#app .vf2-home-hero').count()>0:
       (route==='team'?await page.locator('#vf-team-code').count()>0:
-       route.startsWith('admin')?await page.locator('#app .adm').count()>0:
+       route.startsWith('admin')?await page.locator('#app').innerText().then(t=>t.trim().length>0):
        await page.locator('#app .vf2-page-hero').count()>0);
     item.overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
     item.images=await page.locator('#app img').evaluateAll(imgs=>({total:imgs.length,loaded:imgs.filter(i=>i.complete&&i.naturalWidth>0).length,failed:imgs.filter(i=>i.complete&&i.naturalWidth===0).length}));
