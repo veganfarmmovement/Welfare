@@ -42,13 +42,15 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the c
 assert.doesNotMatch(visualCss, /photo-1509062522246-3755977927d7/, "Education imagery must not use the classroom apple photograph");
 assert.match(visualCss, /vf-motion-card\.vf-learn\{background-image:url\('https:\/\/images\.unsplash\.com\/photo-1524178232363-1fb2b075b655/,"Education card must use classroom learning imagery");
 assert.match(visualCss, /vf-choice-human:before\{background-image:linear-gradient/,"Programme card must use non-food education imagery");
+assert.match(html, /vf-team-access-panel/,"Team access gate must use a dedicated semantic wrapper");
+assert.match(visualCss, /vf-team-access-panel\{background:#fff!important;color:#1d2c21!important/,"Team access panel must keep credentials readable");
 assert.match(forestJs, /photo-1524178232363-1fb2b075b655/, "Education card must use the selected illustrative classroom photograph");
 assert.doesNotMatch(forestJs, /photo-1503676260728-1c00da094a0b/, "Remove the apple classroom photograph from the presentation layer");
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.match(html, /veganfarm-unified\.css/, "The consolidated stylesheet must load");
-assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-unified.css?v=20261124-8">'), "Unified stylesheet link must be a complete valid HTML tag");
+assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-unified.css?v=20261124-9">'), "Unified stylesheet link must be a complete valid HTML tag");
 assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-simple-colour-system.css?v=20261124-8">'), "Simple theme stylesheet link must be a complete valid HTML tag");
 assert.match(html, /veganfarm-simple-colour-system\.css\?v=20261124-8/, "The simple two-colour override must load");
 assert.ok(html.indexOf("veganfarm-unified.css") < html.indexOf("veganfarm-simple-colour-system.css"), "The simple colour system must load after the full design bundle");
