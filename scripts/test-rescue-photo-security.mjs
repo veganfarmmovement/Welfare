@@ -85,12 +85,12 @@ assert.match(simpleCss, /#app \.vf-team-access-form input:focus-visible/, "Team 
 assert.match(html, /Secure sign-in/, "The active shared-code gate must have a clear card heading");
 assert.match(html, /onsubmit="vfTeamUnlock\(event\)"/, "The existing server-verified Team unlock handler must remain connected");
 assert.match(forestJs, /t:'Team Member Access'/, "The private Team route must have one clear access masthead");
-assert.match(simpleCss, /html body #app\.vf-page-team \.vf-route-body \.vf-team-access-card\{[\\s\\S]*?background-color:#fff!important/, "The active Team route must force an opaque white card at route-level specificity");
-assert.match(simpleCss, /vf-team-access-submit\{[\\s\\S]*?background-color:#173d2b!important;[\\s\\S]*?color:#fffdf5!important/, "The Team unlock button must have explicit high-contrast colours");
+assert.match(simpleCss, /html body #app\.vf-page-team \.vf-route-body \.vf-team-access-card\{[\s\S]*?background-color:#fff!important/, "The active Team route must force an opaque white card at route-level specificity");
+assert.match(simpleCss, /vf-team-access-submit\{[\s\S]*?background-color:#173d2b!important;[\s\S]*?color:#fffdf5!important/, "The Team unlock button must have explicit high-contrast colours");
 assert.match(simpleCss, /#wa\[hidden\]\{display:none!important\}/, "Hidden donation enquiry content must respect the native hidden attribute");
 assert.match(simpleCss, /#app\.vf-page-team ~ #vf-floating-donate/, "Floating donation controls must be isolated from the private Team portal");
 assert.match(simpleCss, /#app\.vf-page-team ~ #vf-piano-player/, "Optional music controls must be isolated from the private Team portal");
-assert.match(simpleCss, /vf-motion-hero \.vf-motion-backdrop[\\s\\S]*?rgba\(5,22,15/, "Homepage hero must use a cinematic forest scrim");
+assert.match(simpleCss, /vf-motion-hero \.vf-motion-backdrop[\s\S]*?rgba\(5,22,15/, "Homepage hero must use a cinematic forest scrim");
 assert.match(simpleCss, /vf-motion-hero \.vf-hero-copy h1/, "Homepage hero headings must use the final high-contrast type treatment");
 assert.match(browserAudit, /team-login-card-not-light/, "Browser audit must assert the rendered Team card background");
 assert.match(browserAudit, /team-private-route-public-widget-visible/, "Browser audit must check private-route widget isolation");
