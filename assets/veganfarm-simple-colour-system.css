@@ -6,6 +6,10 @@
   --vf-simple-bg:#fffdf5;
   --vf-simple-text:#1d2c21;
   --vf-simple-line:#e6e2d8;
+  --vf-forest:#173d2b;
+  --vf-leaf:#286b36;
+  --vf-gold:#c7a66a;
+  --vf-stone:#f2efe7;
   --bg:var(--vf-simple-bg)!important;
   --card:var(--vf-simple-bg)!important;
   --ink:var(--vf-simple-text)!important;
@@ -48,12 +52,31 @@ nav :is(a,.logo,.logo small),footer :is(a,p,b,h1,h2,h3,span,small,li){
 #app a,nav a,footer a{text-decoration-color:currentColor!important}
 #app :is(.btn,.button,button,.vf-button,.vf-cinema-btn),
 nav :is(.btn,.mbtn){
-  background:transparent!important;
+  background:var(--vf-forest)!important;
   background-image:none!important;
-  color:var(--vf-simple-text)!important;
-  border:1px solid var(--vf-simple-text)!important;
+  color:#fff!important;
+  border:1px solid var(--vf-forest)!important;
   border-radius:6px!important;
   box-shadow:none!important;
+}
+#app :is(.btn.secondary,.button.secondary,.btn.out,.btn.gold,.vf-button.secondary){
+  background:transparent!important;
+  color:var(--vf-forest)!important;
+  border-color:var(--vf-forest)!important;
+}
+nav a[aria-current="page"],nav a.on,nav a:hover{
+  text-decoration:underline!important;
+  text-decoration-color:var(--vf-gold)!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:6px!important;
+}
+#app :is(.bar i,.vf-progress-fill,.progress-fill){background:var(--vf-leaf)!important}
+#app :is(.tag,.eyebrow,.vf-eyebrow,.vf-photo-tag,.vf-project-kind,.vf-choice-label,.vf-founder-line){
+  border-bottom:1px solid var(--vf-gold)!important;
+}
+#app :is(input,select,textarea):focus{
+  outline:2px solid var(--vf-gold)!important;
+  outline-offset:2px!important;
 }
 #app :is(.tag,.eyebrow,.vf-eyebrow,.vf-photo-tag,.vf-project-kind,.vf-choice-label,.vf-founder-line),
 #app .vf-photo figcaption{
