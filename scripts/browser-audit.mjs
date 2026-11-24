@@ -40,6 +40,19 @@ try {
         if(!item.loaded) report.errors.push({type:'blank-route',route,width});
         if(!item.routeShell) report.errors.push({type:'missing-route-layout',route,width});
         if(item.overflow) report.errors.push({type:'horizontal-overflow',route,width,scrollWidth:await page.evaluate(()=>document.documentElement.scrollWidth)});
+        if(item.images.failed>0) report.errors.push({type:'broken-images',route,width,failed:item.images.failed});
+        if(route==='home'){
+          item.heroImage=await page.locator('#app .vf-motion-backdrop').evaluate(el=>getComputedStyle(el).backgroundImage);
+          if(!item.heroImage||item.heroImage==='none')report.errors.push({type:'hero-image-missing',width});
+        }
+        if(width===1440){
+          item.navigationLinks=await page.locator('#menu a.l').count();
+          if(item.navigationLinks<5)report.errors.push({type:'navigation-links-missing',route,count:item.navigationLinks});
+          if(route==='donate'){
+            item.qrImages=await page.locator('#app img').evaluateAll(imgs=>imgs.filter(i=>/QR|UPI/i.test(i.alt||'')||/^data:image/.test(i.src)).length);
+            if(item.qrImages<1)report.errors.push({type:'donation-qr-not-found'});
+          }
+        }
         if(width===1440){
           const file=path.join(out,'screenshots',route+'.png');
           await page.screenshot({path:file,fullPage:true,animations:'disabled'});
