@@ -2587,7 +2587,8 @@ currentUser().then(function(u){
   function gatePage(){
     if(!client)return '<section class="sec"><div class="wrap" style="max-width:480px"><h1>VEGANFARM Team</h1><p class="note">The secure service is unavailable. Refresh this page and try again.</p></div></section>';
     if(!gateToken()){
-      return '<section class="sec"><div class="wrap" style="max-width:480px">'+
+      return '<section class="sec vf-team-access"><div class="wrap vf-team-access-panel" style="max-width:560px">'+
+        '<p class="vf-team-kicker">SECURE TEAM ACCESS</p>'+
         '<h1 style="font-size:2.2rem">VEGANFARM Team</h1>'+
         '<p class="mut">Enter the Team access code to open the case-submission forms. Access is limited to Feeding and Treatment case submissions.</p>'+
         '<form onsubmit="vfTeamUnlock(event)">'+
