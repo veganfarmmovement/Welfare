@@ -85,7 +85,7 @@ function buildHeader(){
  if(logo){logo.className='vf2-brand';logo.setAttribute('aria-label','VEGANFARM Movement home');logo.innerHTML=logo.innerHTML.replace(/<small>Movement<\/small>/,'<span class="vf2-brand-caption">INDEPENDENT WELFARE MOVEMENT</span>')}
  var menu=wrap.querySelector('#menu');if(menu)menu.className='vf2-menu';
  var mb=wrap.querySelector('#mb');if(mb){mb.className='vf2-menu-toggle';mb.setAttribute('aria-label','Toggle navigation');mb.textContent='Menu'}
- var cta=wrap.querySelector('a.btn');if(cta){cta.className='vf2-nav-cta';cta.textContent='Support a Rescue'}
+ var cta=wrap.querySelector('a.btn.gold.sm');if(cta){cta.className='vf2-nav-cta';cta.textContent='Support a Rescue'}
  wrap.classList.add('vf2-nav-inner');
 }
 function buildFooter(){
