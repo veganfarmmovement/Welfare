@@ -11,12 +11,9 @@ const routes = [
   'policy-financial','policy-volunteer','team','admin',
   'admin-cases','admin-donations','admin-audit'
 ];
-const languages = [
-  ['en','ltr'],['hi','ltr'],['mr','ltr'],['gu','ltr']
-];
 const out = path.resolve('artifacts');
 fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
-const report = {base,widths,routes,languages,routeChecks:[],languageChecks:[],menuChecks:[],errors:[],networkFailures:[],screenshots:[]};
+const report = {base,widths,routes,routeChecks:[],englishOnlyCheck:null,menuChecks:[],errors:[],networkFailures:[],screenshots:[]};
 let activeRoute='',activeWidth=0;
 const browser = await chromium.launch({headless:true});
 const page = await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
@@ -88,23 +85,23 @@ try {
 
   await page.setViewportSize({width:390,height:844});
   await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
-  await page.locator('#vf-language').waitFor({state:'visible',timeout:15000});
-  for (const [code,dir] of languages) {
-    activeRoute='language:'+code;activeWidth=390;
-    await page.locator('#vf-language').selectOption(code);
-    await page.waitForTimeout(80);
-    const actual = await page.evaluate(()=>({lang:document.documentElement.lang,dir:document.documentElement.dir,notice:!!document.querySelector('[data-vf-translation-notice]')}));
-    const expectedLang = code;
-    const ok = actual.lang===expectedLang && actual.dir===dir && (code==='en'?!actual.notice:actual.notice);
-    report.languageChecks.push({code,dir,actual,ok});
-    if(!ok) report.errors.push({type:'language-switch',code,expected:{lang:expectedLang,dir,notice:code!=='en'},actual});
-    if(code==='en'){
-      const file=path.join(out,'screenshots','language-'+code+'.png');
-      await page.screenshot({path:file,fullPage:true,animations:'disabled'});
-      report.screenshots.push(file);
-    }
+  await page.locator('#app').waitFor({state:'attached',timeout:15000});
+  await page.waitForTimeout(100);
+  report.englishOnlyCheck=await page.evaluate(()=>({
+    documentLanguage:document.documentElement.lang,
+    documentDirection:document.documentElement.dir,
+    languageControls:document.querySelectorAll('#vf-language,.vf-language-control,[aria-label*="Choose language"],[data-language-selector]').length,
+    translationScripts:Array.from(document.scripts).filter(s=>(s.src||'').includes('veganfarm-languages')).map(s=>s.src),
+    translationNotice:!!document.querySelector('[data-vf-translation-notice]'),
+    nonEnglishLanguageOptions:Array.from(document.querySelectorAll('select option')).filter(o=>/^(hi|mr|gu|ur|ar|fr|es|ko|sd)$/i.test(o.value)).length
+  }));
+  if(report.englishOnlyCheck.documentLanguage!=='en'||report.englishOnlyCheck.documentDirection!=='ltr'||
+     report.englishOnlyCheck.languageControls!==0||report.englishOnlyCheck.translationScripts.length!==0||
+     report.englishOnlyCheck.translationNotice||report.englishOnlyCheck.nonEnglishLanguageOptions!==0){
+    report.errors.push({type:'english-only-site-check-failed',actual:report.englishOnlyCheck});
   }
-  await page.locator('#vf-language').selectOption('en');
+  await page.screenshot({path:path.join(out,'screenshots','english-only-home.png'),fullPage:true,animations:'disabled'});
+  report.screenshots.push(path.join(out,'screenshots','english-only-home.png'));
   for(const route of ['home','donate']){
     activeRoute='mobile-screenshot:'+route;activeWidth=390;
     await page.goto(base+'#'+route,{waitUntil:'domcontentloaded',timeout:45000});
@@ -228,7 +225,7 @@ try {
   if(founderGate.dashboardVisible)report.errors.push({type:'founder-dashboard-visible-without-authentication'});
 
   fs.writeFileSync(path.join(out,'browser-audit.json'),JSON.stringify(report,null,2));
-  console.log(JSON.stringify({routeChecks:report.routeChecks.length,languageChecks:report.languageChecks,menuChecks:report.menuChecks,errorCount:report.errors.length,networkFailureCount:report.networkFailures.length,screenshots:report.screenshots.length,errors:report.errors,networkFailures:report.networkFailures},null,2));
+  console.log(JSON.stringify({routeChecks:report.routeChecks.length,englishOnlyCheck:report.englishOnlyCheck,menuChecks:report.menuChecks,errorCount:report.errors.length,networkFailureCount:report.networkFailures.length,screenshots:report.screenshots.length,errors:report.errors,networkFailures:report.networkFailures},null,2));
 } finally {
   await browser.close();
 }
