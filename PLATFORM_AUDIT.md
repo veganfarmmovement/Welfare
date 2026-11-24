@@ -219,3 +219,9 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - GitHub Actions must pass the updated visual/source regression assertions.
 - Real browser image loading, image CDN response, mobile cropping, desktop layout, accessibility and page performance remain to be verified in browser testing.
 - The Unsplash CDN URLs are remote dependencies; verify they return successfully from the deployed GitHub Pages origin before production merge.
+
+
+### Photography regression CI result
+- GitHub Actions run 45361059135 completed successfully.
+- Passed: parse of all active inline JavaScript, existing rescue-photo security assertions, new curated-photo source assertions, responsive `srcset` and lazy-loading assertions, footer attribution/license assertions, hero image and mobile-size assertions, reduced-motion and CSS brace checks, private-photo helper syntax, and Deno Team Edge Function type-check.
+- This is static/source validation. It does not verify the Unsplash CDN from a real browser, mobile cropping, visual quality at deployed breakpoints, accessibility with assistive technology, or page-load performance metrics.
