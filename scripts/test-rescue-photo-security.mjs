@@ -37,6 +37,7 @@ assert.match(photoAsset, /typeof APP!=='undefined'/, "Signed-photo loader must r
 assert.match(photoAsset, /createSignedUrl\(source\.path,SIGNED_URL_TTL\)/, "Signed-photo loader must use signed URLs");
 assert.match(photoAsset, /SIGNED_URL_TTL=300/, "Signed URLs must expire after five minutes");
 assert.match(photoAsset, /RENEW_AFTER_MS=240000/, "Signed URLs must refresh before expiry");
+assert.match(photoAsset, /visibilitychange/, "Signed URLs must refresh immediately when the page becomes visible");
 assert.match(photoAsset, /item\.live\.photo=item\.photo/, "Public live snapshot must receive the signed URL");
 assert.match(photoAsset, /window\.syncCases\(\)/, "Public case cards must be rebuilt after signing");
 assert.match(photoAsset, /update\(\{photo_path:null,photo_url:null\}\)/, "Founder photo removal must persist to the database");
