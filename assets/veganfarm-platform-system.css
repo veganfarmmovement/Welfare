@@ -54,3 +54,12 @@ body{background:var(--vf-page)!important;color:var(--vf-text)!important;font-fam
 #app :is(.vf-focus-card,.vf-project-photo-card,.vf-choice-card,.vf-work-tile,.card):hover{transform:translateY(-3px)!important;box-shadow:0 13px 30px rgba(40,92,49,.11)!important}
 @media(max-width:760px){#app :is(.hero .in,.vf-motion-hero-inner,.vf-hero-inner,.vf-cinema-inner,.vf-route-top .wrap){width:calc(100% - 24px)!important;padding:20px!important}#app .vf-focus-card{min-height:340px!important}#app .vf-impact-hero{grid-template-columns:1fr!important}#app :is(p,li,.mut,small,.note){font-size:14px!important;line-height:1.7!important}}
 @media(prefers-reduced-motion:reduce){#app *,body *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Floating optional music control — always on a light surface with readable labels. */
+.vf-piano-player{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;align-items:center;gap:9px;flex-wrap:wrap;max-width:calc(100vw - 24px);padding:10px 13px;background:#fffdf2;color:#285c31;border:1px solid #cbdcb8;border-radius:18px;box-shadow:0 10px 30px rgba(40,92,49,.16);font:600 12px/1.3 "Instrument Sans",Arial,sans-serif}
+.vf-piano-player button{appearance:none;border:1px solid #86ad28;border-radius:999px;padding:9px 13px;background:#a8cf38;color:#204a29;font:700 12px/1.2 inherit;cursor:pointer}
+.vf-piano-player button:hover{background:#f5d928;color:#204a29}
+.vf-piano-player .vf-piano-status,.vf-piano-player .vf-piano-volume-label{display:inline-flex;align-items:center;min-height:30px;padding:5px 8px;background:#eaf3d9;color:#285c31;border-radius:8px;white-space:nowrap}
+.vf-piano-player .vf-piano-volume{width:78px;accent-color:#286b36;cursor:pointer}
+.vf-piano-player button:focus-visible,.vf-piano-player input:focus-visible{outline:3px solid #286b36;outline-offset:3px}
+@media(max-width:560px){.vf-piano-player{right:10px;bottom:10px;left:10px;justify-content:center;gap:6px;padding:8px}.vf-piano-player .vf-piano-status{font-size:11px}.vf-piano-player .vf-piano-volume{width:64px}}
