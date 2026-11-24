@@ -2181,3 +2181,17 @@ html[dir="rtl"] #app table{direction:rtl}
 #app .vf-upi-id{font-weight:750;letter-spacing:.02em;font-size:1.1rem}
 #app .vf-donate-qr{display:block;width:min(280px,100%);height:auto;aspect-ratio:1;object-fit:contain;padding:12px;margin:22px 0;border:1px solid #e6e2d8;border-radius:8px;background:#fff}
 @media(max-width:760px){#app .vf-form-layout,#app .vf-donate-grid{grid-template-columns:1fr}#app .vf-form-aside{position:static}#app .vf-editorial-form fieldset{grid-template-columns:1fr}#app .vf-payment-panel,#app .vf-donate-form-panel{padding:18px}}
+
+
+/* Dedicated Team access gate: keep credentials readable and visually separate from the public shell. */
+#app .vf-team-access{background:#fffdf5!important;color:#1d2c21!important;padding:clamp(44px,7vw,88px) 24px!important}
+#app .vf-team-access .vf-team-access-panel{background:#fff!important;color:#1d2c21!important;border:1px solid #f2efe7!important;border-radius:18px!important;box-shadow:0 22px 70px rgba(29,44,33,.08)!important;padding:clamp(24px,5vw,48px)!important;max-width:560px!important}
+#app .vf-team-access .vf-team-access-panel :is(h1,h2,p,label){color:#1d2c21!important}
+#app .vf-team-access .vf-team-kicker{font-size:10px!important;letter-spacing:.2em!important;font-weight:700!important;color:#8a744d!important;margin:0 0 16px!important}
+#app .vf-team-access form{display:grid!important;gap:12px!important;margin-top:26px!important}
+#app .vf-team-access input{width:100%!important;min-height:52px!important;background:#fff!important;color:#1d2c21!important;border:1px solid #dcd7ca!important;border-radius:8px!important;padding:12px 14px!important}
+#app .vf-team-access input:focus{outline:3px solid rgba(40,107,54,.18)!important;border-color:#286b36!important}
+#app .vf-team-access button[type=submit]{background:#173d2b!important;color:#fff!important;border:1px solid #173d2b!important;border-radius:8px!important;min-height:48px!important;padding:0 22px!important;justify-self:start!important}
+#app .vf-team-access button[type=submit]:disabled{opacity:.65!important;cursor:wait!important}
+#app .vf-team-access #vf-team-gate-status{color:#536257!important;min-height:26px!important}
+@media(max-width:600px){#app .vf-team-access{padding:36px 16px!important}#app .vf-team-access .vf-team-access-panel{padding:24px 20px!important}}
