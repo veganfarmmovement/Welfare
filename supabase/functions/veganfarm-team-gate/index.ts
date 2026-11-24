@@ -219,12 +219,12 @@ Deno.serve(async (req: Request) => {
 
   try {
     const photoPath = `${caseId}/animal-${crypto.randomUUID()}.${extension(photo.type)}`;
-    const photoUpload = await db.storage.from("case-photos").upload(photoPath, photo, {
+    const photoUpload = await db.storage.from("rescue-case-photos").upload(photoPath, photo, {
       contentType: photo.type,
       upsert: false,
     });
     if (photoUpload.error) throw new Error("Animal photograph upload failed: " + photoUpload.error.message);
-    uploaded.push({ bucket: "case-photos", path: photoPath });
+    uploaded.push({ bucket: "rescue-case-photos", path: photoPath });
 
     const extra = {
       case_type: kind,
@@ -255,7 +255,7 @@ Deno.serve(async (req: Request) => {
       publication_status: "Pending",
       target_amount: null,
       fundraising_target: null,
-      photo_path: photoPath,
+      photo_path: `rescue-case-photos/${photoPath}`,
       submitted_by: null,
       urgent: false,
       is_urgent: false,
