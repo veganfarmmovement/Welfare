@@ -7,7 +7,7 @@ The following editorial photographs are used in the VEGANFARM website. Each sour
 | Animal rescue dog / hero | Angela Handfest | https://unsplash.com/photos/a-close-up-of-a-dog-looking-up-at-the-camera-MF0ZGVdWxkM |
 | Farm animals / cows | Francesco Ungaro | https://unsplash.com/photos/a-group-of-cows-grazing-in-a-field-1fbUIZ1uMiM |
 | Street cat shelter | Tunahan Kuzgun | https://unsplash.com/photos/makeshift-shelter-with-tarps-and-wood-pallets-oYtETwr8L4o |
-| Education / learning | Towfiqu barbhuiya | https://unsplash.com/photos/a-person-writing-on-a-notebook-with-a-pencil-c9NlNPByu_o |
+| Education / learning | Quilia | https://unsplash.com/photos/a-group-of-people-in-a-room-with-a-projector-screen-1-aA2Fadydc |
 | Community volunteering / volunteer page | Vitaly Gariev | https://unsplash.com/photos/person-in-gloves-writing-on-clipboard-with-volunteers-in-background-HpW0eYZi0QI |
 
 ## License
