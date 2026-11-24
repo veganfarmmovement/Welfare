@@ -131,26 +131,84 @@ try {
   await page.setViewportSize({width:390,height:844});
   await page.goto(base+'#team',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('#vf-team-code').waitFor({state:'visible',timeout:15000});
+  // Wait for the final stylesheet to win the cascade; visibility alone is not a CSS-ready signal.
+  await page.waitForFunction(()=>{
+    const card=document.querySelector('.vf-team-access-card');
+    const input=document.querySelector('#vf-team-code');
+    const button=document.querySelector('.vf-team-access-submit');
+    if(!card||!input||!button)return false;
+    const c=getComputedStyle(card),i=getComputedStyle(input),b=getComputedStyle(button);
+    return c.backgroundColor==='rgb(255, 255, 255)' &&
+      i.backgroundColor==='rgb(255, 255, 255)' &&
+      b.backgroundColor==='rgb(23, 61, 43)' &&
+      b.color==='rgb(255, 253, 245)';
+  },undefined,{timeout:10000});
   const teamLogin=await page.evaluate(()=>{
     const card=document.querySelector('.vf-team-access-card');
     const input=document.querySelector('#vf-team-code');
     const button=document.querySelector('.vf-team-access-submit');
-    const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor}};
-    return {heading:document.querySelector('#app h1')?.textContent||'',codeLabel:!!document.querySelector('label[for="vf-team-code"]'),card:card?style(card):null,input:input?style(input):null,button:button?style(button):null};
+    const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor,display:s.display}};
+    const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+    const contrast=(fg,bg)=>{
+      const rgb=s=>{const m=s.match(/[\\d.]+/g)||[];return m.slice(0,3).map(Number)};
+      const lum=s=>rgb(s).map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
+      const a=lum(fg),b=lum(bg);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    };
+    const floating=document.querySelector('#vf-floating-donate');
+    const music=document.querySelector('#vf-piano-player');
+    const enquiries=document.querySelector('#wa');
+    const visible=el=>!!el&&getComputedStyle(el).display!=='none'&&getComputedStyle(el).visibility!=='hidden';
+    const fr=floating&&visible(floating)?rect(floating):null,ir=input?rect(input):null;
+    const overlap=!!(fr&&ir&&fr.left<ir.right&&fr.right>ir.left&&fr.top<ir.bottom&&fr.bottom>ir.top);
+    return {
+      heading:document.querySelector('#app h1')?.textContent||'',
+      h1Count:document.querySelectorAll('#app h1').length,
+      codeLabel:!!document.querySelector('label[for="vf-team-code"]'),
+      card:card?style(card):null,input:input?style(input):null,button:button?style(button):null,
+      cardRect:card?rect(card):null,inputRect:ir,buttonRect:button?rect(button):null,
+      buttonContrast:button?contrast(getComputedStyle(button).color,getComputedStyle(button).backgroundColor):0,
+      floatingVisible:visible(floating),musicVisible:visible(music),
+      publicEnquiriesVisible:visible(enquiries),floatingOverlapsInput:overlap
+    };
   });
   report.teamLogin=teamLogin;
-  if(!teamLogin.heading.includes('Team Member')&&!teamLogin.heading.includes('Team'))report.errors.push({type:'team-login-heading-missing'});
+  if(!teamLogin.heading.includes('Team Member'))report.errors.push({type:'team-login-heading-missing'});
+  if(teamLogin.h1Count!==1)report.errors.push({type:'team-login-duplicate-heading',count:teamLogin.h1Count});
   if(!teamLogin.codeLabel)report.errors.push({type:'team-login-code-label-missing'});
   if(!teamLogin.card||teamLogin.card.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-card-not-light',actual:teamLogin.card});
   if(!teamLogin.input||teamLogin.input.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-input-not-light',actual:teamLogin.input});
+  if(!teamLogin.button||teamLogin.button.background!=='rgb(23, 61, 43)'||teamLogin.button.color!=='rgb(255, 253, 245)'||teamLogin.buttonContrast<4.5)report.errors.push({type:'team-login-button-contrast',actual:teamLogin.button,contrast:teamLogin.buttonContrast});
+  if(teamLogin.floatingVisible||teamLogin.musicVisible||teamLogin.publicEnquiriesVisible)report.errors.push({type:'team-private-route-public-widget-visible',floating:teamLogin.floatingVisible,music:teamLogin.musicVisible,enquiries:teamLogin.publicEnquiriesVisible});
+  if(teamLogin.floatingOverlapsInput)report.errors.push({type:'team-floating-cta-overlaps-input'});
   await page.locator('#vf-team-code').focus();
-  const focusVisible=await page.locator('#vf-team-code').evaluate(el=>getComputedStyle(el).outlineStyle!=='none'&&getComputedStyle(el).outlineWidth!=='0px');
+  const focusVisible=await page.locator('#vf-team-code').evaluate(el=>getComputedStyle(el).outlineStyle!=='none'&&parseFloat(getComputedStyle(el).outlineWidth)>=3);
   report.teamLogin.keyboardFocus=focusVisible;
   if(!focusVisible)report.errors.push({type:'team-login-keyboard-focus-missing'});
   await page.screenshot({path:path.join(out,'screenshots','team-access-mobile.png'),fullPage:true,animations:'disabled'});
   await page.setViewportSize({width:1440,height:1000});
   await page.screenshot({path:path.join(out,'screenshots','team-access-desktop.png'),fullPage:true,animations:'disabled'});
   report.screenshots.push('team-access-mobile.png','team-access-desktop.png');
+
+  // Verify cinematic hero copy is readable over the animal photograph at desktop and mobile sizes.
+  await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
+  await page.locator('#app .vf-motion-hero').waitFor({state:'visible',timeout:15000});
+  await page.waitForFunction(()=>{
+    const h=document.querySelector('#app .vf-motion-hero .vf-hero-copy h1');
+    const bg=document.querySelector('#app .vf-motion-backdrop');
+    return !!h&&!!bg&&getComputedStyle(h).color==='rgb(255, 253, 245)'&&getComputedStyle(bg).backgroundImage.includes('rgba(5, 22, 15');
+  },undefined,{timeout:10000});
+  report.heroContrast=await page.evaluate(()=>{
+    const h=document.querySelector('#app .vf-motion-hero .vf-hero-copy h1');
+    const p=document.querySelector('#app .vf-motion-hero .vf-hero-copy p');
+    const bg=document.querySelector('#app .vf-motion-backdrop');
+    return {heading:getComputedStyle(h).color,body:getComputedStyle(p).color,backdrop:getComputedStyle(bg).backgroundImage};
+  });
+  if(report.heroContrast.heading!=='rgb(255, 253, 245)')report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
+  await page.setViewportSize({width:390,height:844});
+  await page.screenshot({path:path.join(out,'screenshots','home-hero-mobile-390.png'),fullPage:false,animations:'disabled'});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.screenshot({path:path.join(out,'screenshots','home-hero-desktop-1440.png'),fullPage:false,animations:'disabled'});
+  report.screenshots.push('home-hero-mobile-390.png','home-hero-desktop-1440.png');
 
   // Confirm the unauthenticated Founder route does not render privileged dashboard content.
   await page.goto(base+'#admin',{waitUntil:'domcontentloaded',timeout:45000});
