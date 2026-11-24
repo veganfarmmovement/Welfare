@@ -33,7 +33,7 @@ on storage.objects for select to anon
 using (
   bucket_id = 'case-photos'
   and exists (
-    select 1 from public.rescue_cases rc
+    select 1 from public.public_rescue_cases rc
     where rc.photo_path = storage.objects.name and rc.publication = 'published'
   )
 );
@@ -67,7 +67,7 @@ on storage.objects for select to anon
 using (
   bucket_id = 'rescue-case-photos'
   and exists (
-    select 1 from public.rescue_cases rc
+    select 1 from public.public_rescue_cases rc
     where rc.photo_path = 'rescue-case-photos/' || storage.objects.name
       and rc.publication = 'published'
   )
