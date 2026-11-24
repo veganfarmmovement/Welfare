@@ -2060,3 +2060,11 @@ html[dir="rtl"] #app .adm{direction:rtl}
 html[dir="rtl"] #app input,html[dir="rtl"] #app textarea{direction:rtl;text-align:right}
 html[dir="rtl"] #app table{direction:rtl}
 
+/* Fundraising panel: keep all text on a clean, consistent light surface. */
+#app .vf-funding{background:var(--vf-stone)!important;color:var(--vf-charcoal)!important;border:1px solid var(--vf-line)!important;border-radius:4px!important;box-shadow:none!important}
+#app .vf-funding *{background-color:transparent!important;color:var(--vf-charcoal)!important}
+#app .vf-funding .tag{background:rgba(199,166,106,.14)!important;color:var(--vf-forest)!important;border:1px solid rgba(199,166,106,.42)!important}
+#app .vf-funding .bar{background:rgba(23,61,43,.12)!important}
+#app .vf-funding .bar i{background:var(--vf-leaf)!important}
+#app .vf-funding p{color:var(--vf-olive)!important}
+
