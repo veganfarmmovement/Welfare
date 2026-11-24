@@ -169,4 +169,5 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - GitHub Actions workflow `Rescue photo security static checks` completed successfully on the development PR branch.
 - The Node static test parsed all 16 non-empty inline JavaScript blocks in active `index.html`, parsed the private-photo asset, and passed assertions for all six photo-upload code occurrences, private-bucket path prefixing, no case-photo `getPublicUrl`, the active shared-code Edge Function call, signed URL TTL/refresh, Founder photo removal, Edge Function bucket/prefix/signature checks, SQL policy requirements and rollback guards.
 - `node --check assets/veganfarm-private-case-photos.js` passed.
+- `deno check --no-lock supabase/functions/veganfarm-team-gate/index.ts` passed in GitHub Actions.
 - These checks are source-level only; they do not execute SQL, call Storage APIs or test role-based access.
