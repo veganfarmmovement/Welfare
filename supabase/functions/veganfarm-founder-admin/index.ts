@@ -196,5 +196,13 @@ Deno.serve(async (req:Request)=>{
     await audit("Team","Team profile updated",id,"Founder updated Team account status and role");
     return reply({ok:true});
   }
+  if(action==="change_founder_code") {
+    const newPin=safe(body.new_pin,100);
+    if(newPin.length<8)return reply({error:"Use at least 8 characters for the Founder code."},400);
+    const {data,error}=await db.rpc("vf_founder_pin_change",{p_new_pin:newPin});
+    if(error||data!==true)return reply({error:error?.message||"Founder code could not be changed."},400);
+    await audit("Security","Founder access code changed","founder","Founder rotated the server-side access code");
+    return reply({ok:true});
+  }
   return reply({error:"Unknown action."},400);
 });
