@@ -63,7 +63,7 @@ assert.match(simpleCss, /--vf-simple-text:#1d2c21/, "All text must use the singl
 assert.match(simpleCss, /--vf-forest:#173d2b/, "Primary actions must use the restrained forest accent");
 assert.match(simpleCss, /--vf-leaf:#286b36/, "Progress indicators must use the leaf accent");
 assert.match(simpleCss, /--vf-gold:#c7a66a/, "Decorative details must use the champagne accent");
-assert.match(html, /<html lang="en">/, "The website document language must be English");
+assert.match(html, /<html lang="en" dir="ltr">/, "The website document language and direction must be English and left-to-right");
 assert.doesNotMatch(html, /vf-language|veganfarm-languages/, "The public document must not load language controls or translation code");
 assert.doesNotMatch(visualCss + simpleCss, /vf-language-control|vf-translation-fallback/, "Obsolete language-switching and translation-notice styles must be removed");
 assert.match(browserAudit, /englishOnlyCheck/, "Browser audit must verify the English-only configuration");
