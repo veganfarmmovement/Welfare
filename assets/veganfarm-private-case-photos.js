@@ -80,6 +80,26 @@
   wrapLoader('vfLoadPublicMore');
   wrapLoader('vfLoadFounderMore');
   wrapLoader('vfAfterLogin');
+  // Persist the legacy Founder "Remove photograph" action to the rescue_cases row.
+  // The object is intentionally retained in private storage for a later audited cleanup.
+  window.rmPhoto=function(caseCode){
+    var item=appCases().find(function(record){return String(record.id)===String(caseCode);});
+    if(!item||!item.dbId){if(typeof window.toast==='function')window.toast('This case is not linked to a saved record.');return;}
+    if(window.vfRole!=='founder'){if(typeof window.toast==='function')window.toast('Founder sign-in required.');return;}
+    client.from('rescue_cases').update({photo_path:null,photo_url:null}).eq('id',item.dbId).select('id').single().then(function(result){
+      if(result.error)throw result.error;
+      item.photo='';item.photoUrl='';item.photoPath='';item.ppath='';item.photoSignedAt=null;
+      if(item.live){item.live.photo='';item.live.photoUrl='';}
+      return window.vfReload?window.vfReload():signLoadedCases();
+    }).then(function(){
+      if(typeof window.toast==='function')window.toast('Case photograph removed from the public and Founder case record.');
+      if(typeof window.go==='function')window.go(true);
+    }).catch(function(error){
+      console.error('Founder photo removal failed:',error);
+      if(typeof window.toast==='function')window.toast('Photo was not removed: '+(error&&error.message?error.message:'Please try again.'));
+    });
+  };
+
   window.vfSignPrivateCasePhotos=signLoadedCases;
   window.addEventListener('vf-public-appeals-loaded',signLoadedCases);
   window.setTimeout(signLoadedCases,900);
