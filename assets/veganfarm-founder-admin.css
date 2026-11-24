@@ -54,3 +54,6 @@
 .vf-team-live-table>div{display:grid;grid-template-columns:minmax(0,1.5fr) auto minmax(0,1fr);gap:12px;align-items:center;padding:11px 0;border-top:1px solid #edf0e9;font-size:12px}
 .vf-team-live-table small{display:block;color:#7b867d;font-size:10px;margin-top:4px}.vf-team-live-status{background:#f2efe3;color:#6d5a2d;border-radius:99px;padding:5px 8px;font-size:10px}
 @media(max-width:640px){.vf-team-live-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.vf-team-live-table>div{grid-template-columns:1fr auto}.vf-team-live-table>div>small:last-child{grid-column:1/-1}}
+
+.vf-admin-active nav,.vf-admin-active #tick,.vf-admin-active #ann,.vf-admin-active #wa,.vf-admin-active footer{display:none!important}
+.vf-admin-active #app{min-height:100vh}
