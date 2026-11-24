@@ -43,7 +43,7 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile he
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.match(html, /veganfarm-unified\.css/, "The consolidated stylesheet must load");
-assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-unified.css?v=20261124-4">'), "Unified stylesheet link must be a complete valid HTML tag");
+assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-unified.css?v=20261124-5">'), "Unified stylesheet link must be a complete valid HTML tag");
 assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-simple-colour-system.css?v=20261124-4">'), "Simple theme stylesheet link must be a complete valid HTML tag");
 assert.match(html, /veganfarm-simple-colour-system\.css\?v=20261124-4/, "The simple two-colour override must load");
 assert.ok(html.indexOf("veganfarm-unified.css") < html.indexOf("veganfarm-simple-colour-system.css"), "The simple colour system must load after the full design bundle");
