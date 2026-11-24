@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="vf-build" content="2026-11-24-accessible-light-system-1">
+<meta name="vf-build" content="2026-11-24-private-case-photo-system-1">
 <meta name="description" content="VEGANFARM Movement is an independent, currently unregistered welfare movement working on animal welfare, vegan awareness and education. Donations are made to the named beneficiary shown on the Donate page.">
 <link rel="canonical" href="https://veganfarmmovement.github.io/Welfare/">
 <meta name="application-name" content="VEGANFARM Movement">
@@ -1217,14 +1217,14 @@ var PUBL={draft:'Draft',pending_review:'Pending Founder review',published:'Publi
 var pubDb=function(l){for(var k in PUBL)if(PUBL[k]===l)return k};
 var CASECOLS='id,case_code,animal_name,animal_type,location,hospital,condition,treatment,description,status,target_amount,publication,photo_path,photo_url,kind,urgent,extra,created_at';
 var TEAMCASECOLS=CASECOLS+',submitted_by,review_note';
-var photoUrl=function(p){return p?sb.storage.from('case-photos').getPublicUrl(p).data.publicUrl:''};
+var photoUrl=function(p){return '';};
 var me=function(){return sb.auth.getSession().then(function(r){return r.data&&r.data.session?r.data.session.user.id:null})};
-function mapCase(c){var x=c.extra||{};return{id:c.case_code,dbId:c.id,extra:x,n:c.animal_name,type:c.animal_type||'Animal',loc:c.location||'',hosp:c.hospital||'',cond:c.condition||'',treat:c.treatment||'',desc:c.description||'',kind:c.kind||'Treatment',fdaily:+x.fdaily||0,fn:+x.fn||0,amt:c.target_amount==null?null:+c.target_amount,est:x.est==null?null:+x.est,req:x.req||null,st:c.status||'',pub:PUBL[c.publication]||'Draft',note:c.review_note||'',urgent:!!c.urgent,photo:c.photo_url||photoUrl(c.photo_path),photoUrl:c.photo_url||'',ppath:c.photo_path,completed:!!x.completed,completedAmount:Number(x.completed_amount||0),donorCount:x.donor_count==null?null:Number(x.donor_count),fundingSource:x.funding_source||'',illustrative:!!x.image_is_illustrative,imageCredit:x.image_credit||'',imageCreditUrl:x.image_credit_url||'',imageLicense:x.image_license||'',updates:Array.isArray(x.updates)?x.updates:[],docs:null,src:c.submitted_by?'team':'',added:Date.parse(c.created_at),sample:false}}
+function mapCase(c){var x=c.extra||{};return{id:c.case_code,dbId:c.id,extra:x,n:c.animal_name,type:c.animal_type||'Animal',loc:c.location||'',hosp:c.hospital||'',cond:c.condition||'',treat:c.treatment||'',desc:c.description||'',kind:c.kind||'Treatment',fdaily:+x.fdaily||0,fn:+x.fn||0,amt:c.target_amount==null?null:+c.target_amount,est:x.est==null?null:+x.est,req:x.req||null,st:c.status||'',pub:PUBL[c.publication]||'Draft',note:c.review_note||'',urgent:!!c.urgent,photo:c.photo_path?'':(c.photo_url||''),photoUrl:c.photo_url||'',ppath:c.photo_path,photoPath:c.photo_path||'',completed:!!x.completed,completedAmount:Number(x.completed_amount||0),donorCount:x.donor_count==null?null:Number(x.donor_count),fundingSource:x.funding_source||'',illustrative:!!x.image_is_illustrative,imageCredit:x.image_credit||'',imageCreditUrl:x.image_credit_url||'',imageLicense:x.image_license||'',updates:Array.isArray(x.updates)?x.updates:[],docs:null,src:c.submitted_by?'team':'',added:Date.parse(c.created_at),sample:false}}
 function up(bucket,file){if(!file||!file.size)return Promise.resolve(null);
 if(file.size>5242880)return Promise.reject(new Error('File is larger than 5 MB'));
 if(!/^(image\/(jpeg|png)|application\/pdf)$/.test(file.type))return Promise.reject(new Error('Only JPG, PNG or PDF files are allowed'));
 var path=Date.now()+'-'+Math.random().toString(36).slice(2,10)+'.'+(file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg');
-return sb.storage.from(bucket).upload(path,file,{contentType:file.type}).then(function(r){if(r.error)throw r.error;return path})}
+var saveUpload=function(uploadPath){return sb.storage.from(bucket).upload(uploadPath,file,{contentType:file.type}).then(function(r){if(r.error)throw r.error;return bucket==='rescue-case-photos'?'rescue-case-photos/'+uploadPath:uploadPath})};if(bucket==='rescue-case-photos')return me().then(function(userId){if(!userId)throw new Error('Sign in before uploading a rescue photograph.');return saveUpload(userId+'/'+path)});return saveUpload(path)}
 var fileIn=function(form,n){return form.elements[n]&&form.elements[n].files&&form.elements[n].files[0]};
 function save(factory,done,then){if(busy)return;busy=true;
 factory().then(function(r){busy=false;if(r&&r.error){toast('Not saved: '+r.error.message);return}
@@ -1270,7 +1270,7 @@ if(!v('n')){toast('Name is required');return}var kind=f.get('kind')==='Feeding'?
 save(function(){return me().then(function(id){return sb.from('rescue_cases').insert({animal_name:v('n'),location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),kind:kind,status:kind==='Feeding'?'Feeding ongoing':'Awaiting treatment',target_amount:f.get('amt')?+f.get('amt'):null,publication:'draft',submitted_by:id,extra:{fdaily:kind==='Feeding'?(+f.get('fdaily')||0):0,fn:kind==='Feeding'?(+f.get('fn')||0):0}})})},'Case created as a draft')};
 window.caseEdit=function(e){e.preventDefault();if(needF())return;var a=APP.find(function(x){return x.id==csel});if(!a||!a.dbId){toast('This case is not linked to a saved database record. Reload the dashboard and try again.');return}var f=new FormData(e.target),form=e.target,v=function(k){return(f.get(k)||'').trim()};
 if(!v('n')){toast('Name is required');return}var kind=f.get('kind')==='Feeding'?'Feeding':'Treatment';
-save(function(){return up('case-photos',fileIn(form,'photo')).then(function(path){var extra=Object.assign({},a.extra||{});extra.fdaily=kind==='Feeding'?(+f.get('fdaily')||0):0;extra.fn=kind==='Feeding'?(+f.get('fn')||0):0;var p={animal_name:v('n'),kind:kind,location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:f.get('st'),target_amount:f.get('amt')?+f.get('amt'):null,urgent:!!f.get('urg'),extra:extra};if(path)p.photo_path=path;
+save(function(){return up('rescue-case-photos',fileIn(form,'photo')).then(function(path){var extra=Object.assign({},a.extra||{});extra.fdaily=kind==='Feeding'?(+f.get('fdaily')||0):0;extra.fn=kind==='Feeding'?(+f.get('fn')||0):0;var p={animal_name:v('n'),kind:kind,location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:f.get('st'),target_amount:f.get('amt')?+f.get('amt'):null,urgent:!!f.get('urg'),extra:extra};if(path)p.photo_path=path;
 return sb.from('rescue_cases').update(p).eq('id',a.dbId).select('id').single()})},'Case saved to the database',function(){csel=null;location.hash='admin-cases'})};
 /* Founder case controls must write through to Supabase, not only the temporary browser state. */
 window.fSt=function(id,value){if(needF())return;var a=APP.find(function(x){return x.id==id});if(!a||!a.dbId)return;var complete=/^(Completed|Recovered|Closed)$/i.test(String(value||''));save(function(){return sb.from('donations').select('amount').eq('case_id',a.dbId).eq('status','verified').then(function(dr){if(dr.error)throw dr.error;var extra=Object.assign({},a.extra||{});if(complete){extra.completed=true;extra.completed_amount=(dr.data||[]).reduce(function(n,d){return n+Number(d.amount||0)},0)}else{delete extra.completed;delete extra.completed_amount}return sb.from('rescue_cases').update({status:value,extra:extra}).eq('id',a.dbId).select('id').single()})},complete?'Case completed and moved to Past Work':'Recovery status saved')};
@@ -1288,7 +1288,7 @@ save(function(){return sb.from('rescue_cases').update(p).eq('id',a.dbId).select(
 window.tNew=function(e){e.preventDefault();if(needT())return;if(!TP.submit){toast('Submitting cases is turned off by the Founder');return}
 var f=new FormData(e.target),form=e.target,v=function(k){return(f.get(k)||'').trim()};
 if(v('vphone').replace(/\D/g,'').length<10){toast('Enter a valid contact number');return}if(!v('n')){toast('Animal name is required');return}
-save(function(){return me().then(function(id){return up('case-photos',fileIn(form,'photo')).then(function(path){
+save(function(){return me().then(function(id){return up('rescue-case-photos',fileIn(form,'photo')).then(function(path){
 return sb.from('rescue_cases').insert({animal_name:v('n'),location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:'Awaiting treatment',publication:'pending_review',photo_path:path,submitted_by:id,extra:{est:f.get('amt')?+f.get('amt'):null}}).select('id').single()})}).then(function(r){
 if(r.error||!r.data)return r;return sb.from('case_private').insert({case_id:r.data.id,finder_name:v('vname'),finder_phone:v('vphone')})})},'Case submitted. Pending Founder review.',function(){location.hash='team-manage'})};
 window.tSave=function(e){e.preventDefault();if(needT())return;if(!TP.edit){toast('Editing cases is turned off by the Founder');return}
@@ -1489,7 +1489,7 @@ window.caseEdit=function(e){
   if(!v('n')){toast('Animal name is required');return;}
   currentUser().then(function(user){
     var photo=fileIn(form,'photo');
-    return up('case-photos',photo).then(function(path){
+    return up('rescue-case-photos',photo).then(function(path){
       var kind=f.get('kind')==='Feeding'?'Feeding':'Treatment';
       var row={animal_name:v('n'),kind:kind,location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:f.get('st'),target_amount:f.get('amt')?+f.get('amt'):null,urgent:!!f.get('urg'),extra:{fdaily:kind==='Feeding'?(+f.get('fdaily')||0):0,fn:kind==='Feeding'?(+f.get('fn')||0):0,est:a.est}};
       if(path)row.photo_path=path;
@@ -1508,7 +1508,7 @@ window.tNew=function(e){
   var btn=form.querySelector('button[type=submit],button:not([type])');if(btn)btn.disabled=true;
   currentUser().then(function(user){
     if(!user)throw new Error('Your session has expired. Sign in again.');
-    return up('case-photos',fileIn(form,'photo')).then(function(photo){
+    return up('rescue-case-photos',fileIn(form,'photo')).then(function(photo){
       return sb.from('rescue_cases').insert({animal_name:v('n'),location:v('loc'),hospital:v('hosp'),condition:v('cond'),treatment:v('treat'),description:v('desc'),status:'Awaiting treatment',publication:'pending_review',photo_path:photo,submitted_by:user.id,extra:{est:f.get('amt')?+f.get('amt'):null}}).select('id').single();
     }).then(function(res){
       if(res.error)throw res.error;var caseId=res.data.id;
@@ -1528,7 +1528,7 @@ window.tSave=function(e){
   e.preventDefault();if(window.vfRole!=='team'){toast('Team member sign-in required');return;}if(!TP.edit){toast('Case editing is disabled by the Founder');return;}
   var a=APP.find(function(x){return x.id===tsel;});if(!a||!a.dbId)return;var f=new FormData(e.target),form=e.target,v=function(k){return String(f.get(k)||'').trim();};
   var extra=Object.assign({},a.extra||{},{est:a.est,req:f.get('req')?+f.get('req'):null});
-  currentUser().then(function(user){if(!user)throw new Error('Session expired');return up('case-photos',fileIn(form,'photo')).then(function(photo){var p={animal_name:v('n')||a.n,location:v('loc'),hospital:v('hosp'),condition:v('cond'),description:v('desc'),treatment:v('treat'),status:f.get('st')||a.st,extra:extra};if(photo)p.photo_path=photo;return sb.from('rescue_cases').update(p).eq('id',a.dbId).eq('submitted_by',user.id).in('publication',['draft','pending_review']).select('id').then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('This case can no longer be edited');var jobs=[],rep=fileIn(form,'rep'),bill=fileIn(form,'bill');if(rep)jobs.push(uploadCaseDocument(a.dbId,'medical_report',rep,user.id));if(bill)jobs.push(uploadCaseDocument(a.dbId,'veterinary_bill',bill,user.id));return Promise.all(jobs);});});}).then(function(){return window.vfAfterLogin();}).then(function(){toast('Case details and attachments saved');location.hash='team-manage';go(true);}).catch(function(err){reportError('Case changes were not saved',err);});
+  currentUser().then(function(user){if(!user)throw new Error('Session expired');return up('rescue-case-photos',fileIn(form,'photo')).then(function(photo){var p={animal_name:v('n')||a.n,location:v('loc'),hospital:v('hosp'),condition:v('cond'),description:v('desc'),treatment:v('treat'),status:f.get('st')||a.st,extra:extra};if(photo)p.photo_path=photo;return sb.from('rescue_cases').update(p).eq('id',a.dbId).eq('submitted_by',user.id).in('publication',['draft','pending_review']).select('id').then(function(r){if(r.error)throw r.error;if(!r.data||!r.data.length)throw new Error('This case can no longer be edited');var jobs=[],rep=fileIn(form,'rep'),bill=fileIn(form,'bill');if(rep)jobs.push(uploadCaseDocument(a.dbId,'medical_report',rep,user.id));if(bill)jobs.push(uploadCaseDocument(a.dbId,'veterinary_bill',bill,user.id));return Promise.all(jobs);});});}).then(function(){return window.vfAfterLogin();}).then(function(){toast('Case details and attachments saved');location.hash='team-manage';go(true);}).catch(function(err){reportError('Case changes were not saved',err);});
 };
 
 /* Donation review and donor-name controls persist notification decisions as well as payments. */
@@ -2274,16 +2274,16 @@ currentUser().then(function(u){
 
   function upload(bucket,file,caseId,docType,userId){
     if(!file||!file.size)return Promise.resolve(null);
-    var isPhoto=bucket==='case-photos';
+    var isPhoto=bucket==='rescue-case-photos';
     var isVideo=docType==='treatment_video';
     if(file.size>(isPhoto?5242880:isVideo?52428800:10485760))return Promise.reject(new Error(isPhoto?'Photo exceeds 5 MB.':isVideo?'Video exceeds 50 MB.':'Document exceeds 10 MB.'));
     if(isVideo&&!/^(video\/mp4|video\/webm|video\/quicktime)$/.test(file.type))return Promise.reject(new Error('Use an MP4, WebM or MOV video.'));
     if(!isVideo&&!(file.type==='image/jpeg'||file.type==='image/png'||(!isPhoto&&file.type==='application/pdf')))return Promise.reject(new Error(isPhoto?'Use a JPG or PNG photograph.':'Use JPG, PNG or PDF documents.'));
     var ext=isVideo?(file.type==='video/webm'?'webm':file.type==='video/quicktime'?'mov':'mp4'):(file.type==='application/pdf'?'pdf':file.type==='image/png'?'png':'jpg');
-    var path=isPhoto?(Date.now()+'-'+Math.random().toString(36).slice(2,10)+'.'+ext):(caseId+'/'+docType+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext);
+    var path=isPhoto?(userId+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,10)+'.'+ext):(caseId+'/'+docType+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext);
     return client.storage.from(bucket).upload(path,file,{contentType:file.type}).then(function(r){
       if(r.error)throw r.error;
-      if(isPhoto)return path;
+      if(isPhoto)return 'rescue-case-photos/'+path;
       return client.from('case_documents').insert({case_id:caseId,document_type:docType,file_path:path,is_public:false,created_by:userId}).then(function(d){if(d.error)throw d.error;return path;});
     });
   }
@@ -2303,7 +2303,7 @@ currentUser().then(function(u){
     var caseId=null;
     client.auth.getUser().then(function(auth){
       var user=auth.data&&auth.data.user;if(auth.error)throw auth.error;if(!user)throw new Error('Your login session has expired. Sign in again.');
-      return upload('case-photos',photo,null,null,user.id).then(function(photoPath){
+      return upload('rescue-case-photos',photo,null,null,user.id).then(function(photoPath){
         var extra={case_type:kind,est:kind==='Feeding'?Number(v('fdaily'))*30:Number(v('amt')),fdaily:kind==='Feeding'?Number(v('fdaily')):0,fn:kind==='Feeding'?Number(v('fn')):0,food_type:kind==='Feeding'?v('food_type'):'',frequency:kind==='Feeding'?v('frequency'):'',feeding_notes:kind==='Feeding'?v('desc'):''};
         var row={animal_name:v('n'),animal_type:v('animal_type'),location:v('loc'),hospital:kind==='Treatment'?v('hosp'):null,condition:kind==='Treatment'?v('cond'):null,treatment:kind==='Treatment'?v('treat'):null,description:v('desc'),kind:kind,status:kind==='Feeding'?'Feeding ongoing':'Awaiting treatment',publication:'pending_review',target_amount:null,photo_path:photoPath,submitted_by:user.id,extra:extra};
         return client.from('rescue_cases').insert(row).select('id').single().then(function(r){if(r.error)throw r.error;if(!r.data)throw new Error('The case record was not returned.');caseId=r.data.id;
@@ -2718,4 +2718,5 @@ currentUser().then(function(u){
 <script src="assets/veganfarm-forest-luxury.js?v=20261124-12"></script>
 <script id="vf-back-to-top-feature">(function(){if(document.getElementById('vf-back-top'))return;var b=document.createElement('button');b.id='vf-back-top';b.type='button';b.setAttribute('aria-label','Back to top');b.textContent='↑';b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});document.body.appendChild(b);window.addEventListener('scroll',function(){b.classList.toggle('is-visible',window.scrollY>500);},{passive:true});})();</script>
 <script src="assets/veganfarm-piano.js?v=20261124-1" defer></script>
+<script src="assets/veganfarm-private-case-photos.js?v=20261124-1"></script>
 </body></html>
