@@ -17,11 +17,12 @@ const languages = [
 ];
 const out = path.resolve('artifacts');
 fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
-const report = {base,widths,routes,languages,routeChecks:[],languageChecks:[],menuChecks:[],errors:[],screenshots:[]};
+const report = {base,widths,routes,languages,routeChecks:[],languageChecks:[],menuChecks:[],errors:[],networkFailures:[],screenshots:[]};
 let activeRoute='',activeWidth=0;
 const browser = await chromium.launch({headless:true});
 const page = await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
 page.on('pageerror',e=>report.errors.push({type:'pageerror',message:e.message,stack:e.stack,route:activeRoute,width:activeWidth}));
+page.on('response',r=>{if(r.status()>=400)report.networkFailures.push({status:r.status(),url:r.url(),route:activeRoute,width:activeWidth});});
 page.on('console',m=>{if(m.type()==='error')report.errors.push({type:'console',message:m.text()})});
 
 try {
@@ -120,7 +121,7 @@ try {
   if(founderGate.dashboardVisible)report.errors.push({type:'founder-dashboard-visible-without-authentication'});
 
   fs.writeFileSync(path.join(out,'browser-audit.json'),JSON.stringify(report,null,2));
-  console.log(JSON.stringify({routeChecks:report.routeChecks.length,languageChecks:report.languageChecks,menuChecks:report.menuChecks,errorCount:report.errors.length,screenshots:report.screenshots.length,errors:report.errors},null,2));
+  console.log(JSON.stringify({routeChecks:report.routeChecks.length,languageChecks:report.languageChecks,menuChecks:report.menuChecks,errorCount:report.errors.length,networkFailureCount:report.networkFailures.length,screenshots:report.screenshots.length,errors:report.errors,networkFailures:report.networkFailures},null,2));
 } finally {
   await browser.close();
 }
