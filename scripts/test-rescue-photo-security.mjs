@@ -53,7 +53,7 @@ assert.match(frontendCss,/@media\(max-width:860px\)/,"The navigation must have a
 assert.match(frontendCss,/@media\(max-width:560px\)/,"The design must have a dedicated small-screen layout");
 assert.match(frontendCss,/prefers-reduced-motion:reduce/,"Motion must respect reduced-motion preferences");
 assert.match(frontendCss,/vf-team-access-card/,"The Team access card must be styled in the new system");
-assert.match(frontendCss,/vf2-founder/,"The Founder workspace must have a dedicated V2 treatment");
+assert.match(frontendCss,/#app\.vf2-founder/,"The Founder workspace must have a dedicated V2 treatment");
 assert.match(browserAudit,/routeChecks/,"Browser audit must test rendered routes");
 assert.match(browserAudit,/englishOnlyCheck/,"Browser audit must verify English-only behaviour");
 assert.match(browserAudit,/team-access-desktop\.png/,"Browser audit must capture the Team access screen");
