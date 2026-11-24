@@ -1,0 +1,94 @@
+/* VEGANFARM ACCESSIBILITY-FIRST LIGHT SYSTEM — loaded after every legacy stylesheet */
+:root{
+ --vf-light-bg:#F2F8E8;--vf-light-card:#FFFDF2;--vf-light-cream:#FFF9E9;
+ --vf-light-green:#EAF3D9;--vf-text:#285C31;--vf-text-strong:#204A29;
+ --vf-accent:#A8CF38;--vf-yellow:#F5D928;--vf-leaf:#286B36;
+ --vf-border:#D8E4C8;--vf-shadow:0 12px 34px rgba(40,92,49,.09);
+ color-scheme:light!important
+}
+html,body{background:var(--vf-light-bg)!important;color:var(--vf-text)!important}
+body{font-family:"Instrument Sans",system-ui,sans-serif!important}
+body>nav,nav{background:#FFFDF2!important;color:var(--vf-text)!important;border-bottom:1px solid var(--vf-border)!important;box-shadow:0 4px 22px rgba(40,92,49,.07)!important}
+body>nav :is(a,span,strong,small),nav :is(a,span,strong,small){color:var(--vf-text)!important;background:#FFFDF2!important}
+#app{background:var(--vf-light-bg)!important;color:var(--vf-text)!important}
+#app *:not(img):not(svg):not(path):not(video):not(source):not(script):not(style):not(canvas){
+ color:var(--vf-text)!important;
+ background-color:#FFFDF2!important;
+ background-image:none!important;
+ text-shadow:none!important;
+ box-shadow:none;
+}
+#app :is(section,.sec,.wrap,.grid,.two,.adm,.main,.side,.hero,.vf-motion-hero,.vf-motion-hero-inner,.vf-about-section,.vf-projects-section,.vf-detail-page,.vf-detail-content,.vf-education-feature,.vf-transparency-section,.vf-impact-section,.vf-live-section,.vf-live-panel,.vf-volunteer-section,.vf-quote-section,.vf-cinema,.vf-founder-quote,.vf-donate-ribbon,.vf-project-bottom-cta,.vf-focus-card,.vf-project-photo-card,.vf-choice-card,.vf-work-tile,.vf-project-tools,.vf-transparency-steps,.card,.scroll,.stats,.kpis,.tbl-wrap,.vf-footer-brand,footer){
+ background:#F2F8E8!important;color:var(--vf-text)!important;
+}
+#app :is(.card,.vf-focus-card,.vf-project-photo-card,.vf-choice-card,.vf-work-tile,.vf-project-tools,.vf-transparency-steps,.vf-live-panel,.scroll,.stats,.kpis,.tbl-wrap,.note,.tag,.vf-photo-tag,.vf-project-mark,.vf-payment-note,.vf-detail-note,.vf-legal-note,.vf-image-disclaimer){
+ background:#FFFDF2!important;color:var(--vf-text)!important;border:1px solid var(--vf-border)!important;border-radius:14px!important;
+}
+#app :is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,legend,small,strong,b,em,span,a,td,th,caption,summary,.mut,.note,.tag,.vf-eyebrow,.vf-overline,.vf-kicker,.vf-founder-line,.vf-detail-note,.vf-payment-note,.vf-image-disclaimer,.vf-legal-note){
+ background:#FFFDF2!important;color:var(--vf-text)!important;
+}
+#app :is(h1,h2,h3,h4){color:var(--vf-text-strong)!important;line-height:1.2!important}
+#app :is(h1 em,h2 em,h3 em,.vf-eyebrow,.vf-overline,.vf-kicker){color:#286B36!important}
+#app p,#app li,#app .mut,#app small{font-size:15px!important;line-height:1.75!important}
+#app :is(.vf-button,.btn,.button,button,.vf-cinema-btn,.mbtn,[role=button]){
+ background:#EAF3D9!important;color:#204A29!important;border:1px solid #A8CF38!important;border-radius:12px!important;
+ font-weight:700!important;min-height:42px!important;padding:10px 16px!important;text-decoration:none!important;
+}
+#app :is(.vf-button-gold,.btn.gold,.vf-donate-button,.vf-button-cream){
+ background:#F5D928!important;color:#204A29!important;border:1px solid #D6B900!important;
+}
+#app :is(.vf-button-glass,.btn.out,.button.out){background:#FFFDF2!important;color:#286B36!important;border:1px solid #A8CF38!important}
+#app :is(input,textarea,select,option){
+ background:#FFFFFF!important;color:#204A29!important;border:1.5px solid #B7CBA4!important;border-radius:9px!important;
+}
+#app :is(input,textarea,select)::placeholder{color:#667C5D!important;opacity:1!important}
+#app label{font-size:14px!important;font-weight:700!important;line-height:1.6!important}
+#app :is(table,thead,tbody,tfoot,tr,th,td){background:#FFFDF2!important;color:#285C31!important;border-color:#D8E4C8!important}
+#app :is(.side,.menu,.mp,.popover,.dropdown,.modal,.dialog,.toast,.notification,.alert,#toast,#nf,.nc){
+ background:#FFFDF2!important;color:#285C31!important;border:1px solid #D8E4C8!important;
+}
+#app :is(.side a,.menu a,.mp a,.side a.on,.side a:hover){background:#EAF3D9!important;color:#285C31!important}
+#app :is(.tag,.vf-tag,.vf-photo-tag,.vf-project-mark,.status,.badge){background:#EAF3D9!important;color:#285C31!important;border:1px solid #D8E4C8!important}
+#app :is(.vf-focus-card,.vf-project-photo-card,.vf-choice-card){overflow:hidden!important;border-radius:18px!important;box-shadow:var(--vf-shadow)!important}
+#app .vf-focus-card :is(.vf-focus-content,.vf-focus-content span,.vf-focus-content h3,.vf-focus-content b,.vf-focus-index,.vf-focus-symbol){
+ background:#FFFDF2!important;color:#285C31!important;text-shadow:none!important;
+}
+#app .vf-focus-card :is(.vf-focus-shade){background:transparent!important;opacity:0!important}
+#app .vf-focus-card img,#app .vf-project-photo img,#app .vf-about-image img,#app .vf-education-detail-image img{display:block!important;object-fit:cover!important}
+#app .vf-motion-backdrop{background-image:none!important;background-color:#EAF3D9!important}
+#app .vf-about-image,#app .vf-education-detail-image{background:#EAF3D9!important;border:1px solid #D8E4C8!important}
+#app footer,footer{background:#EAF3D9!important;color:#285C31!important;border-top:1px solid #D8E4C8!important}
+#app footer :is(h1,h2,h3,p,span,b,strong,small,a,li){background:#EAF3D9!important;color:#285C31!important}
+#app .vf-footer-bottom{border-color:#D8E4C8!important}
+#app :is(.vf-project-tools,.vf-project-filter,.vf-project-filters,.filters,.filter-bar){background:#FFFDF2!important;color:#285C31!important}
+#app :is(.filter-btn,.case-filter,.filter-chip,.filter-pill,.category-filter,[data-filter],.vf-filter-btn){
+ background:#EAF3D9!important;color:#285C31!important;border:1px solid #B7CBA4!important;
+}
+#app :is(.filter-btn,.case-filter,.filter-chip,.filter-pill,.category-filter,[data-filter],.vf-filter-btn).active,
+#app :is(.filter-btn,.case-filter,.filter-chip,.filter-pill,.category-filter,[data-filter],.vf-filter-btn)[aria-pressed=true]{
+ background:#F5D928!important;color:#204A29!important;border-color:#D6B900!important;
+}
+#app .bar{background:#EAF3D9!important}
+#app .bar i{background:#A8CF38!important}
+#app :is(.vf-donate-ribbon,.vf-founder-quote,.vf-project-bottom-cta,.vf-volunteer-section,.vf-quote-section,.vf-live-section,.vf-detail-hero,.vf-cinema,.vf-impact-section){
+ background:#EAF3D9!important;color:#285C31!important;
+}
+#app :is(.vf-donate-ribbon,.vf-founder-quote,.vf-project-bottom-cta,.vf-volunteer-section,.vf-quote-section,.vf-live-section,.vf-detail-hero,.vf-cinema,.vf-impact-section) :is(h1,h2,h3,p,span,b,strong,small,a,blockquote,.vf-eyebrow,.vf-overline,.vf-founder-line){
+ background:#FFFDF2!important;color:#285C31!important;
+}
+#app :is(.vf-donate-ribbon,.vf-project-bottom-cta) :is(.vf-button,.btn){background:#F5D928!important;color:#204A29!important}
+#app .vf-project-photo{background:#EAF3D9!important}
+#app .vf-project-photo .vf-photo-tag{background:#FFFDF2!important;color:#285C31!important}
+#app img[alt*="QR"],#app img[alt*="qr"]{background:#FFFFFF!important;border:1px solid #D8E4C8!important;padding:8px!important;object-fit:contain!important}
+#app :is(a,button,input,select,textarea):focus-visible{outline:3px solid #286B36!important;outline-offset:3px!important}
+#app :is(button:disabled,input:disabled,select:disabled,textarea:disabled){background:#EAF3D9!important;color:#667C5D!important;opacity:.75!important}
+#app .vf-reveal{opacity:1!important;transform:none!important}
+#app :is(.vf-focus-card,.vf-project-photo-card,.vf-choice-card,.card,.vf-button,button){transition:transform .22s ease,box-shadow .22s ease!important}
+#app :is(.vf-focus-card,.vf-project-photo-card,.vf-choice-card,.card):hover{transform:translateY(-3px)!important;box-shadow:0 12px 28px rgba(40,92,49,.1)!important}
+#toast,#nf .nc{background:#FFFDF2!important;color:#285C31!important;border:1px solid #D8E4C8!important}
+@media(max-width:760px){
+ #app :is(p,li,.mut,small,.vf-detail-note,.vf-image-disclaimer){font-size:14px!important;line-height:1.7!important}
+ #app .vf-focus-card{min-height:360px!important}
+ #app .vf-education-detail{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){#app *,body *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
