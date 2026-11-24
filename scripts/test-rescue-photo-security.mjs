@@ -98,6 +98,11 @@ assert.match(simpleCss, /vf-motion-hero \.vf-hero-copy h1/, "Homepage hero headi
 assert.match(browserAudit, /team-login-card-not-light/, "Browser audit must assert the rendered Team card background");
 assert.match(browserAudit, /team-private-route-public-widget-visible/, "Browser audit must check private-route widget isolation");
 assert.match(browserAudit, /home-hero-desktop-1440\.png/, "Browser audit must capture a desktop hero screenshot");
+assert.match(html, /id="vf-team-unlock-button"/, "Team unlock action must have a stable contrast-test target");
+assert.match(forestJs, /id="vf-home-hero-title"/, "Homepage hero title must have a stable contrast-test target");
+assert.match(simpleCss, /#app #vf-team-unlock-button\{[\\s\\S]*?color:#fffdf5!important/, "Team unlock label must render in high-contrast ivory");
+assert.match(simpleCss, /#app #vf-home-hero-title[\\s\\S]*?color:#fffdf5!important/, "Homepage hero title must render in high-contrast ivory");
+assert.match(browserAudit, /hero-primary-button-contrast/, "Browser audit must validate the primary hero action contrast");
 assert.match(forestJs, /Compassion is not just a belief\./, "Homepage hero must use the approved central message");
 assert.match(forestJs, /VEGANFARM Movement brings people together to support animal welfare, expand access to education and encourage a more compassionate world\./, "Homepage hero must use the approved supporting description");
 assert.match(forestJs, /INDEPENDENT WELFARE MOVEMENT · INDIA/, "Homepage must show the required identity descriptor");
