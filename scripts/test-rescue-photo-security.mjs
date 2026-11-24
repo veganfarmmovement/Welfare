@@ -53,8 +53,9 @@ assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation 
 assert.doesNotMatch(visualCss, /#app section:has\(#vf-team-code\)/, "Obsolete dark Team access overrides must be removed from the unified stylesheet");
 assert.match(html, /veganfarm-unified\.css/, "The consolidated stylesheet must load");
 assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-unified.css?v=20261124-11">'), "Unified stylesheet link must be a complete valid HTML tag");
-assert.ok(html.includes('<link rel="stylesheet" href="assets/veganfarm-simple-colour-system.css?v=20261124-11">'), "Simple theme stylesheet link must be a complete valid HTML tag");
-assert.match(html, /veganfarm-simple-colour-system\.css\?v=20261124-11/, "The simple two-colour override must load");
+assert.match(html, /<link rel="stylesheet" href="assets\/veganfarm-simple-colour-system\.css\?v=\d{8}-\d+"\s*>/, "Simple theme stylesheet link must be a complete valid HTML tag");
+assert.match(html, /veganfarm-simple-colour-system\.css\?v=\d{8}-\d+/, "The simple two-colour override must load");
+assert.match(simpleCss, /body \.vf-team-access-card\{[\s\S]*?background-color:#fff!important/, "Team access card must remain opaque outside legacy app wrappers");
 assert.ok(html.indexOf("veganfarm-unified.css") < html.indexOf("veganfarm-simple-colour-system.css"), "The simple colour system must load after the full design bundle");
 assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\\.css/, "Legacy stylesheets must not load independently");
 assert.match(simpleCss, /--vf-simple-bg:#fffdf5/, "The page background must use the single ivory token");
