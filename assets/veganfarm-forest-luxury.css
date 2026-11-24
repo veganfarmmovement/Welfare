@@ -746,3 +746,31 @@ footer:not(#vf-never) *{color:#263b26!important}
 #app .vf-back-top,#vf-back-top{background:#b7d94b!important;color:#17251a!important}
 @media(max-width:800px){#app .hero{min-height:unset!important;padding:36px 0!important}#app .hero .in{padding:22px!important}#app .vf-motion-card{min-height:340px!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}#app *,#app *:before,#app *:after{animation:none!important;transition:none!important}}
+
+
+/* Final sweep for legacy dark sections, floating bars and small navigation labels */
+nav:not(#vf-never) .menu a.l{font-size:12px!important;letter-spacing:.025em!important}
+#ann,#tick{background:#e2ecd6!important;color:#17251a!important;border:1px solid rgba(23,37,26,.14)!important}
+#ann *,#tick *{color:#17251a!important}
+#wa,.wa,.wab{background:#b7d94b!important;color:#17251a!important;border-color:#8eae36!important}
+#wa *,.wa *,.wab *{color:#17251a!important}
+#toast{background:#f8f8ef!important;color:#17251a!important;border:1px solid rgba(23,37,26,.16)!important;box-shadow:0 12px 32px rgba(23,37,26,.16)!important}
+#nf{color:#17251a!important}
+#app .vf-dark-section,#app .vf-campaign-grid{background:#edf1e4!important;color:#17251a!important}
+#app .vf-campaign-grid .card,#app .vf-campaign-grid .campaign,#app .vf-campaign-grid>div{background:#f8f8ef!important;color:#17251a!important;border-color:rgba(23,37,26,.14)!important;box-shadow:0 12px 30px rgba(30,55,32,.07)!important}
+#app .vf-campaign-grid :is(h2,h3,h4,p,.mut,a,span){color:#17251a!important}
+#app .vf-cinema{background:#edf1e4!important;color:#17251a!important}
+#app .vf-cinema:before{opacity:.14!important}
+#app .vf-cinema:after{background:linear-gradient(90deg,rgba(248,248,239,.96),rgba(248,248,239,.78) 58%,rgba(248,248,239,.3))!important}
+#app .vf-cinema :is(h1,h2,h3,p,.vf-kicker,.vf-cinema-bottom,.vf-cinema-copy>p){color:#17251a!important;text-shadow:none!important}
+#app .vf-cinema h1 em{color:#416b35!important}
+#app .vf-cinema-btn.ghost{background:#f8f8ef!important;color:#17251a!important;border:1px solid rgba(23,37,26,.32)!important}
+#app .vf-metric strong,#app .vf-metric span{color:#31582d!important}
+#app .vf-project-photo-card{background-color:#f8f8ef!important;color:#17251a!important}
+#app .vf-education-photo-caption,#app .vf-education-detail-image>span,#app .vf-education-gallery span{background:rgba(248,248,239,.94)!important;color:#17251a!important;padding:7px 10px!important;border-radius:8px!important}
+#app .vf-project-bottom-cta{background:#e3ecd8!important;color:#17251a!important}
+#app .vf-project-bottom-cta :is(h2,h3,p,a,span){color:#17251a!important}
+#app .vf-volunteer-section,#app .vf-quote-section{background:#e3ecd8!important;color:#17251a!important}
+#app .vf-volunteer-section :is(h1,h2,h3,p,a,span),#app .vf-quote-section :is(h1,h2,h3,p,blockquote){color:#17251a!important}
+#app .vf-education-feature{background:#e3ecd8!important;color:#17251a!important}
+#app .vf-education-feature :is(h1,h2,h3,p,span,a,small){color:#17251a!important}
