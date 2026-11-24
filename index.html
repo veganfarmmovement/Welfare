@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="vf-build" content="2026-11-24-sage-readable-private-columns-19">
+<meta name="vf-build" content="2026-11-24-public-safe-views-20">
 <meta name="description" content="VEGANFARM Movement is an independent, currently unregistered welfare movement working on animal welfare, vegan awareness and education. Donations are made to the named beneficiary shown on the Donate page.">
 <link rel="canonical" href="https://veganfarmmovement.github.io/Welfare/">
 <meta name="application-name" content="VEGANFARM Movement">
@@ -1250,7 +1250,7 @@ ev.forEach(function(e,i){var n=i+1;LG.push([n,fmt(e.ts),e.k==='don'?'Donation':'
 })};
 window.vfReload=function(){return window.vfLoadFounder().then(window.vfLoadFounderMore)};
 window.shareVfCase=function(caseCode){var url=location.origin+location.pathname+'#case-'+encodeURIComponent(caseCode);var title='Help this VEGANFARM rescue appeal';var message='Please support or share this Founder-approved animal rescue appeal: '+url;if(navigator.share){navigator.share({title:title,text:message,url:url}).catch(function(err){if(err&&err.name!=='AbortError')console.error(err)})}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(message).then(function(){toast('Appeal link copied. Share it with your contacts.')},function(){window.prompt('Copy this appeal link',url)})}else{window.prompt('Copy this appeal link',url)}};
-window.vfLoadPublicMore=function(){return sb.from('rescue_cases').select(CASECOLS).eq('publication','published').order('created_at',{ascending:false}).then(function(r){
+window.vfLoadPublicMore=function(){return sb.from('public_rescue_cases').select('*').order('created_at',{ascending:false}).then(function(r){
 if(r.error){console.error('Public rescue appeals could not be loaded:',r.error);return}
 APP.length=0;(r.data||[]).forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases();go(true)})};
 /* Load approved appeals for every visitor, without requiring Founder or Team sign-in. */
@@ -1436,7 +1436,7 @@ window.vfLoadPublicMore=function(){
     if(typeof syncCases==='function')syncCases();
     var ids=APP.filter(function(a){return a.dbId;}).map(function(a){return a.dbId;});
     if(!ids.length)return;
-    return sb.from('case_documents').select('case_id,document_type,file_path,is_public').in('case_id',ids).eq('is_public',true).then(function(r){
+    return sb.from('public_case_documents').select('case_id,document_type,file_path,is_public').in('case_id',ids).then(function(r){
       if(r.error)throw r.error;var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};a.docsPub=a.docsPub||{};a.docsPath=a.docsPath||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';a.docsPath[k]=d.file_path;jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(s.error)throw s.error;a.docs[k]=s.data.signedUrl;a.docsPub[k]=true;}));});return Promise.all(jobs).then(function(){if(typeof syncCases==='function')syncCases();if(typeof go==='function')go(true);});
     });
   }).catch(function(error){console.error('Public rescue appeals or approved documents could not be loaded:',error);throw error;});
