@@ -1,0 +1,30 @@
+name: Rescue photo security static checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "assets/veganfarm-private-case-photos.js"
+      - "supabase/functions/veganfarm-team-gate/**"
+      - "supabase-phase7-private-case-photo-storage*.sql"
+      - "scripts/test-rescue-photo-security.mjs"
+      - ".github/workflows/rescue-photo-security-static.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse and assert rescue-photo security paths
+        run: node scripts/test-rescue-photo-security.mjs
+      - name: Parse signed-photo asset
+        run: node --check assets/veganfarm-private-case-photos.js
