@@ -563,3 +563,47 @@ html body main#app .vf-motion-hero .vf-hero-side-note{
   padding:20px 22px!important;
   backdrop-filter:blur(12px)!important;
 }
+
+
+/* Remove the inherited .wrap panel so the Team portal has one clearly defined card. */
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-wrap{
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin-inline:auto!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card{
+  background:#fff!important;
+  background-color:#fff!important;
+  background-image:none!important;
+  border:1px solid #e6e2d8!important;
+  box-shadow:0 24px 70px rgba(29,44,33,.12)!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card .vf-team-access-submit{
+  background:#173d2b!important;
+  background-color:#173d2b!important;
+  color:#fffdf5!important;
+  -webkit-text-fill-color:#fffdf5!important;
+  border-color:#173d2b!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card .vf-team-access-submit:hover{
+  background:#245b3c!important;
+  background-color:#245b3c!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body main#app.vf-page-team .vf-route-body section.vf-team-access .vf-team-access-card-head .vf-team-access-mark{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 46px!important;
+  width:46px!important;
+  height:46px!important;
+  border-radius:14px!important;
+  background:#eef3e7!important;
+  color:#173d2b!important;
+  font:800 13px 'Instrument Sans',Arial,sans-serif!important;
+  letter-spacing:.08em!important;
+}
