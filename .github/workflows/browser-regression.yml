@@ -10,7 +10,7 @@ on:
       - 'scripts/test-rescue-photo-security.mjs'
       - '.github/workflows/browser-regression.yml'
   push:
-    branches: [development/platform-transformation, frontend/rebuild-v2]
+    branches: [main, development/platform-transformation, frontend/rebuild-v2]
   workflow_dispatch:
 
 permissions:
@@ -37,6 +37,7 @@ jobs:
         run: |
           node --check assets/veganfarm-frontend-v2.js
           node --check assets/veganfarm-luxury-cinematic.js
+          node --check assets/veganfarm-founder-admin.js
           node --check scripts/browser-audit.mjs
       - name: Start local static preview
         run: |
