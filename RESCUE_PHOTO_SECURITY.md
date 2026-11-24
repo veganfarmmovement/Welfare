@@ -42,7 +42,7 @@ Read-only production inspection found:
 - Public case loader reads \`public_rescue_cases\`; its definition filters to \`publication = 'published'\`.
 - Anonymous Storage SELECT policies require an exact path match in that published projection. Pending, draft, rejected and archived paths cannot be signed anonymously.
 - Public cards render from the \`APP\` lexical binding and its separate \`live\` snapshot. The helper reads the lexical binding, updates both \`item.photo\` and \`item.live.photo\`, rebuilds public cards and rerenders.
-- Signed URLs expire after 5 minutes and refresh after 4 minutes while the page is visible.
+- Signed URLs expire after 5 minutes and refresh after 4 minutes while the page is visible. A visibility-change listener triggers a refresh immediately when a visitor returns to the page.
 - Three existing published rows use external Wikimedia/GitHub URLs. They are not Storage objects and remain in the published projection.
 
 ## Storage migration design
