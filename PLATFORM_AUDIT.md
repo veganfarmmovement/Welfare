@@ -249,3 +249,11 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - Browser regression run 45384225898 was launched for the active shared-code gate and its desktop/mobile screenshots; its result was still pending when this note was written. No screenshot is claimed until that run completes.
 - No authenticated Team or Founder account was used. Live Supabase role isolation and dashboard workflows remain NOT TESTED/BLOCKED without a safe staging project and authorised staging accounts.
 - No production deployment, database mutation, Supabase migration, Storage/RLS change, payment destination change or QR change was made.
+
+
+### Team gate CSS conflict correction — 24 November 2026
+- Browser regression identified that the legacy unified stylesheet still applied a dark forest background and dark input surface through `:has(#vf-team-code)` selectors, overriding the new light access card.
+- Removed the obsolete dark Team gate rules and retired panel styles from `assets/veganfarm-unified.css`.
+- Kept the new ivory access card and form styling in the final theme stylesheet, which loads after the unified stylesheet.
+- Bumped the unified stylesheet cache key so browsers receive the corrected CSS.
+- Static validation passed on the preceding active-gate implementation (run 45384226094). The browser run on that older CSS (45384357154) correctly failed because the dark legacy rules were still active. A fresh browser run is required against the latest CSS before marking the Team visual fix PASSED.
