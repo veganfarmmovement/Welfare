@@ -30,6 +30,10 @@ assert.doesNotMatch(html,/veganfarm-unified\.css|veganfarm-simple-colour-system\
 assert.doesNotMatch(html,/vf-language|veganfarm-languages/,"Language selectors and translation scripts must not be active");
 assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1,"Only the new frontend stylesheet should control the application");
 assert.match(frontendJs,/P\.home=home/,"V2 must own the homepage renderer");
+assert.match(frontendJs,/P\.projects=function/,"V2 must provide a dedicated Projects template");
+assert.match(frontendJs,/P\.education=function/,"V2 must provide a dedicated Education template");
+assert.match(frontendJs,/P\.impact=function/,"V2 must provide a dedicated Impact template");
+assert.match(frontendJs,/No sample statistics or unverified estimates are displayed/,"Impact presentation must not publish seeded sample figures");
 assert.match(frontendJs,/P\[route\]=function/,"V2 must wrap existing route content in its new page templates");
 assert.match(frontendJs,/function buildHeader\(/,"V2 must own the public navigation presentation");
 assert.match(frontendJs,/function buildFooter\(/,"V2 must own the footer presentation");
