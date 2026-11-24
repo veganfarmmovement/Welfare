@@ -126,5 +126,5 @@ Do not run rollback SQL against production. It intentionally restores public acc
 - Live Storage DELETE permissions and actual object deletion have not been tested. These require an authorised Founder session against a separate staging environment.
 
 ### Validation boundary
-- GitHub Actions static checks validate source structure and syntax only. They do not execute SQL, call Storage APIs, verify role isolation or prove that signed URLs expire and refresh correctly.
+- GitHub Actions now runs a mocked helper test for initial signing, four-minute refresh, visibility-triggered refresh, successful deletion, shared-reference protection and Storage-delete failure handling. These mocks validate client-side control flow only; they do not execute SQL, call a real Storage API, or verify live role isolation.
 - No production Supabase setting, migration, object, database row or Edge Function was changed.
