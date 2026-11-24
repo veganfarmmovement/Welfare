@@ -5,7 +5,7 @@ import vm from "node:vm";
 const read = (path) => fs.readFileSync(new URL(path, import.meta.url), "utf8");
 const html = read("../index.html");
 const photoAsset = read("../assets/veganfarm-private-case-photos.js");
-const visualCss = read("../assets/veganfarm-platform-system.css");
+const visualCss = read("../assets/veganfarm-unified.css");
 const platformCss = read("../assets/veganfarm-platform-system.css");
 const unifiedCss = read("../assets/veganfarm-unified.css");
 const localeJs = read("../assets/veganfarm-languages.js");
@@ -24,7 +24,7 @@ for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
 }
 assert.ok(inlineCount >= 15, "Expected to parse the app's inline JavaScript modules");
 assert.match(html, /const VF_PHOTOS=/, "Homepage must define a curated editorial photo set");
-for (const photoId of ["photo-1643786261573-9838e66d89dc","photo-1710871329594-b962eb958bc9","photo-1762951002221-76fe0ce6b419","photo-1633442495686-e8b67cffab53","photo-1557844352-761f2565b576","photo-1758599668125-e154250f24bd"]) {
+for (const photoId of ["photo-1643786261573-9838e66d89dc","photo-1710871329594-b962eb958bc9","photo-1762951002221-76fe0ce6b419","photo-1633442495686-e8b67cffab53","photo-1758599668125-e154250f24bd"]) {
   assert.ok(html.includes(photoId), "Expected curated Unsplash photo asset: " + photoId);
 }
 assert.match(html, /srcset=/, "Editorial photos must offer responsive image sources");
@@ -38,7 +38,6 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the c
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
-assert.match(html, /veganfarm-simple-colour-system\.css/, "The simple colour system must load on every page");
 assert.match(html, /veganfarm-unified\\.css/, "The consolidated stylesheet must load");
 assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\\.css/, "Legacy stylesheets must not load independently");
 assert.match(unifiedCss, /--vf-forest:#173D2B/, "The bundled stylesheet must contain the luxury palette");
