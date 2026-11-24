@@ -18,13 +18,13 @@ var keys={
  'Home':['होम','मुख्यपृष्ठ','હોમ','گھر','الرئيسية','Accueil','Inicio','홈','الرئيسية'],
  'About':['हमारे बारे में','आमच्याबद्दल','અમારા વિશે','اسان بابت','معلومات عنا','À propos','Acerca de','소개','من نحن'],
  'Rescue cases':['रेस्क्यू मामले','रेस्क्यू प्रकरणे','રેસ્ક્યૂ કેસ','بچاءَ جا ڪيس','حالات الإنقاذ','Cas de sauvetage','Casos de rescate','구조 사례','حالات الإنقاذ'],
- 'Impact':['प्रभाव','परिणाम','અસર','اثر / परिणाम','الأثر','Impact','Impacto','성과','الأثر'],
+ 'Impact':['प्रभाव','परिणाम','અસર','اثر','الأثر','Impact','Impacto','성과','الأثر'],
  'Projects':['परियोजनाएँ','उपक्रम','પ્રોજેક્ટ્સ','منصوبا','المشاريع','Projets','Proyectos','프로젝트','المشاريع'],
- 'Education':['शिक्षा','शिक्षण','શિક્ષણ','تعليم / शिक्षण','التعليم','Éducation','Educación','교육','التعليم'],
+ 'Education':['शिक्षा','शिक्षण','શિક્ષણ','تعليم','التعليم','Éducation','Educación','교육','التعليم'],
  'Our Past Work':['हमारे पिछले कार्य','आमचे मागील कार्य','અમારું અગાઉનું કાર્ય','اسان جا اڳوڻا ڪم','أعمالنا السابقة','Nos actions passées','Nuestro trabajo anterior','지난 활동','أعمالنا السابقة'],
  'Volunteer':['स्वयंसेवक बनें','स्वयंसेवक व्हा','સ્વયંસેવક બનો','رضاڪار بڻجو','تطوع','Bénévolat','Voluntariado','자원봉사','التطوع'],
- 'Transparency':['पारदर्शिता','पारदर्शकता','પારદર્શિતા','شفافيت / पारदर्शकता','الشفافية','Transparence','Transparencia','투명성','الشفافية'],
- 'Contact':['संपर्क','संपर्क','સંપર્ક','رابطو / संपर्क','اتصل بنا','Contact','Contacto','문의','اتصل بنا'],
+ 'Transparency':['पारदर्शिता','पारदर्शकता','પારદર્શિતા','شفافيت','الشفافية','Transparence','Transparencia','투명성','الشفافية'],
+ 'Contact':['संपर्क','संपर्क','સંપર્ક','رابطو','اتصل بنا','Contact','Contacto','문의','اتصل بنا'],
  'VEGANFARM TEAM':['VEGANFARM टीम','VEGANFARM टीम','VEGANFARM ટીમ','VEGANFARM ٽيم','فريق VEGANFARM','Équipe VEGANFARM','Equipo VEGANFARM','VEGANFARM 팀','فريق VEGANFARM'],
  'Support a Rescue':['रेस्क्यू में सहायता करें','रेस्क्यूला मदत करा','રેસ્ક્યૂને સહાય કરો','بچاءَ ۾ مدد ڪريو','ادعم عملية إنقاذ','Soutenir un sauvetage','Apoyar un rescate','구조 지원하기','ادعم عملية إنقاذ'],
  'Donate':['दान करें','देणगी द्या','દાન આપો','عطيو ڏيو','تبرع','Faire un don','Donar','기부하기','تبرع'],
@@ -37,6 +37,8 @@ var keys={
 var dict={};
 languages.slice(1).forEach(function(l,i){dict[l.code]={};Object.keys(keys).forEach(function(k){dict[l.code][k]=keys[k][i]||k;});});
 var current='en',observer=null;
+var fallbackNotice='Translation status: This language is only partially translated. Some page content remains in English; human review is pending.';
+function ensureFallbackNotice(){var app=document.getElementById('app');if(!app)return;var note=app.querySelector('[data-vf-translation-notice]');if(current==='en'){if(note)note.remove();return;}if(!note){note=document.createElement('p');note.className='vf-translation-fallback';note.setAttribute('data-vf-translation-notice','1');note.setAttribute('role','status');note.setAttribute('aria-live','polite');app.insertBefore(note,app.firstChild);}note.textContent=fallbackNotice;}
 function translateNode(node){
  if(!node||node.nodeType!==3)return;
  var parent=node.parentElement;
@@ -45,6 +47,8 @@ function translateNode(node){
  var source=node.__vfEnglish.trim();
  if(!source)return;
  var translated=(dict[current]&&dict[current][source])||source;
+ if(current!=='en'&&translated===source){if(parent)parent.setAttribute('data-vf-untranslated','1');}
+ else if(parent)parent.removeAttribute('data-vf-untranslated');
  if(node.nodeValue!==translated)node.nodeValue=translated;
 }
 function translateTree(root){
@@ -71,6 +75,7 @@ function setLanguage(code){
  var select=document.getElementById('vf-language');
  if(select&&select.value!==language.code)select.value=language.code;
  translateTree(document.body);
+ ensureFallbackNotice();
  window.dispatchEvent(new CustomEvent('vf:languagechange',{detail:{language:language.code,direction:language.dir}}));
 }
 function init(){
@@ -85,11 +90,12 @@ function init(){
    if(record.type==='characterData')translateNode(record.target);
    record.addedNodes&&record.addedNodes.forEach(function(node){translateTree(node)});
   });
+  ensureFallbackNotice();
  });
  observer.observe(document.getElementById('app')||document.body,{childList:true,subtree:true,characterData:true});
  var menu=document.getElementById('menu');
  if(menu)observer.observe(menu,{childList:true,subtree:true,characterData:true});
 }
-window.VFLanguage={languages:languages,set:setLanguage,get:function(){return current},coverage:'Shared navigation and selected common actions only; page-copy translations are being added and fall back to English.'};
+window.VFLanguage={languages:languages,set:setLanguage,get:function(){return current},coverage:'PARTIAL: selected common interface strings only. Page copy, forms, dynamic records, Team portal and Founder dashboard are not fully translated. English fallback is explicitly disclosed; native-speaker review is required for every non-English locale.'};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
