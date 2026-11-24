@@ -191,3 +191,31 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - Two earlier CI runs failed while the new assertions were being developed (45355379969: an over-escaped assertion pattern; 45355739560: cross-realm deep-equality in the test harness). Both failures were corrected; run 45355844948 passed.
 - These tests use a mock client. They do not prove actual Supabase RLS, signed URL access, Storage DELETE permissions, Edge Function runtime behaviour, or browser rendering.
 - Multi-photo upload/gallery remains unimplemented; current schema/UI still use one `photo_path` per case.
+
+
+## Website photography enhancement — 24 November 2026
+
+### Visual implementation
+- Replaced the previous unverified homepage hero image with a verified Unsplash shelter-dog photograph, using a light ivory-to-transparent overlay so the hero remains consistent with the bright visual system.
+- Added a curated Unsplash image set for shelter dogs, cows, a street-cat shelter, hands-on learning, plant-based produce and community volunteering.
+- Added an editorial image gallery to the homepage and relevant images to the three homepage/project cards. The volunteer page now includes a community-volunteering image.
+- Rescue case cards continue to use their actual case photographs or the existing placeholder; editorial stock images are not substituted for beneficiary evidence.
+- Added responsive `srcset` variants (480/800/1200 px), Unsplash CDN format conversion and quality parameters, lazy loading and asynchronous decoding for content imagery. The hero is preloaded and the mobile hero requests a smaller width.
+- Added visible footer photographer credits and a repository source register in `PHOTO_CREDITS.md`.
+- Added CSS for responsive photo cards, image hover transitions and reduced-motion preference.
+
+### Image sourcing and rights
+- All selected images are individual Unsplash photo pages marked free to use under the Unsplash License.
+- The website links to each photographer's source photo page and the Unsplash license.
+- Images are explicitly illustrative stock photography, not represented as actual VEGANFARM rescue, student, volunteer or programme photographs.
+- No Google Images results or Unsplash+ assets were selected.
+
+### Preserved systems
+- Changes are limited to active website presentation, image markup, stylesheet, regression tests and image-credit documentation.
+- No Supabase code, database data, authentication, Storage bucket, security policy, donation workflow, QR destination, Edge Function or user data was changed.
+- No migration was applied and no production deployment was made.
+
+### Validation still required
+- GitHub Actions must pass the updated visual/source regression assertions.
+- Real browser image loading, image CDN response, mobile cropping, desktop layout, accessibility and page performance remain to be verified in browser testing.
+- The Unsplash CDN URLs are remote dependencies; verify they return successfully from the deployed GitHub Pages origin before production merge.
