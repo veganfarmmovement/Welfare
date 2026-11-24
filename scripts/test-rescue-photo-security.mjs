@@ -91,6 +91,7 @@ assert.ok(html.includes("window.VF_QR=QR"), "Donation presentation must reuse th
 assert.match(forestJs, /id="fcon"><\/p><p id="socf"><\/p>/, "Presentation footer must preserve core notification and social-link mount points");
 assert.ok(html.includes("if(window.vfRole!=='team')return;") && html.indexOf("public_case_documents", html.indexOf("if(window.vfRole!=='team')return;")) > -1, "Anonymous visitors must not query restricted public case attachments");
 assert.match(forestJs, /vf-public-data-warning/, "Public data permission failures must be disclosed without exposing private case data");
+assert.match(forestJs, /enquiries\.hidden=\(location\.hash\|\|'#home'\)==='#donate'/,"Hide the website QR strip on Donate to avoid confusion with the payment QR");
 assert.match(forestJs, /route===\'home\'\|\|route===\'cases\'\|\|route\.indexOf\(\'case-\'\)===0/, "Public data notice must be limited to public rescue routes");
 assert.ok(html.includes("window.vfAfterLogin=function(){\n  if(window.vfRole!=='team')return Promise.resolve(baseAfterLogin&&baseAfterLogin());"), "Only authenticated Team sessions may load Team case attachments");
 assert.ok(html.includes("function enrichLoadedCases(){\n    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();"), "Anonymous visitors must not enrich cases from the private rescue_cases table");
