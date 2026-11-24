@@ -171,3 +171,14 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - `node --check assets/veganfarm-private-case-photos.js` passed.
 - `deno check --no-lock supabase/functions/veganfarm-team-gate/index.ts` passed in GitHub Actions.
 - These checks are source-level only; they do not execute SQL, call Storage APIs or test role-based access.
+
+
+## Rescue-photo follow-up — guarded object deletion (24 November 2026)
+
+- Updated the Founder Remove Photograph handler to clear the case row's `photo_path` and `photo_url`, then check whether another case row still references the same stored path.
+- When no other case references the object, the handler calls Storage `remove` on the correct private bucket (new prefixed paths or legacy unprefixed paths).
+- If the reference check or Storage delete fails, the object is not made public; the UI reports that private cleanup may still be required.
+- Added static regression assertions for the Storage removal call, shared-reference protection and failure reporting.
+- This does not implement multi-photo case galleries: the existing schema and UI still represent one `photo_path` per case, and the Team Edge Function accepts one photo.
+- GitHub Actions static validation is running on the updated branch. The result must be read from the run before marking checks passed.
+- No SQL was applied, no production Storage or Supabase setting was changed, and no Edge Function was deployed.
