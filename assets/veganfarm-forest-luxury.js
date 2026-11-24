@@ -101,8 +101,8 @@ var routeExperience={
  education:{k:'LEARNING INITIATIVE',t:'Education',d:'Learn about English-speaking support at Maratha Aashram, Virar.',v:'education'},
  projects:{k:'OUR WORK',t:'Projects',d:'Explore animal welfare and education initiatives supported by the movement.',v:'projects'},
  'case-archived':{k:'ANIMAL WELFARE',t:'Rescue case unavailable',d:'This case is not currently published.',v:'case'},
- team:{k:'SECURE TEAM ACCESS',t:'VEGANFARM Team',d:'A restricted workspace for approved Team activities and case submissions.',v:'team'},
- 'veganfarm-team':{k:'SECURE TEAM ACCESS',t:'VEGANFARM Team',d:'A restricted workspace for approved Team activities and case submissions.',v:'team'},
+ team:{k:'PRIVATE TEAM PORTAL',t:'Team Member Access',d:'Secure access to Feeding and Treatment case submissions. Every submission is reviewed by the Founder.',v:'team'},
+ 'veganfarm-team':{k:'PRIVATE TEAM PORTAL',t:'Team Member Access',d:'Secure access to Feeding and Treatment case submissions. Every submission is reviewed by the Founder.',v:'team'},
  admin:{k:'PRIVATE WORKSPACE',t:'Founder dashboard',d:'Private management workspace. Access and available records depend on Founder authentication.',v:'admin'}
 };
 function decorateRoute(){
