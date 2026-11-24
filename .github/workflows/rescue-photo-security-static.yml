@@ -6,6 +6,7 @@ on:
     paths:
       - "index.html"
       - "assets/veganfarm-platform-system.css"
+      - "assets/veganfarm-unified.css"
       - "assets/veganfarm-languages.js"
       - "assets/veganfarm-simple-colour-system.css"
       - "PHOTO_CREDITS.md"
