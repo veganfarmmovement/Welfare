@@ -50,7 +50,6 @@ function enhanceRoute(){
  var descText=desc?desc.textContent.trim():'Explore the work, updates and ways to participate in the VEGANFARM Movement.';
  app.innerHTML='<div class="vf-route-shell"><section class="vf-route-top"><div class="wrap"><span class="eyebrow">VEGANFARM MOVEMENT / '+h.replace(/-/g,' ').toUpperCase()+'</span><h1>'+titleText.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})+'</h1><p>'+descText.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})+'</p></div></section><div class="vf-route-content"><div class="wrap">'+old+'</div></div></div>';
  }
-}
 go=function(keep){originalGo(keep);enhanceRoute();reveal()};
 function reveal(){
  var nodes=document.querySelectorAll('#app .vf-route-content .card,#app .vf-new-home .vf-intro-grid,#app .vf-new-home .vf-work-tile,#app .vf-new-home .vf-section-heading');
