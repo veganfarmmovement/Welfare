@@ -33,8 +33,10 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Validate browser audit script syntax
-        run: node --check scripts/browser-audit.mjs
+      - name: Validate frontend and browser audit syntax
+        run: |
+          node --check assets/veganfarm-frontend-v2.js
+          node --check scripts/browser-audit.mjs
       - name: Start local static preview
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 --directory . > /tmp/veganfarm-preview.log 2>&1 &
