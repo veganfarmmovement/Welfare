@@ -1,0 +1,111 @@
+/* VEGANFARM — simple, consistent two-colour system
+   One page background and one text colour across public pages, appeals and admin.
+   Photography remains visible; this stylesheet changes presentation only. */
+:root{
+  color-scheme:light;
+  --vf-simple-bg:#fffdf5;
+  --vf-simple-text:#1d2c21;
+  --vf-simple-line:#e6e2d8;
+  --bg:var(--vf-simple-bg)!important;
+  --card:var(--vf-simple-bg)!important;
+  --ink:var(--vf-simple-text)!important;
+  --mut:var(--vf-simple-text)!important;
+  --line:var(--vf-simple-line)!important;
+  --g:var(--vf-simple-text)!important;
+  --g2:var(--vf-simple-text)!important;
+  --gold:var(--vf-simple-text)!important;
+  --sand:var(--vf-simple-bg)!important;
+}
+html,body,body:before,#app,#app>*,nav,footer,.ann,.tick{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+}
+body:before{display:none!important}
+#app *:not(img):not(video):not(.vf-motion-backdrop){
+  color:var(--vf-simple-text)!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+#app :is(section,article,.card,.panel,.box,.tile,.vf-reimagined-home,.vf-live-panel,.vf-campaign-grid,.vf-campaign-grid>*,.vf-impact-hero,.vf-impact-hero-copy,.vf-impact-stat,.vf-project-card,.vf-focus-card,.vf-motion-card,.vf-choice-card,.vf-detail-hero,.vf-route-top,.vf-route-content,.adm,.side,.main),
+#app :is(section,article,.card,.panel,.box,.tile) :is(.b,.vf-project-body,.vf-project-foot){
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+#app :is(h1,h2,h3,h4,p,li,small,strong,b,label,span,a,summary,blockquote,figcaption),
+nav :is(a,.logo,.logo small),footer :is(a,p,b,h1,h2,h3,span,small,li){
+  color:var(--vf-simple-text)!important;
+}
+#app a,nav a,footer a{text-decoration-color:currentColor!important}
+#app :is(.btn,.button,button,.vf-button,.vf-cinema-btn),
+nav :is(.btn,.mbtn){
+  background:transparent!important;
+  background-image:none!important;
+  color:var(--vf-simple-text)!important;
+  border:1px solid var(--vf-simple-text)!important;
+  border-radius:6px!important;
+  box-shadow:none!important;
+}
+#app :is(.tag,.eyebrow,.vf-eyebrow,.vf-photo-tag,.vf-project-kind,.vf-choice-label,.vf-founder-line),
+#app .vf-photo figcaption{
+  background:transparent!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+#app :is(input,select,textarea){
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border:1px solid var(--vf-simple-line)!important;
+  box-shadow:none!important;
+}
+#app :is(.bar,.vf-progress-track,.progress-track){
+  background:var(--vf-simple-bg)!important;
+  border:1px solid var(--vf-simple-line)!important;
+}
+#app :is(.bar i,.vf-progress-fill,.progress-fill){background:var(--vf-simple-text)!important}
+#app :is(.hero,.vf-motion-hero,.vf-live-section,.vf-donate-ribbon,.vf-volunteer-section,.vf-join-section,.vf-dark-section,.vf-quote-section,.vf-route-top){
+  background-color:var(--vf-simple-bg)!important;
+  background-image:none!important;
+  color:var(--vf-simple-text)!important;
+}
+#app .hero{
+  background-image:linear-gradient(90deg,rgba(255,253,245,.96),rgba(255,253,245,.78)),url("https://images.unsplash.com/photo-1643786261573-9838e66d89dc?auto=format&fit=crop&w=1600&q=80")!important;
+  background-position:center,68% 42%!important;
+  background-size:cover!important;
+}
+#app .vf-motion-backdrop{opacity:.12!important}
+#app :is(.vf-cinema,.vf-motion-hero-inner,.vf-hero-copy,.vf-live-panel,.vf-donate-ribbon-inner,.vf-volunteer-inner){
+  background:transparent!important;
+  color:var(--vf-simple-text)!important;
+}
+#app :is(.vf-cinema h1,.vf-motion-hero h1,.vf-hero-copy h1,.vf-cinema-copy>p,.vf-motion-hero p,.vf-live-section h2,.vf-live-section p,.vf-donate-ribbon h2,.vf-donate-ribbon p,.vf-volunteer-section h2,.vf-volunteer-section p,.vf-join-section h2,.vf-join-section p,.vf-dark-section h2,.vf-dark-section p){
+  color:var(--vf-simple-text)!important;
+}
+#app :is(.vf-focus-card img,.vf-project-photo img,.vf-photo img,.vf-photo-media img,.imgbox img,.img img,.completed-photo img,.vf-completed-photo img),
+#app img{background:transparent!important}
+#app :is(.vf-photo,.vf-project-photo,.vf-project-image-card,.vf-completed-card,.vf-focus-card,.vf-motion-card,.vf-impact-stat,.vf-impact-hero-copy){
+  border:1px solid var(--vf-simple-line)!important;
+  border-radius:8px!important;
+}
+#app :is(.stats,.stats div,.kpi,.scroll,.adm,.side,.main,.completed-section){
+  background:var(--vf-simple-bg)!important;
+  border-color:var(--vf-simple-line)!important;
+  color:var(--vf-simple-text)!important;
+}
+#app table,#app th,#app td,#app tr:hover td{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border-color:var(--vf-simple-line)!important;
+}
+footer{border-top:1px solid var(--vf-simple-line)!important}
+#toast,#nf .nc{
+  background:var(--vf-simple-bg)!important;
+  color:var(--vf-simple-text)!important;
+  border:1px solid var(--vf-simple-line)!important;
+  box-shadow:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #app *,#app *:before,#app *:after{animation:none!important;transition:none!important}
+}
