@@ -90,7 +90,7 @@
     if(window.vfRole!=='founder'){notify('Founder sign-in required.');return;}
     var storedPath=String(item.photoPath||item.ppath||'');
     var source=sourceFor(storedPath);
-    client.from('rescue_cases').update({photo_path:null,photo_url:null}).eq('id',item.dbId).select('id').single().then(function(result){
+    return client.from('rescue_cases').update({photo_path:null,photo_url:null}).eq('id',item.dbId).select('id').single().then(function(result){
       if(result.error)throw result.error;
       item.photo='';item.photoUrl='';item.photoPath='';item.ppath='';item.photoSignedAt=null;
       if(item.live){item.live.photo='';item.live.photoUrl='';}
