@@ -170,3 +170,12 @@ footer h1,footer h2,footer h3,footer p,footer span,footer small,footer a,footer 
 #app footer,footer{background:#fffdf5!important;color:#1d2c21!important;border-top:1px solid #f2efe7!important}
 #app footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary),footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary){color:#1d2c21!important}
 #app footer a:hover,footer a:hover{color:#286b36!important}
+
+
+/* Navigation remains light; only the active underline and primary actions use accents. */
+body>nav,body>nav .wrap,body>nav #menu,body>nav .menu{background:#fffdf5!important;color:#1d2c21!important;border-color:#f2efe7!important}
+body>nav a,body>nav .logo,body>nav .logo small,body>nav .menu a.l{color:#1d2c21!important}
+body>nav .menu a.l{background:transparent!important;border-bottom:2px solid transparent!important}
+body>nav .menu a.l.on,body>nav .menu a.l[aria-current="page"]{color:#173d2b!important;border-bottom-color:#c7a66a!important;background:transparent!important}
+body>nav .menu a.l:hover{color:#286b36!important;background:#f2efe7!important}
+body>nav .btn,body>nav .button,body>nav button{background:#173d2b!important;color:#fffdf5!important;border-color:#173d2b!important}
