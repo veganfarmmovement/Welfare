@@ -156,3 +156,11 @@ footer{border-top:1px solid var(--vf-simple-line)!important}
 #app .vf-motion-hero .vf-overline,#app .vf-motion-hero .vf-overline i{color:#e3c995!important}
 #app .vf-motion-hero .vf-button-gold{background:#c7a66a!important;color:#173d2b!important;border-color:#c7a66a!important}
 #app .vf-motion-hero .vf-button-glass{background:rgba(23,61,43,.22)!important;color:#fffdf5!important;border-color:rgba(255,253,245,.75)!important}
+
+
+/* The donation information strip sits outside #app and follows the same ivory/stone system. */
+#wa{background:#f2efe7!important;color:#1d2c21!important;border-top:1px solid #c7a66a!important;border-bottom:1px solid #e6e2d8!important}
+#wa h1,#wa h2,#wa h3,#wa p,#wa span,#wa small,#wa strong,#wa label{color:#1d2c21!important}
+#wa .wab{background:#173d2b!important;color:#fffdf5!important;border:1px solid #173d2b!important}
+footer{background:#fffdf5!important;color:#1d2c21!important}
+footer h1,footer h2,footer h3,footer p,footer span,footer small,footer a,footer b{color:#1d2c21!important}
