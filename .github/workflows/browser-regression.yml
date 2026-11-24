@@ -10,7 +10,7 @@ on:
       - 'scripts/test-rescue-photo-security.mjs'
       - '.github/workflows/browser-regression.yml'
   push:
-    branches: [development/platform-transformation]
+    branches: [development/platform-transformation, frontend/rebuild-v2]
   workflow_dispatch:
 
 permissions:
