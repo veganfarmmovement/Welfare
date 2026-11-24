@@ -16,6 +16,34 @@ grant select on table public.public_rescue_cases to anon, authenticated;
 revoke all privileges on table public.public_case_documents from public, anon, authenticated;
 grant select on table public.public_case_documents to anon, authenticated;
 
+
+-- Restrict anonymous object listing to case images attached to published cases and
+-- story images attached to published stories. This is an interim listing control only:
+-- because case-photos is still a PUBLIC bucket, a known object URL can still be fetched.
+-- A complete privacy fix must move unpublished photos into private storage and use signed URLs.
+drop policy if exists vf_case_photos_public_read on storage.objects;
+create policy vf_case_photos_public_read
+on storage.objects for select to anon, authenticated
+using (
+  (
+    bucket_id = 'case-photos'
+    and exists (
+      select 1 from public.rescue_cases rc
+      where rc.id::text = split_part(storage.objects.name, '/', 1)
+        and rc.publication = 'published'
+    )
+  )
+  or
+  (
+    bucket_id = 'story-photos'
+    and exists (
+      select 1 from public.stories st
+      where st.photo_path = storage.objects.name
+        and st.published = true
+    )
+  )
+);
+
 commit;
 
 -- Expected result after application:
