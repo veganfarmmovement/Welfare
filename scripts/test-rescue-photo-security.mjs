@@ -71,6 +71,8 @@ assert.equal((html.match(/<option value="(?:en|hi|mr|gu)">/g)||[]).length, 4, "E
 assert.doesNotMatch(html, /option value="(?:sd|ur|fr|es|ko|ar)"/, "Unsupported languages must not appear in the selector");
 assert.deepEqual([...localeJs.matchAll(/code:'([a-z]+)'/g)].map(m=>m[1]), ['en','hi','mr','gu'], "Locale configuration must contain exactly English, Hindi, Marathi and Gujarati");
 assert.ok(localeJs.includes("'Home':['होम','मुख्यपृष्ठ','હોમ'"), "Shared Home navigation labels must be provided for all three requested Indian languages");
+assert.match(localeJs, /sourceStrings:sharedStringCount/, "Language report must count the shared translation dictionary");
+assert.match(localeJs, /fullInterface:\{status:'NOT COMPLETE'/, "Language report must not imply full-site translation is complete");
 assert.match(html, /class="vf-team-access"/, "Team sign-in must use its dedicated accessible light-theme layout");
 assert.match(html, /id="vf-team-login-name"/, "Team sign-in must expose a labelled name field");
 assert.match(html, /id="vf-team-login-email"/, "Team sign-in must expose a labelled email field");
