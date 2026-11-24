@@ -45,6 +45,12 @@ try {
         if(!item.routeShell) report.errors.push({type:'missing-route-layout',route,width});
         if(item.overflow) report.errors.push({type:'horizontal-overflow',route,width,scrollWidth:await page.evaluate(()=>document.documentElement.scrollWidth),elements:await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(el=>({el,r:el.getBoundingClientRect()})).filter(x=>x.r.width>0&&x.r.right>window.innerWidth+1).slice(0,12).map(x=>({tag:x.el.tagName,id:x.el.id,className:String(x.el.className||'').slice(0,120),right:Math.round(x.r.right),width:Math.round(x.r.width),position:getComputedStyle(x.el).position}))) });
         if(item.images.failed>0) report.errors.push({type:'broken-images',route,width,failed:item.images.failed});
+        if(route==='volunteer'||route==='contact'||route==='donate'){
+          item.form=await page.locator('#app form').first().evaluate(el=>({onsubmit:el.getAttribute('onsubmit'),fields:Array.from(el.querySelectorAll('input,select,textarea')).map(x=>x.name).filter(Boolean),qr:!!document.querySelector('#app .vf-donate-qr')}));
+          if(route==='volunteer'&&!String(item.form.onsubmit||'').includes("fsub(event,'vol')"))report.errors.push({type:'volunteer-form-handler-missing',route,width});
+          if(route==='contact'&&!String(item.form.onsubmit||'').includes("fsub(event,'msg')"))report.errors.push({type:'contact-form-handler-missing',route,width});
+          if(route==='donate'&&(!String(item.form.onsubmit||'').includes('donSubmit(event)')||!item.form.qr))report.errors.push({type:'donation-form-or-qr-missing',route,width});
+        }
         if(route==='home'){
           await page.locator('#app .vf-motion-hero').waitFor({state:'visible',timeout:15000});
           await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},undefined,{timeout:15000}).catch(()=>{});
