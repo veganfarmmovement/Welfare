@@ -42,3 +42,15 @@
 .vf-admin-empty{background:#fff;border:1px dashed #d6dfd3;border-radius:14px;padding:28px;text-align:center;color:#748075}
 @media(max-width:850px){.vf-admin-shell{grid-template-columns:1fr}.vf-admin-sidebar{padding:14px;gap:12px}.vf-admin-brand{padding-bottom:12px}.vf-admin-sidebar nav{display:flex;overflow:auto;padding-bottom:4px}.vf-admin-sidebar nav a{white-space:nowrap}.vf-admin-logout{margin-top:0;align-self:flex-start;padding:9px 16px}.vf-admin-main{padding-top:22px}.vf-admin-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.vf-admin-quick{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.vf-admin-login-card{padding:25px 20px}.vf-admin-top{align-items:flex-start;flex-direction:column}.vf-admin-case-body{grid-template-columns:1fr}.vf-admin-case-photo{height:190px}.vf-admin-case-controls{grid-template-columns:1fr}.vf-admin-actions{grid-column:1}.vf-admin-record{padding:15px}.vf-admin-record-head{flex-direction:column}.vf-admin-stats{gap:9px}.vf-admin-stat{padding:13px}.vf-admin-stat strong{font-size:23px}}
+
+/* Team portal live case overview */
+.vf-team-live-summary{display:grid;gap:12px;margin:18px 0}
+.vf-team-live-loading{background:#f3f6ef;border:1px solid #e2e9df;border-radius:14px;padding:16px;color:#68796a;font-size:13px}
+.vf-team-live-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.vf-team-live-stats>div{background:#f3f6ef;border:1px solid #e2e9df;border-radius:13px;padding:14px}
+.vf-team-live-stats strong,.vf-team-live-stats span{display:block}.vf-team-live-stats strong{font:500 26px Georgia,serif;color:#214c36}.vf-team-live-stats span{font-size:11px;color:#6e7b70;margin-top:5px}
+.vf-team-live-list{background:#fff;border:1px solid #e2e8df;border-radius:14px;padding:16px}
+.vf-team-live-list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#263c2e}.vf-team-live-list-head button{border:1px solid #dce4d8;background:#f7f9f5;border-radius:99px;padding:7px 12px;font-size:11px}
+.vf-team-live-table>div{display:grid;grid-template-columns:minmax(0,1.5fr) auto minmax(0,1fr);gap:12px;align-items:center;padding:11px 0;border-top:1px solid #edf0e9;font-size:12px}
+.vf-team-live-table small{display:block;color:#7b867d;font-size:10px;margin-top:4px}.vf-team-live-status{background:#f2efe3;color:#6d5a2d;border-radius:99px;padding:5px 8px;font-size:10px}
+@media(max-width:640px){.vf-team-live-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.vf-team-live-table>div{grid-template-columns:1fr auto}.vf-team-live-table>div>small:last-child{grid-column:1/-1}}
