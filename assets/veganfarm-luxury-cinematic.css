@@ -182,7 +182,7 @@ body>footer .vf2-footer-grid{width:min(1240px,calc(100% - 56px))!important;displ
 .vf-lx-home .vf-lx-reveal:nth-child(3){transition-delay:.12s}
 #vf-back-top{background:var(--vf-lx-gold)!important;color:var(--vf-lx-forest)!important;border:0!important;border-radius:2px!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important}
 @keyframes vfLxHeroDrift{from{transform:scale(1.015) translateX(-.25%)}to{transform:scale(1.07) translateX(.25%)}}
-@media(max-width:900px){
+@media(max-width:1100px){
  body>nav.vf2-nav .vf2-menu-toggle{display:block!important}
  body>nav.vf2-nav .vf2-menu{display:none!important}
  body>nav.vf2-nav .vf2-menu.open{display:flex!important;position:absolute;top:82px;left:0;right:0;padding:18px 28px 24px;flex-direction:column;align-items:flex-start;box-shadow:0 18px 30px rgba(0,0,0,.18)}
