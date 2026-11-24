@@ -1139,12 +1139,7 @@ body{background:radial-gradient(ellipse at 12% 0%,rgba(100,145,84,.18),transpare
 #app .adm table,#app .adm tr,#app .adm td,#app .adm th{background:transparent!important;color:#fff!important;border-color:rgba(255,255,255,.18)!important}
 #app .adm input,#app .adm select,#app .adm textarea{background:#071d13!important;color:#fff!important;border:1px solid rgba(213,239,107,.45)!important}
 #app .adm input::placeholder,#app .adm textarea::placeholder{color:#c3d3c5!important}
-#app section:has(#vf-team-code),#app section:has(#vf-team-case-form){background:linear-gradient(145deg,#0b2a1c,#123b28)!important;color:#fff!important;min-height:75vh;padding-block:clamp(48px,7vw,90px)}
-#app section:has(#vf-team-code) .wrap,#app section:has(#vf-team-case-form) .wrap{background:transparent!important}
-#app section:has(#vf-team-code) h1,#app section:has(#vf-team-code) p,#app section:has(#vf-team-case-form) h1,#app section:has(#vf-team-case-form) h2,#app section:has(#vf-team-case-form) p{color:#fff!important}
-#app section:has(#vf-team-code) .card,#app section:has(#vf-team-case-form) .card{background:#17452d!important;border:1px solid rgba(213,239,107,.28)!important;color:#fff!important}
-#app section:has(#vf-team-code) .note,#app section:has(#vf-team-case-form) .note{background:#0a2118!important;color:#fff!important;border-color:rgba(213,239,107,.35)!important}
-#app section:has(#vf-team-code) input,#app section:has(#vf-team-case-form) input,#app section:has(#vf-team-code) textarea,#app section:has(#vf-team-case-form) textarea,#app section:has(#vf-team-code) select,#app section:has(#vf-team-case-form) select{background:#071d13!important;color:#fff!important;border:1px solid rgba(213,239,107,.5)!important}
+/* Retired dark Team access theme removed; the final ivory Team portal styles live in veganfarm-simple-colour-system.css. */
 #app .vf-project-mark{height:145px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:26px;background:radial-gradient(circle at 85% 15%,rgba(213,239,107,.2),transparent 38%),linear-gradient(135deg,#173f2b,#0b2419);border-bottom:1px solid rgba(213,239,107,.2)}
 #app .vf-project-mark span{font:500 clamp(2.8rem,5vw,4.5rem) 'Playfair Display',serif;color:#d5ef6b!important;opacity:.85}
 #app .vf-project-mark b{font:800 10px 'Manrope',sans-serif;letter-spacing:.18em;color:#fff!important}
@@ -2184,17 +2179,6 @@ html[dir="rtl"] #app table{direction:rtl}
 
 
 /* Dedicated Team access gate: keep credentials readable and visually separate from the public shell. */
-#app .vf-team-access{background:#fffdf5!important;color:#1d2c21!important;padding:clamp(44px,7vw,88px) 24px!important}
-#app .vf-team-access .vf-team-access-panel{background:#fff!important;color:#1d2c21!important;border:1px solid #f2efe7!important;border-radius:18px!important;box-shadow:0 22px 70px rgba(29,44,33,.08)!important;padding:clamp(24px,5vw,48px)!important;max-width:560px!important}
-#app .vf-team-access .vf-team-access-panel :is(h1,h2,p,label){color:#1d2c21!important}
-#app .vf-team-access .vf-team-kicker{font-size:10px!important;letter-spacing:.2em!important;font-weight:700!important;color:#8a744d!important;margin:0 0 16px!important}
-#app .vf-team-access form{display:grid!important;gap:12px!important;margin-top:26px!important}
-#app .vf-team-access input{width:100%!important;min-height:52px!important;background:#fff!important;color:#1d2c21!important;border:1px solid #dcd7ca!important;border-radius:8px!important;padding:12px 14px!important}
-#app .vf-team-access input:focus{outline:3px solid rgba(40,107,54,.18)!important;border-color:#286b36!important}
-#app .vf-team-access button[type=submit]{background:#173d2b!important;color:#fff!important;border:1px solid #173d2b!important;border-radius:8px!important;min-height:48px!important;padding:0 22px!important;justify-self:start!important}
-#app .vf-team-access button[type=submit]:disabled{opacity:.65!important;cursor:wait!important}
-#app .vf-team-access #vf-team-gate-status{color:#536257!important;min-height:26px!important}
-@media(max-width:600px){#app .vf-team-access{padding:36px 16px!important}#app .vf-team-access .vf-team-access-panel{padding:24px 20px!important}}
 
 
 /* Team route shell also wraps legacy gate markup; enforce readable contrast at route level. */
