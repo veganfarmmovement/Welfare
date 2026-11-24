@@ -143,7 +143,8 @@ try {
   if(!teamLogin.nameLabel||!teamLogin.emailLabel)report.errors.push({type:'team-login-labels-missing'});
   if(!teamLogin.card||teamLogin.card.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-card-not-light',actual:teamLogin.card});
   if(!teamLogin.input||teamLogin.input.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-input-not-light',actual:teamLogin.input});
-  await page.locator('#vf-team-login-email').focus();
+  await page.locator('#vf-team-login-name').focus();
+  await page.keyboard.press('Tab');
   const focusVisible=await page.locator('#vf-team-login-email').evaluate(el=>getComputedStyle(el).outlineStyle!=='none'&&getComputedStyle(el).outlineWidth!=='0px');
   report.teamLogin.keyboardFocus=focusVisible;
   if(!focusVisible)report.errors.push({type:'team-login-keyboard-focus-missing'});
