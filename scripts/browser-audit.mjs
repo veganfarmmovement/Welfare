@@ -56,6 +56,13 @@ try {
           await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},undefined,{timeout:15000}).catch(()=>{});
           item.heroImage=await page.locator('#app .vf-motion-backdrop').evaluate(el=>getComputedStyle(el).backgroundImage);
           item.heroDiagnostic=await page.locator('#app .vf-motion-backdrop').evaluate(el=>({className:el.className,rect:(()=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})(),display:getComputedStyle(el).display,visibility:getComputedStyle(el).visibility,backgroundImage:getComputedStyle(el).backgroundImage,inlineStyle:el.getAttribute('style')}));
+          if((!item.heroImage||item.heroImage==='none')&&width===360){
+            await page.reload({waitUntil:'domcontentloaded',timeout:45000});
+            await page.locator('#app .vf-motion-hero').waitFor({state:'visible',timeout:15000});
+            await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},undefined,{timeout:15000}).catch(()=>{});
+            item.heroImage=await page.locator('#app .vf-motion-backdrop').evaluate(el=>getComputedStyle(el).backgroundImage);
+            item.heroDiagnostic=await page.locator('#app .vf-motion-backdrop').evaluate(el=>({className:el.className,rect:(()=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})(),display:getComputedStyle(el).display,visibility:getComputedStyle(el).visibility,backgroundImage:getComputedStyle(el).backgroundImage,inlineStyle:el.getAttribute('style')}));
+          }
           if(width===360)await page.screenshot({path:path.join(out,'screenshots','mobile-home-360.png'),fullPage:true,animations:'disabled'});
           if(!item.heroImage||item.heroImage==='none')report.errors.push({type:'hero-image-missing',width});
         }
