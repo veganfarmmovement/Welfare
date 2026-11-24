@@ -774,3 +774,67 @@ nav:not(#vf-never) .menu a.l{font-size:12px!important;letter-spacing:.025em!impo
 #app .vf-volunteer-section :is(h1,h2,h3,p,a,span),#app .vf-quote-section :is(h1,h2,h3,p,blockquote){color:#17251a!important}
 #app .vf-education-feature{background:#e3ecd8!important;color:#17251a!important}
 #app .vf-education-feature :is(h1,h2,h3,p,span,a,small){color:#17251a!important}
+
+
+/* VEGANFARM accessibility reset — warm sage surfaces, dark readable type, no white text */
+:root{
+ --vf-page:#e8efdf!important;
+ --vf-surface:#f2f5e9!important;
+ --vf-surface-2:#dce8d2!important;
+ --vf-ink:#17251a!important;
+ --vf-charcoal:#17251a!important;
+ --vf-forest:#254a2d!important;
+ --vf-deep:#d6e3cb!important;
+ --vf-paper:#f2f5e9!important;
+ --vf-muted:#465b49!important;
+ --vf-line:rgba(23,37,26,.18)!important;
+ --vf-gold:#9a781c!important;
+ --vf-leaf:#355d2b!important;
+ color-scheme:light;
+}
+html,body{background:#e8efdf!important;color:#17251a!important}
+body{font-size:16px!important;line-height:1.65!important}
+#app{background:transparent!important;color:#17251a!important}
+#app :is(nav,.nav,.menu,.menu a){background:#d6e3cb!important;color:#17251a!important;border-color:rgba(23,37,26,.16)!important}
+#app :is(.hero,.sec,section.sec,.alt,section,footer,.footer,.vf-reimagined-home,.vf-detail-page,.vf-detail-content,.vf-dark-section,.vf-campaign-grid,.vf-cinema,.vf-project-bottom-cta,.vf-join-section,.vf-volunteer-section,.vf-quote-section,.vf-education-feature,.vf-live-panel){background-color:#e8efdf!important;color:#17251a!important}
+#app :is(.card,.kpi,.completed-total,.stats div,.note,.vf-focus-card,.vf-choice-card,.vf-project-photo-card,.vf-campaign-grid .card,.vf-campaign-grid .campaign,.vf-campaign-grid>div,.vf-detail-page .card,.vf-route-content .card,.vf-live-panel .card,.vf-education-photo,.vf-project-tools,.vf-detail-note){background:#f2f5e9!important;color:#17251a!important;border-color:rgba(23,37,26,.18)!important;box-shadow:0 10px 26px rgba(35,65,34,.08)!important}
+#app :is(.adm,.adm .side,.adm .main,.adm .content,.adm .nav,.adm .sidebar,.admin,[class*="dashboard"],[class*="admin-"]){background:#e2ebd8!important;color:#17251a!important}
+#app :is(.adm .card,.adm .kpi,.adm .scroll,.adm .tbl-wrap,.adm .side){background:#f2f5e9!important;color:#17251a!important;border-color:rgba(23,37,26,.18)!important}
+#app :is(.adm table,.adm thead,.adm tbody,.adm tr,.adm td,.adm th){background:transparent!important;color:#17251a!important;border-color:rgba(23,37,26,.18)!important}
+#app :is(input,textarea,select,option){background:#f8faF2!important;color:#17251a!important;border:1px solid rgba(37,74,45,.35)!important}
+#app :is(input,textarea)::placeholder{color:#586b59!important;opacity:1!important}
+#app :is(button,.btn,.vf-cinema-btn,.vf-button-glass,.mbtn){background:#c7e45b!important;color:#17251a!important;border:1px solid #8eae36!important;box-shadow:0 5px 14px rgba(50,76,26,.12)!important}
+#app :is(.btn.out,.vf-cinema-btn.ghost,.vf-button-glass){background:#dce8d2!important;color:#17251a!important;border:1px solid rgba(23,37,26,.32)!important}
+#app :is(a,.l,.nav a,.menu a){color:#254a2d!important;text-decoration-color:rgba(37,74,45,.4)!important}
+#app :is(.tag,.tag.d,.tag.r,.vf-photo-tag,.vf-project-mark,.vf-education-photo-caption,.vf-education-detail-image>span,.vf-education-gallery span){background:#dce8d2!important;color:#17251a!important;border-color:rgba(23,37,26,.2)!important}
+#app :is(.vf-cinema:after,.vf-detail-hero:after){background:linear-gradient(90deg,rgba(232,239,223,.96),rgba(232,239,223,.82) 62%,rgba(232,239,223,.35))!important}
+#app :is(.vf-cinema h1,.vf-cinema h2,.vf-cinema h3,.vf-cinema p,.vf-cinema .vf-kicker,.vf-cinema .vf-cinema-bottom,.vf-cinema .vf-cinema-copy>p){text-shadow:none!important}
+#app :is(.vf-legal-note,.vf-image-disclaimer,.vf-detail-note,.vf-hero-side-note,.vf-live-foot){background:#e2ebd8!important;color:#465b49!important;opacity:1!important}
+#app :is(.vf-founder-quote,.vf-founder-quote p,.vf-founder-line,.vf-founder-signature){color:#254a2d!important}
+#app :is(.vf-transparency-steps strong,.vf-metric strong,.vf-metric span){color:#254a2d!important}
+#app :is(.vf-project-photo-card .vf-project-body,.vf-project-photo-card .vf-project-foot){background:#f2f5e9!important;color:#17251a!important}
+#app :is(.vf-project-photo-card h3,.vf-project-photo-card p,.vf-project-photo-card small,.vf-project-photo-card a,.vf-project-photo-card .vf-project-kind,.vf-project-photo-card .vf-project-foot small){color:#17251a!important}
+#app :is(.vf-focus-card h3,.vf-choice-card h3,.vf-choice-card>a){color:#17251a!important}
+#app :is(.vf-education-copy h2,.vf-education-copy p,.vf-education-copy .vf-eyebrow,.vf-education-copy .vf-education-facts strong,.vf-education-copy .vf-education-facts span,.vf-education-copy a){color:#17251a!important}
+#app :is(.vf-detail-hero h1,.vf-detail-hero p,.vf-detail-hero span,.vf-detail-intro h2,.vf-detail-intro p){color:#17251a!important}
+#app :is(.vf-overline,.vf-eyebrow,.vf-founder-signature,.vf-founder-line){color:#355d2b!important}
+#app :is(.vf-education-feature h1,.vf-education-feature h2,.vf-education-feature h3,.vf-education-feature p,.vf-education-feature span,.vf-education-feature a){color:#17251a!important}
+#app :is(.vf-project-bottom-cta h2,.vf-project-bottom-cta h3,.vf-project-bottom-cta p,.vf-project-bottom-cta a,.vf-project-bottom-cta span){color:#17251a!important}
+#app :is(.vf-volunteer-section h1,.vf-volunteer-section h2,.vf-volunteer-section h3,.vf-volunteer-section p,.vf-volunteer-section a,.vf-volunteer-section span,.vf-quote-section h1,.vf-quote-section h2,.vf-quote-section h3,.vf-quote-section p,.vf-quote-section blockquote){color:#17251a!important}
+#app :is(.vf-detail-page h1,.vf-detail-page h2,.vf-detail-page h3,.vf-detail-page p,.vf-detail-page span,.vf-detail-page a){color:#17251a!important}
+#app :is(.vf-route-content .tbl th,.vf-route-content .tbl td){background:#e2ebd8!important;color:#17251a!important}
+#app :is(.vf-project-empty){color:#465b49!important;border-color:rgba(23,37,26,.3)!important}
+#app :is(.vf-legal-note,.vf-image-disclaimer){font-size:14px!important;line-height:1.7!important}
+#app :is(p,.mut,.note,.small,small,.vf-detail-note,.vf-image-disclaimer){font-size:15px!important;line-height:1.7!important}
+#app label,#app .label{font-size:14px!important;line-height:1.5!important}
+#app :is(.vf-kicker,.vf-overline,.vf-eyebrow,.vf-project-kind,.vf-photo-tag){font-size:12px!important;letter-spacing:.06em!important}
+#app :is(.vf-focus-content b,.vf-choice-card>a,.vf-project-foot a){font-size:13px!important}
+#app :is(.skip:focus){background:#c7e45b!important;color:#17251a!important}
+#app [style*="color:#fff"],#app [style*="color: #fff"],#app [style*="color:white"],#app [style*="color: white"]{color:#17251a!important}
+#app *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe){color:#17251a!important}
+#app *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe)::before,
+#app *:not(svg):not(path):not(img):not(video):not(canvas):not(source):not(picture):not(iframe)::after{color:#17251a!important}
+@media(max-width:760px){
+ #app :is(p,.mut,.note,small,.vf-detail-note,.vf-image-disclaimer){font-size:14px!important;line-height:1.65!important}
+ #app :is(label,.label){font-size:13px!important}
+}
