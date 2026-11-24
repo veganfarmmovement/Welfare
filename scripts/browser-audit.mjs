@@ -188,17 +188,19 @@ try {
   await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
   await page.locator('#app .vf-motion-hero').waitFor({state:'visible',timeout:15000});
   await page.waitForFunction(()=>{
-    const h=document.querySelector('#app .vf-motion-hero .vf-hero-copy h1');
-    const bg=document.querySelector('#app .vf-motion-backdrop');
-    return !!h&&!!bg&&getComputedStyle(h).color==='rgb(255, 253, 245)'&&getComputedStyle(bg).backgroundImage.includes('rgba(5, 22, 15');
+    const link=Array.from(document.querySelectorAll('link[rel="stylesheet"]')).find(x=>x.href.includes('veganfarm-simple-colour-system.css'));
+    return !!link&&!!link.sheet;
   },undefined,{timeout:10000});
+  await page.waitForTimeout(250);
   report.heroContrast=await page.evaluate(()=>{
     const h=document.querySelector('#app .vf-motion-hero .vf-hero-copy h1');
     const p=document.querySelector('#app .vf-motion-hero .vf-hero-copy p');
     const bg=document.querySelector('#app .vf-motion-backdrop');
-    return {heading:getComputedStyle(h).color,body:getComputedStyle(p).color,backdrop:getComputedStyle(bg).backgroundImage};
+    const matched=[];
+    if(h)for(const sheet of Array.from(document.styleSheets)){try{for(const rule of Array.from(sheet.cssRules||[])){if(!rule.selectorText||!rule.selectorText.includes('vf-hero-copy'))continue;try{if(h.matches(rule.selectorText))matched.push({selector:rule.selectorText,color:rule.style.getPropertyValue('color'),important:rule.style.getPropertyPriority('color')})}catch(_e){}}}catch(_e){}}
+    return {heading:h?getComputedStyle(h).color:null,body:p?getComputedStyle(p).color:null,headingFill:h?getComputedStyle(h).webkitTextFillColor:null,backdrop:bg?getComputedStyle(bg).backgroundImage:null,matchedRules:matched.slice(-25)};
   });
-  if(report.heroContrast.heading!=='rgb(255, 253, 245)')report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
+  if(report.heroContrast.heading!=='rgb(255, 253, 245)'||!String(report.heroContrast.body).includes('255, 253, 245'))report.errors.push({type:'hero-heading-contrast',actual:report.heroContrast});
   await page.setViewportSize({width:390,height:844});
   await page.screenshot({path:path.join(out,'screenshots','home-hero-mobile-390.png'),fullPage:false,animations:'disabled'});
   await page.setViewportSize({width:1440,height:1000});
