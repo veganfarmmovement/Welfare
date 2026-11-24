@@ -721,3 +721,37 @@ img{max-width:100%}
  .vf2-band-foot{font-size:.52rem!important;letter-spacing:.07em!important}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Inner page system: every public route gets a distinct editorial canvas */
+.vf2-page-hero{position:relative;display:flex;align-items:flex-end;min-height:clamp(460px,62vw,720px);overflow:hidden;background:#243c2d;color:#fff;padding:clamp(50px,8vw,110px) max(5vw,calc((100vw - 1320px)/2))}
+.vf2-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78)}
+.vf2-hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,34,23,.78),rgba(14,34,23,.28) 75%),linear-gradient(0deg,rgba(14,34,23,.35),transparent 60%)}
+.vf2-hero-copy{position:relative;z-index:2;max-width:900px;color:#fff}
+.vf2-hero-copy h1{color:#fff!important;font-size:clamp(3.4rem,7.6vw,7.2rem)!important;line-height:.95!important;margin:24px 0!important}
+.vf2-hero-copy p{max-width:620px;color:rgba(255,255,255,.88)!important;font-size:1.04rem!important;line-height:1.85!important}
+.vf2-hero-foot{display:block;margin-top:34px;color:rgba(255,255,255,.7);font-size:.6rem;letter-spacing:.18em}
+.vf2-page-content{width:min(1200px,calc(100% - 10vw));margin-inline:auto;padding-block:clamp(80px,10vw,140px)}
+.vf2-about-lead,.vf2-education-lead,.vf2-impact-lead,.vf2-projects-intro{display:grid;grid-template-columns:1fr .9fr;gap:10vw;align-items:center;margin-bottom:90px}
+.vf2-about-lead-copy,.vf2-education-copy{max-width:620px}
+.vf2-about-principles,.vf2-principle-grid,.vf2-education-facts,.vf2-projects-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;margin-block:70px}
+.vf2-about-principles>* ,.vf2-principle-grid>* ,.vf2-education-facts>*{background:transparent!important;border:0!important;border-top:1px solid #cfd4ca!important;border-radius:0!important;box-shadow:none!important;padding:22px 0!important}
+.vf2-project-card{background:transparent!important;border:0!important;box-shadow:none!important}
+.vf2-project-image{aspect-ratio:4/3;overflow:hidden;border-radius:2px}
+.vf2-project-image img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.vf2-project-card:hover .vf2-project-image img{transform:scale(1.04)}
+.vf2-project-copy{padding:20px 0!important}
+.vf2-impact-note{background:transparent!important;border:0!important;border-top:1px solid #cfd4ca!important;padding:24px 0!important}
+.vf2-about-status,.vf2-about-legal,.vf2-projects-cta{background:transparent!important;border:0!important;box-shadow:none!important;padding:26px 0!important}
+.vf2-education-image{min-height:400px;overflow:hidden}
+.vf2-education-image img{width:100%;height:100%;object-fit:cover}
+.vf2-footer{padding:70px 0 28px!important}
+.vf2-footer-main{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:50px}
+.vf2-footer-bottom{border-top:1px solid rgba(255,255,255,.18);margin-top:45px;padding-top:22px}
+@media(max-width:700px){
+ .vf2-page-hero{min-height:520px;padding:55px 22px}
+ .vf2-page-content{width:calc(100% - 40px)}
+ .vf2-about-lead,.vf2-education-lead,.vf2-impact-lead,.vf2-projects-intro{grid-template-columns:1fr;gap:34px;margin-bottom:55px}
+ .vf2-about-principles,.vf2-principle-grid,.vf2-education-facts,.vf2-projects-grid{grid-template-columns:1fr;gap:18px;margin-block:48px}
+ .vf2-footer-main{grid-template-columns:1fr;gap:28px}
+}
