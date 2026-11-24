@@ -130,22 +130,21 @@ try {
   // Verify the unauthenticated Team access screen and its light-theme controls.
   await page.setViewportSize({width:390,height:844});
   await page.goto(base+'#team',{waitUntil:'domcontentloaded',timeout:45000});
-  await page.locator('#vf-team-login-name').waitFor({state:'visible',timeout:15000});
+  await page.locator('#vf-team-code').waitFor({state:'visible',timeout:15000});
   const teamLogin=await page.evaluate(()=>{
     const card=document.querySelector('.vf-team-access-card');
-    const input=document.querySelector('#vf-team-login-email');
+    const input=document.querySelector('#vf-team-code');
     const button=document.querySelector('.vf-team-access-submit');
     const style=el=>{const s=getComputedStyle(el);return {color:s.color,background:s.backgroundColor,border:s.borderColor}};
-    return {heading:document.querySelector('#app h1')?.textContent||'',nameLabel:!!document.querySelector('label[for="vf-team-login-name"]'),emailLabel:!!document.querySelector('label[for="vf-team-login-email"]'),card:card?style(card):null,input:input?style(input):null,button:button?style(button):null};
+    return {heading:document.querySelector('#app h1')?.textContent||'',codeLabel:!!document.querySelector('label[for="vf-team-code"]'),card:card?style(card):null,input:input?style(input):null,button:button?style(button):null};
   });
   report.teamLogin=teamLogin;
   if(!teamLogin.heading.includes('Team Member')&&!teamLogin.heading.includes('Team'))report.errors.push({type:'team-login-heading-missing'});
-  if(!teamLogin.nameLabel||!teamLogin.emailLabel)report.errors.push({type:'team-login-labels-missing'});
+  if(!teamLogin.codeLabel)report.errors.push({type:'team-login-code-label-missing'});
   if(!teamLogin.card||teamLogin.card.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-card-not-light',actual:teamLogin.card});
   if(!teamLogin.input||teamLogin.input.background!=='rgb(255, 255, 255)')report.errors.push({type:'team-login-input-not-light',actual:teamLogin.input});
-  await page.locator('#vf-team-login-name').focus();
-  await page.keyboard.press('Tab');
-  const focusVisible=await page.locator('#vf-team-login-email').evaluate(el=>getComputedStyle(el).outlineStyle!=='none'&&getComputedStyle(el).outlineWidth!=='0px');
+  await page.locator('#vf-team-code').focus();
+  const focusVisible=await page.locator('#vf-team-code').evaluate(el=>getComputedStyle(el).outlineStyle!=='none'&&getComputedStyle(el).outlineWidth!=='0px');
   report.teamLogin.keyboardFocus=focusVisible;
   if(!focusVisible)report.errors.push({type:'team-login-keyboard-focus-missing'});
   await page.screenshot({path:path.join(out,'screenshots','team-access-mobile.png'),fullPage:true,animations:'disabled'});
