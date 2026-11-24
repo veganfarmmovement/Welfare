@@ -42,7 +42,8 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the c
 assert.doesNotMatch(visualCss, /photo-1509062522246-3755977927d7/, "Education imagery must not use the classroom apple photograph");
 assert.match(visualCss, /vf-motion-card\.vf-learn\{background-image:none!important/,"Education card must not use food photography");
 assert.match(visualCss, /vf-choice-human:before\{background-image:none!important/,"Programme card must not use food photography");
-assert.doesNotMatch(visualCss, /photo-1524178232363-1fb2b075b655/,"Remove the classroom apple stock image from the presentation layer");
+assert.match(forestJs, /photo-1524178232363-1fb2b075b655/, "Education card must use the selected illustrative classroom photograph");
+assert.doesNotMatch(forestJs, /photo-1503676260728-1c00da094a0b/, "Remove the apple classroom photograph from the presentation layer");
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
