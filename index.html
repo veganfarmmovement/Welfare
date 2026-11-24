@@ -1956,6 +1956,8 @@ currentUser().then(function(u){
       '<label>Food being provided *</label><input name="food_type" required placeholder="Example: dry food, cooked food, fodder">'+
       '<label>Feeding frequency *</label><select name="frequency" required><option value="">Select frequency</option><option>Once daily</option><option>Twice daily</option><option>Three times daily</option><option>Weekly</option><option>Emergency / one-time</option></select>'+
       '<label>Daily feeding cost (₹) *</label><input name="fdaily" type="number" min="1" step="0.01" required>'+
+      '<label>Supporting photos, bills, invoices or feeding proof (optional, multiple files)</label><input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple>'+
+      '<p class="mut">Upload up to 8 supporting JPG, PNG, PDF or video files (10 MB each). Files stay private and are visible only to the Founder during review.</p>'+
       '<p class="mut">The Founder will set the official campaign target after reviewing the request. Estimated monthly feeding cost is calculated from the daily cost.</p>'+
       contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Feeding case for Founder review</button></form>';
   }
@@ -1969,7 +1971,8 @@ currentUser().then(function(u){
       '<label>Medical report (optional)</label><input name="rep" type="file" accept="image/jpeg,image/png,application/pdf">'+
       '<label>Veterinary bill / estimate (optional)</label><input name="bill" type="file" accept="image/jpeg,image/png,application/pdf">'+
       '<label>Case video (optional)</label><input name="case_video" type="file" accept="video/mp4,video/webm,video/quicktime">'+
-      '<p class="mut">Upload one short MP4, WebM or MOV video (up to 50 MB). Videos and medical documents remain private until the Founder reviews them. The Founder will verify the medical details and set the official fundraising target before publication.</p>'+
+      '<label>Additional supporting photos, bills, invoices or documents (optional, multiple files)</label><input name="attachments" type="file" accept="image/jpeg,image/png,application/pdf,video/mp4,video/webm,video/quicktime" multiple>'+
+      '<p class="mut">Upload up to 8 additional JPG, PNG, PDF or video files (10 MB each). Medical documents, bills and videos remain private until the Founder reviews them. The Founder verifies the medical details and sets the official fundraising target before publication.</p>'+
       contactFields()+'<p id="vf-case-error" role="alert" style="color:#991b1b;min-height:22px;margin:8px 0"></p><button class="btn" type="submit">Submit Treatment case for Founder review</button></form>';
   }
   function teamHome(){
