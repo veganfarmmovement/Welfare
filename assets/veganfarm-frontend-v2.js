@@ -108,9 +108,11 @@ function decoratePrivate(){
 function afterRoute(){
  buildHeader();buildFooter();decoratePrivate();
  var route=(location.hash||'#home').slice(1);
- if(route.indexOf('case-')===0&&!app.querySelector('.vf2-page-hero')){
-  var meta={eyebrow:'ANIMAL WELFARE · CASE DETAIL',title:'Rescue case details',copy:'Review the published case information and verified support details.',image:'photo-1552053831-71594a27632d'};
-  var content=app.innerHTML;app.innerHTML='<div class="vf2-page vf2-page-case-detail">'+hero(meta,'case-detail')+'<div class="vf2-page-content vf2-shell">'+content+'</div></div>';
+ if(routeMeta[route]&&route!=='home'&&route!=='team'&&route!=='veganfarm-team'&&route.indexOf('admin')!==0&&!app.querySelector('.vf2-page-hero')){
+  var meta=routeMeta[route];var content=app.innerHTML;app.innerHTML='<div class="vf2-page vf2-page-'+route+'">'+hero(meta,route)+'<div class="vf2-page-content vf2-shell">'+content+'</div></div>';
+ }else if(route.indexOf('case-')===0&&!app.querySelector('.vf2-page-hero')){
+  var caseMeta={eyebrow:'ANIMAL WELFARE · CASE DETAIL',title:'Rescue case details',copy:'Review the published case information and verified support details.',image:'photo-1552053831-71594a27632d'};
+  var caseContent=app.innerHTML;app.innerHTML='<div class="vf2-page vf2-page-case-detail">'+hero(caseMeta,'case-detail')+'<div class="vf2-page-content vf2-shell">'+caseContent+'</div></div>';
  }
 
  if(app){
