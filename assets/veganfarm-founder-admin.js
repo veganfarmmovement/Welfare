@@ -26,7 +26,7 @@ function login(){
   finally{busy=false;}
  });
 }
-var nav=[['admin','Overview'],['admin-cases','Rescue appeals'],['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-volunteers','Volunteers'],['admin-messages','Messages'],['admin-stories','Stories & updates'],['admin-team','Team accounts'],['admin-settings','Website settings'],['admin-audit','Audit history']];
+var nav=[['admin','Overview'],['admin-cases','Rescue appeals'],['admin-donations','Donations'],['admin-expenses','Expenses'],['admin-volunteers','Volunteers'],['admin-messages','Messages'],['admin-stories','Stories & updates'],['admin-team','Team accounts'],['admin-settings','Website settings'],['admin-security','Security'],['admin-audit','Audit history']];
 function shell(route,content){
  app.innerHTML='<div class="vf-admin-shell"><aside class="vf-admin-sidebar"><a class="vf-admin-brand" href="#admin"><span>VF</span><div><b>VEGANFARM</b><small>FOUNDER WORKSPACE</small></div></a><nav>'+nav.map(function(n){return '<a href="#'+n[0]+'" class="'+(route===n[0]?'active':'')+'">'+esc(n[1])+'</a>'}).join('')+'</nav><button class="vf-admin-logout" id="vf-admin-logout">Lock dashboard</button></aside><main class="vf-admin-main"><header class="vf-admin-top"><div><span>VEGANFARM · PRIVATE ADMINISTRATION</span><h1>'+esc(nav.find(function(n){return n[0]===route})?.[1]||'Overview')+'</h1></div><button class="vf-admin-refresh" id="vf-admin-refresh">Refresh data</button></header>'+content+'</main></div>';
  document.getElementById('vf-admin-logout').onclick=logout;
@@ -78,6 +78,7 @@ function content(route){
  if(route==='admin-stories')return genericTable('Stories',data.stories||[],['Title','Location','Published','Created at'],r=>'<button data-vf-action="story-toggle" data-id="'+esc(r.id)+'" data-published="'+String(!r.published)+'">'+(r.published?'Unpublish':'Publish')+'</button>');
  if(route==='admin-team')return genericTable('Team accounts',data.profiles||[],['Display name','Email','Role','Status','Created at'],r=>'<select id="role-'+esc(r.id)+'"><option value="team" '+(r.role==='team'?'selected':'')+'>Team</option><option value="founder" '+(r.role==='founder'?'selected':'')+'>Founder</option></select> <select id="status-'+esc(r.id)+'"><option>pending</option><option '+(r.status==='approved'?'selected':'')+'>approved</option><option '+(r.status==='rejected'?'selected':'')+'>rejected</option><option '+(r.status==='suspended'?'selected':'')+'>suspended</option></select> <button data-vf-action="profile-save" data-id="'+esc(r.id)+'">Save</button>');
  if(route==='admin-settings')return '<div class="vf-admin-record-list">'+(data.settings||[]).map(x=>'<form class="vf-admin-record" data-vf-form="setting"><h3>'+esc(x.key)+'</h3><input type="hidden" name="key" value="'+esc(x.key)+'"><textarea name="value" rows="4">'+esc(JSON.stringify(x.value))+'</textarea><button type="submit">Save setting</button></form>').join('')+'</div>';
+ if(route==='admin-security')return '<section class="vf-admin-record"><h2>Founder access code</h2><p class="vf-admin-muted">Change the code used to unlock this private dashboard. The new code is stored as a salted password hash and is never saved in the website files.</p><form data-vf-form="change-pin"><label>New Founder code<input name="new_pin" type="password" minlength="8" maxlength="100" autocomplete="new-password" required></label><label>Confirm new Founder code<input name="confirm_pin" type="password" minlength="8" maxlength="100" autocomplete="new-password" required></label><button type="submit">Update Founder code</button></form><p class="vf-admin-muted">Existing sessions remain active until they expire or are locked. Use Lock dashboard after changing the code.</p></section>';
  if(route==='admin-audit')return genericTable('Audit history',data.audit||[],['Created at','Actor role','Module','Action','Record id','Detail']);
  return overview();
 }
@@ -116,8 +117,19 @@ async function handleAction(e){
 }
 async function handleForm(e){
  e.preventDefault();var f=e.currentTarget;
- try{var fd=new FormData(f),raw=fd.get('value'),value;try{value=JSON.parse(raw)}catch(x){value=raw}await api('setting_update',{key:fd.get('key'),value:value});await refresh();}
- catch(x){alert(await errorText(x));}
+ try{
+  var fd=new FormData(f);
+  if(f.dataset.vfForm==='change-pin'){
+   var next=String(fd.get('new_pin')||''),confirmPin=String(fd.get('confirm_pin')||'');
+   if(next.length<8)throw new Error('Use at least 8 characters.');
+   if(next!==confirmPin)throw new Error('The two codes do not match.');
+   await api('change_founder_code',{new_pin:next});
+   f.reset();alert('Founder access code updated. Lock and sign in again using the new code.');
+   return;
+  }
+  var raw=fd.get('value'),value;try{value=JSON.parse(raw)}catch(x){value=raw}
+  await api('setting_update',{key:fd.get('key'),value:value});await refresh();
+ }catch(x){alert(await errorText(x));}
 }
 function route(){
  var h=(location.hash||'#home').slice(1);
