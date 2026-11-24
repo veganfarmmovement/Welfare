@@ -1,6 +1,9 @@
 /* VEGANFARM Impact page: render completed cases immediately, then merge live published records. */
 (function () {
   'use strict';
+  var seed = []; // Impact is derived only from published live records; no seeded case totals.EGANFARM Impact page: render completed cases immediately, then merge live published records. */
+(function () {
+  'use strict';
   var seed = []; // No seeded case data or financial totals.  var css = `
   .vf-impact-hero{display:grid;grid-template-columns:1.3fr .7fr;align-items:center;gap:22px;padding:clamp(24px,4vw,42px);margin:10px 0 26px;border-radius:24px;background:#f2f8e8;color:#285c31;border:1px solid #d8e4c8;overflow:hidden}
   .vf-impact-hero h2{font:clamp(28px,4vw,42px)/1.08 Georgia,serif;color:#285c31;margin:0 0 12px}.vf-impact-hero p{color:#526653;line-height:1.65;margin:0;max-width:560px}.vf-impact-art{width:100%;max-width:220px;justify-self:center}
@@ -40,6 +43,21 @@
   }
   function render() {
     var list = cases();
+    var published = typeof APP !== 'undefined' ? APP.filter(function (x) { return x.pub === 'Published'; }).length : 0;
+    var cards = list.map(function (x) {
+      var photo = x.photo ? '<img src="' + esc(x.photo) + '" alt="' + (x.illustrative ? 'Illustrative veterinary photograph' : 'Animal photograph') + ' for ' + esc(x.name) + '" loading="lazy" decoding="async" onerror="this.remove();this.parentNode.classList.add(\\'photo-fallback\\')">' : '';
+      return '<article class="vf-completed-card"><div class="vf-completed-photo' + (photo ? '' : ' photo-fallback') + '">' + photo + (x.illustrative ? '<span class="vf-illustrative">Illustrative image</span>' : '') + stamp() + '</div><div class="vf-completed-body"><span class="vf-completed-label">Published · completed</span><h3>' + esc(x.name) + '</h3><p class="vf-completed-location">Location: ' + esc(x.location) + '</p></div></article>';
+    }).join('');
+    var activeAppeals = typeof APP !== 'undefined' ? APP.filter(function (x) { return x.pub === 'Published' && !x.completed && !/^(Completed|Recovered|Closed)$/i.test(x.st || ''); }).length : 0;
+    var art = '<svg class="vf-impact-art" viewBox="0 0 240 220" role="img" aria-label="Illustration of a hand protecting an animal paw"><circle cx="120" cy="108" r="88" fill="#fff" opacity=".12"/><path d="M55 145c-6-22 7-42 27-47l20-5 10-31c3-9 16-8 18 2l2 19 8-31c3-11 18-9 19 3l-1 35 10-20c5-9 19-4 16 7l-10 47c-3 18-17 31-37 33l-44 4c-18 1-33-5-38-16z" fill="#f5f8e9" stroke="#dceac8" stroke-width="4" stroke-linejoin="round"/><ellipse cx="119" cy="121" rx="21" ry="17" fill="#8eaf2d"/><ellipse cx="91" cy="99" rx="8" ry="11" fill="#8eaf2d"/><ellipse cx="111" cy="88" rx="8" ry="11" fill="#8eaf2d"/><ellipse cx="132" cy="88" rx="8" ry="11" fill="#8eaf2d"/><ellipse cx="151" cy="99" rx="8" ry="11" fill="#8eaf2d"/><path d="M66 174c24 17 78 20 111-3" fill="none" stroke="#d9e8c4" stroke-width="6" stroke-linecap="round"/></svg>';
+    return '<section class="vf-impact-hero"><div><h2>Every life matters.<br>Every act of care counts.</h2><p>VEGANFARM Movement supports animal treatment and community welfare through Founder-approved work. Completed cases are shown below.</p></div>' + art + '</section><div class="vf-impact-stats"><div class="vf-impact-stat"><b>' + list.length + '</b><span>Published completed rescue cases</span></div><div class="vf-impact-stat"><b>' + published + '</b><span>Total published rescue cases</span></div><div class="vf-impact-stat"><b>' + activeAppeals + '</b><span>Active published rescue appeals</span></div></div><div class="vf-completed-heading"><h2>Completed animal cases</h2><p>Published case records · VEGANFARM Movement</p></div><div class="vf-completed-grid">' + (cards || '<p class="vf-impact-note">No completed rescue cases are currently published. Verified case stories will appear here after Founder review.</p>') + '</div><p class="vf-impact-note">Counts on this page are calculated from published rescue-case records. Donation and expense totals are shown only in the relevant case or transparency records when they can be verified.</p>';;;
+  }
+  if (typeof P !== 'undefined') P.impact = function () { return head('Our impact', 'Rescue cases and completed work by VEGANFARM Movement.') + S(render()); };
+  if (typeof go === 'function' && (location.hash || '').split('?')[0] === '#impact') go(true);
+  window.addEventListener('hashchange', function () {
+    if ((location.hash || '').split('?')[0] === '#impact') setTimeout(function () { if (typeof go === 'function') go(true); }, 0);
+  });
+})();    var list = cases();
     var published = typeof APP !== 'undefined' ? APP.filter(function (x) { return x.pub === 'Published'; }).length : 0;
     var cards = list.map(function (x) {
       var photo = x.photo ? '<img src="' + esc(x.photo) + '" alt="' + (x.illustrative ? 'Illustrative veterinary photograph' : 'Animal photograph') + ' for ' + esc(x.name) + '" loading="eager" decoding="async" onerror="this.remove();this.parentNode.classList.add(\'photo-fallback\')">' : '';
