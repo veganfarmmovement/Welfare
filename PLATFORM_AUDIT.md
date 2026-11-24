@@ -110,3 +110,35 @@ The active website's public content must continue to describe VEGANFARM as an in
 7. Add optional music only after a real licensed audio asset is available; no fake player should be shipped.
 8. Validate the UPI QR destination with a real UPI scanner before making payment claims.
 9. Review or archive the two older HTML snapshots so users do not open obsolete versions.
+
+
+## Phase 7 — private rescue photograph implementation staged (24 November 2026)
+
+### Production state — unchanged
+- The production Supabase bucket `case-photos` is still public at the time of this update.
+- Read-only inspection found 5 objects in `case-photos`: 3 linked to published cases, 1 archived case and 1 rejected case. The existing private `rescue-case-photos` bucket currently has 0 objects.
+- No storage object was copied, moved or deleted. No production bucket setting, policy, database record or Edge Function was changed.
+- A Supabase development branch has not been created. Supabase quoted US$0.01344 per hour for a branch; creation is waiting for the owner's explicit cost approval.
+
+### Development-branch code now committed
+1. `index.html` now routes new case-photo uploads to the existing private `rescue-case-photos` bucket. New stored `photo_path` values carry a `rescue-case-photos/` prefix; legacy unprefixed paths continue to resolve to `case-photos`.
+2. Added `assets/veganfarm-private-case-photos.js`. It requests 5-minute signed URLs for case photos, refreshes them after 4 minutes, and wraps the existing public, Founder and Team case loaders. Anonymous signing is intended to work only for published cases; authenticated Founder access and authenticated Team-owner access are defined in the migration.
+3. Added `supabase-phase7-private-case-photo-storage.sql`. It makes the legacy `case-photos` bucket private, adds separate anonymous-published and authenticated Founder/Team-owner read policies, restricts new Team uploads to a folder named for the authenticated user, and preserves the separate public story-photo bucket.
+4. Added a version-controlled copy of the Team gate Edge Function at `supabase/functions/veganfarm-team-gate/index.ts`. It uploads new shared-code Team submissions to `rescue-case-photos`, stores the prefixed path and checks file signatures for JPEG, PNG, PDF, WebM, MP4 and MOV files.
+5. The production Edge Function remains unchanged. The version-controlled copy has not been deployed.
+
+### Validation and limitations
+- Static source checks confirm that all 5 generic case-photo upload calls and the Team upload call now target `rescue-case-photos`; no old upload call remains in the active HTML.
+- Static source checks confirm the new bucket prefix, signed URL TTL/renewal, role-aware loader wrappers, migration policies and Edge Function signature checks are present.
+- The new signed-photo JavaScript asset passed `node --check` under Node v22.16.0.
+- No Supabase migration has been applied. The migration and Edge Function must be tested together on a Supabase development branch before deployment.
+- Anonymous signed-URL creation, Founder previews, Team ownership, published public images, rejected/archived denial and existing rescue submissions have not yet passed live access tests.
+- No browser visual or end-to-end test has been completed. Do not describe the photo privacy issue as fixed until those tests pass.
+
+## Updated production merge blockers
+1. Obtain approval for the quoted Supabase test-branch cost (US$0.01344/hour), then create and test against a development branch.
+2. Apply the Phase 7 storage migration only on that branch and verify anonymous, Founder and Team access against published, pending, rejected and archived cases.
+3. Deploy the version-controlled Team gate function to the test project and test new submissions, file-signature rejection and Founder review.
+4. Verify legacy published case images still render through signed URLs and that archived/rejected legacy images cannot be signed by anonymous users.
+5. Test the Phase 6 read-only view migration separately; do not combine it with Phase 7 until the public case pages and Founder workflow pass.
+6. Complete browser tests, QR scanning, auth, donations, approvals, mobile layout and refresh reliability before production deployment.
