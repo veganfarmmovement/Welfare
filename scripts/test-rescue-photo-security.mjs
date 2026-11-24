@@ -28,6 +28,8 @@ assert.match(html,/assets\/veganfarm-frontend-v2\.css/,"The new frontend design 
 assert.match(html,/assets\/veganfarm-frontend-v2\.js/,"The new frontend renderer must load");
 assert.doesNotMatch(html,/veganfarm-unified\.css|veganfarm-simple-colour-system\.css|modern-upgrade\.js|veganfarm-editorial-redesign\.js|veganfarm-forest-luxury\.js/,"Legacy presentation layers must not be active");
 assert.doesNotMatch(html,/vf-language|veganfarm-languages/,"Language selectors and translation scripts must not be active");
+assert.doesNotMatch(html,/veganfarm-piano\.js/,"The old music player must not be part of the public website template");
+assert.match(frontendCss,/\.vf2-menu a\[href="#admin"\]/,"Private administration links must not clutter the public navigation");
 assert.equal((html.match(/rel="stylesheet"/g)||[]).length,1,"Only the new frontend stylesheet should control the application");
 assert.match(frontendJs,/P\.home=home/,"V2 must own the homepage renderer");
 assert.match(frontendJs,/P\.projects=function/,"V2 must provide a dedicated Projects template");
