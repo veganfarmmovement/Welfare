@@ -1475,6 +1475,7 @@ window.vfLoadPublicMore=function(){
   });
 };
 window.vfAfterLogin=function(){
+  if(window.vfRole!=='team')return Promise.resolve(baseAfterLogin&&baseAfterLogin());
   return Promise.resolve(baseAfterLogin&&baseAfterLogin()).then(function(){
     return sb.from('case_documents').select('case_id,document_type,file_path,is_public');
   }).then(function(r){
