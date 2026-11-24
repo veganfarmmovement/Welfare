@@ -62,7 +62,10 @@ try{
  await save('team-access-mobile.png',true);await page.setViewportSize({width:1440,height:1000});await save('team-access-desktop.png',true);
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={dashboardVisible:await page.locator('#app .adm').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(report.founderGate.dashboardVisible)report.errors.push({type:'unauthenticated-founder-dashboard-visible'});
  // Capture a production baseline screenshot for visual comparison; it is never used as the test target.
- try{await page.goto('https://veganfarmmovement.github.io/Welfare/',{waitUntil:'domcontentloaded',timeout:20000});await page.waitForTimeout(500);await save('before-production-homepage.png',false)}catch(e){report.baselineScreenshotUnavailable=e.message}
+ const baselinePage=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
+ try{await baselinePage.goto('https://veganfarmmovement.github.io/Welfare/',{waitUntil:'domcontentloaded',timeout:20000});await baselinePage.waitForTimeout(500);const file=path.join(out,'screenshots','before-production-homepage.png');await baselinePage.screenshot({path:file,fullPage:false,animations:'disabled'});report.screenshots.push('before-production-homepage.png')}
+ catch(e){report.baselineScreenshotUnavailable=e.message}
+ finally{await baselinePage.close()}
  fs.writeFileSync(path.join(out,'browser-audit.json'),JSON.stringify(report,null,2));
  console.log(JSON.stringify({routeChecks:report.routeChecks.length,errors:report.errors,networkFailures:report.networkFailures.length,screenshots:report.screenshots.length,englishOnlyCheck:report.englishOnlyCheck,menuChecks:report.menuChecks,team:report.team,founderGate:report.founderGate},null,2));
 }finally{await browser.close()}
