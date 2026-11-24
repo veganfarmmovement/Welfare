@@ -66,6 +66,116 @@ assert.match(rollback, /raise exception 'Rollback stopped: rescue-case-photos st
 assert.match(rollback, /update public\.rescue_cases[\s\S]*?photo_path=substring/, "Rollback must restore legacy path prefixes after copy verification");
 assert.match(rollback, /set public=true where id='case-photos'/, "Rollback must restore the legacy bucket setting");
 
+
+async function exercisePhotoHelper({otherReferences = false, deleteError = null} = {}) {
+  const signedCalls = [];
+  const removed = [];
+  const updates = [];
+  const notices = [];
+  let intervalCallback = null;
+  let visibilityCallback = null;
+  const client = {
+    storage: {
+      from(bucket) {
+        return {
+          createSignedUrl(path, ttl) {
+            signedCalls.push({ bucket, path, ttl });
+            return Promise.resolve({ data: { signedUrl: "https://signed.example/" + signedCalls.length }, error: null });
+          },
+          remove(paths) {
+            removed.push({ bucket, paths });
+            return Promise.resolve({ data: null, error: deleteError });
+          },
+        };
+      },
+    },
+    from(table) {
+      assert.equal(table, "rescue_cases");
+      return {
+        update(patch) {
+          updates.push(patch);
+          return {
+            eq() {
+              return { select() { return { single: async () => ({ data: { id: "db-1" }, error: null }) }; } };
+            },
+          };
+        },
+        select() {
+          return {
+            eq() {
+              return {
+                neq() {
+                  return {
+                    limit: async () => ({ data: otherReferences ? [{ id: "db-other" }] : [], error: null }),
+                  };
+                },
+              };
+            },
+          };
+        },
+      };
+    },
+  };
+  const record = {
+    id: "VF-1",
+    dbId: "db-1",
+    photoPath: "rescue-case-photos/db-1/animal.jpg",
+    ppath: "rescue-case-photos/db-1/animal.jpg",
+    live: {},
+  };
+  const window = {
+    vfSupabase: client,
+    vfRole: "founder",
+    addEventListener() {},
+    setTimeout() {},
+    setInterval(callback) { intervalCallback = callback; },
+    syncCases() {},
+    go() {},
+    vfReload: async () => {},
+  };
+  const document = {
+    visibilityState: "visible",
+    addEventListener(event, callback) {
+      if (event === "visibilitychange") visibilityCallback = callback;
+    },
+  };
+  vm.runInNewContext(photoAsset, {
+    window, document, APP: [record], Date, Promise,
+    console: { warn() {}, info() {}, error() {} },
+    toast(message) { notices.push(message); },
+  });
+  await window.vfSignPrivateCasePhotos();
+  assert.equal(signedCalls.length, 1, "Initial load must sign a private photo");
+  assert.deepEqual(signedCalls[0], { bucket: "rescue-case-photos", path: "db-1/animal.jpg", ttl: 300 });
+  assert.equal(record.live.photo, "https://signed.example/1", "Public live snapshot must receive the signed URL");
+
+  record.photoSignedAt = Date.now() - 241000;
+  intervalCallback();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(signedCalls.length, 2, "Refresh interval must renew a URL before its five-minute expiry");
+  record.photoSignedAt = Date.now() - 241000;
+  visibilityCallback();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(signedCalls.length, 3, "Returning to a visible tab must renew an ageing URL");
+
+  await window.rmPhoto("VF-1");
+  assert.deepEqual(updates[0], { photo_path: null, photo_url: null });
+  if (otherReferences) {
+    assert.equal(removed.length, 0, "A shared object must not be deleted");
+    assert.ok(notices.some((message) => message.includes("another case still references it")));
+  } else if (deleteError) {
+    assert.equal(removed.length, 1, "Storage deletion must be attempted after the row is cleared");
+    assert.ok(notices.some((message) => message.includes("private storage object may need Founder cleanup")));
+  } else {
+    assert.deepEqual(removed, [{ bucket: "rescue-case-photos", paths: ["db-1/animal.jpg"] }]);
+    assert.ok(notices.some((message) => message.includes("private storage object deleted")));
+  }
+}
+
+await exercisePhotoHelper();
+await exercisePhotoHelper({ otherReferences: true });
+await exercisePhotoHelper({ deleteError: { message: "simulated Storage failure" } });
+
 console.log("Rescue-photo static checks passed.");
 console.log("Inline scripts parsed:", inlineCount);
 console.log("Case-photo upload call sites:", appUploads.length);
