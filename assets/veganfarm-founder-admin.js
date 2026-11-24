@@ -93,7 +93,8 @@ async function handleAction(e){
  try{
   b.disabled=true;
   if(action.startsWith('case-')){
-   var publication=action==='case-publish'?'published':action==='case-reject'?'rejected':action==='case-unpublish'?'unpublished':'pending_review';
+   var current=(data.cases||[]).find(function(x){return x.id===id;});
+   var publication=action==='case-publish'?'published':action==='case-reject'?'rejected':action==='case-unpublish'?'unpublished':(current&&current.publication)||'pending_review';
    await api('case_review',{id:id,publication:publication,target_amount:document.getElementById('target-'+id)?.value||0,status:document.getElementById('status-'+id)?.value||'Awaiting treatment',review_note:document.getElementById('note-'+id)?.value||''});
   }else if(action.startsWith('donation-')){
    var status=action==='donation-verify'?'verified':action==='donation-reject'?'rejected':'pending';
