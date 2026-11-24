@@ -2153,3 +2153,31 @@ html[dir="rtl"] #app table{direction:rtl}
 /* Keep programme and education imagery free of food/product photography. */
 #app .vf-motion-card.vf-learn{background-image:url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=85')!important;background-color:#f2efe7!important}
 #app .vf-choice-human:before{background-image:linear-gradient(0deg,rgba(246,247,237,.12),transparent),url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=82')!important}
+
+
+/* Dedicated layouts for the live volunteer, contact and donation workflows. */
+#app .vf-form-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:clamp(24px,5vw,72px);align-items:start;max-width:1120px;margin:0 auto}
+#app .vf-form-main h2,#app .vf-donate-intro h2{font:600 clamp(2rem,4vw,3.2rem)/1.08 "Newsreader",Georgia,serif;margin:12px 0 18px}
+#app .vf-form-main h2 em,#app .vf-donate-intro h2 em{color:#286b36;font-style:italic}
+#app .vf-form-main>p,#app .vf-donate-intro>p{max-width:65ch;color:#5f675e}
+#app .vf-editorial-form{display:grid;gap:10px;margin-top:24px;padding:clamp(18px,3vw,30px);border:1px solid #e6e2d8;border-radius:8px;background:#fffdf5;max-width:none}
+#app .vf-editorial-form>label{margin-top:6px;color:#1d2c21;font-size:.82rem;font-weight:650}
+#app .vf-editorial-form input:not([type=checkbox]),#app .vf-editorial-form select,#app .vf-editorial-form textarea{width:100%;min-width:0;padding:12px 13px;border:1px solid #d9d5ca;border-radius:4px;background:#fffdf5;color:#1d2c21;font:inherit;box-sizing:border-box}
+#app .vf-editorial-form input:focus,#app .vf-editorial-form select:focus,#app .vf-editorial-form textarea:focus{outline:2px solid #c7a66a;outline-offset:2px}
+#app .vf-editorial-form fieldset{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px;border:1px solid #e6e2d8;border-radius:5px}
+#app .vf-editorial-form legend{padding:0 6px;color:#1d2c21;font-size:.82rem;font-weight:650}
+#app .vf-editorial-form fieldset label,#app .vf-checkbox-label{display:flex;align-items:center;gap:8px;font-size:.84rem;color:#1d2c21}
+#app .vf-editorial-form input[type=checkbox]{width:16px;height:16px;min-width:16px;accent-color:#286b36}
+#app .vf-form-privacy{margin:6px 0;color:#62685f;font-size:.78rem;line-height:1.6}
+#app .vf-form-aside{position:sticky;top:100px;padding:clamp(20px,3vw,32px);background:#f2efe7;border-left:3px solid #c7a66a;border-radius:6px}
+#app .vf-form-aside h3{font:600 1.7rem/1.15 "Newsreader",Georgia,serif;margin:12px 0}
+#app .vf-form-aside ol{padding-left:20px;line-height:1.8}
+#app .vf-form-aside li{padding:6px 0}
+#app .vf-donate-layout{max-width:1160px;margin:0 auto}
+#app .vf-donate-intro{max-width:760px;margin:0 0 28px}
+#app .vf-donate-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px;align-items:start}
+#app .vf-payment-panel,#app .vf-donate-form-panel{padding:clamp(20px,3vw,32px);border:1px solid #e6e2d8;border-radius:8px;background:#fffdf5}
+#app .vf-payment-panel h3,#app .vf-donate-form-panel h3{font:600 1.55rem/1.2 "Newsreader",Georgia,serif;margin:12px 0}
+#app .vf-upi-id{font-weight:750;letter-spacing:.02em;font-size:1.1rem}
+#app .vf-donate-qr{display:block;width:min(280px,100%);height:auto;aspect-ratio:1;object-fit:contain;padding:12px;margin:22px 0;border:1px solid #e6e2d8;border-radius:8px;background:#fff}
+@media(max-width:760px){#app .vf-form-layout,#app .vf-donate-grid{grid-template-columns:1fr}#app .vf-form-aside{position:static}#app .vf-editorial-form fieldset{grid-template-columns:1fr}#app .vf-payment-panel,#app .vf-donate-form-panel{padding:18px}}
