@@ -256,4 +256,4 @@ Anonymous access, Founder previews across every publication state, Team owner is
 - Removed the obsolete dark Team gate rules and retired panel styles from `assets/veganfarm-unified.css`.
 - Kept the new ivory access card and form styling in the final theme stylesheet, which loads after the unified stylesheet.
 - Bumped the unified stylesheet cache key so browsers receive the corrected CSS.
-- Static validation passed on the preceding active-gate implementation (run 45384226094). The browser run on that older CSS (45384357154) correctly failed because the dark legacy rules were still active. A fresh browser run is required against the latest CSS before marking the Team visual fix PASSED.
+- Browser run 45384357154 correctly exposed the legacy dark override; that CSS was removed and the unified stylesheet cache key refreshed. Static run 45385005603 PASSED after the removal. Browser run 45385005611 is in progress with active Team gate screenshot/style checks; the final visual fix remains NOT TESTED until that run completes.
