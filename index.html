@@ -1122,6 +1122,8 @@ return Promise.all([sb.from('public_donation_feed').select('*').order('created_a
 if(r[0].error){console.warn('Public donation feed unavailable; rescue appeals will still load.',r[0].error)}else{
 DONS.length=0;(r[0].data||[]).forEach(function(x,i){DONS.push({id:'F'+i,n:x.donor,a:+x.amount,cat:x.category,tg:x.target_label||'',caseId:x.case_id||null,when:fmt(x.created_at),pub:x.donor==='Anonymous'?'anon':'name'})})}
 if(r[1].error){PUBLIC_VERIFIED_TOTAL=null;console.warn('Public financial totals unavailable; rescue appeals will still load.',r[1].error)}else{PUBLIC_VERIFIED_TOTAL=Number(r[1].data.verified_donations)||0;EXP=Number(r[1].data.approved_expenses)||0}
+/* Anonymous public pages must not query the restricted rescue_cases view. The public appeal list stays empty until a safe published-data source is available. */
+if(!vfRole){window.vfPublicDataError=true;window.dispatchEvent(new Event('vf:publicdataerror'));return 0}
 return window.vfLoadPublicMore?window.vfLoadPublicMore():0}).then(function(){go(true)})}
 window.vfRefreshPublicData=loadPublic;
 
