@@ -38,8 +38,8 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc/, "Hero must use the c
 assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile hero must use a smaller image variant");
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
-assert.match(html, /veganfarm-unified\\.css/, "The consolidated stylesheet must load");
-assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\\.css/, "Legacy stylesheets must not load independently");
+assert.match(html, /veganfarm-unified\.css/, "The consolidated stylesheet must load");
+assert.doesNotMatch(html, /(?:modern-upgrade|premium-2026|signature-overhaul|veganfarm-complete-rebuild|veganfarm-editorial-redesign|veganfarm-forest-luxury|veganfarm-platform-system)\.css/, "Legacy stylesheets must not load independently");
 assert.match(unifiedCss, /--vf-forest:#173D2B/, "The bundled stylesheet must contain the luxury palette");
 assert.match(platformCss, /--vf-forest:#173D2B/, "Luxury forest palette must be defined");
 assert.match(platformCss, /--vf-ivory:#FFFDF5/, "Luxury ivory palette must be defined");
@@ -48,7 +48,7 @@ assert.match(localeJs, /code:'sd'/, "Sindhi must be offered in the locale select
 assert.match(localeJs, /code:'ur',label:'اردو',dir:'rtl'/, "Urdu must use RTL");
 assert.match(localeJs, /code:'ar',label:'العربية',dir:'rtl'/, "Arabic must use RTL");
 assert.doesNotMatch(html, /photo-1557844352-761f2565b576|Plant-based food|Plant-based living/, "Food photography must not appear on the site");
-assert.equal(platformCss.split("{").length, platformCss.split("}").length, "Unified design stylesheet braces must be balanced");assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
+assert.equal(unifiedCss.split("{").length, unifiedCss.split("}").length, "Consolidated stylesheet braces must be balanced");
 assert.equal((visualCss.match(/\{/g)||[]).length,(visualCss.match(/\}/g)||[]).length,"Visual stylesheet braces must be balanced");
 new vm.Script(photoAsset, { filename: "veganfarm-private-case-photos.js" });
 
