@@ -28,3 +28,9 @@ jobs:
         run: node scripts/test-rescue-photo-security.mjs
       - name: Parse signed-photo asset
         run: node --check assets/veganfarm-private-case-photos.js
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Type-check Team Edge Function
+        run: deno check --no-lock supabase/functions/veganfarm-team-gate/index.ts
