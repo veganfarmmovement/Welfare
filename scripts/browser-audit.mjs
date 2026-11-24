@@ -45,7 +45,8 @@ try {
         if(item.overflow) report.errors.push({type:'horizontal-overflow',route,width,scrollWidth:await page.evaluate(()=>document.documentElement.scrollWidth),elements:await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(el=>({el,r:el.getBoundingClientRect()})).filter(x=>x.r.width>0&&x.r.right>window.innerWidth+1).slice(0,12).map(x=>({tag:x.el.tagName,id:x.el.id,className:String(x.el.className||'').slice(0,120),right:Math.round(x.r.right),width:Math.round(x.r.width),position:getComputedStyle(x.el).position}))) });
         if(item.images.failed>0) report.errors.push({type:'broken-images',route,width,failed:item.images.failed});
         if(route==='home'){
-          await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},undefined,{timeout:8000}).catch(()=>{});
+          await page.locator('#app .vf-motion-hero').waitFor({state:'visible',timeout:15000});
+          await page.waitForFunction(()=>{const el=document.querySelector('#app .vf-motion-backdrop');return !!el&&getComputedStyle(el).backgroundImage.includes('images.unsplash.com')},undefined,{timeout:15000}).catch(()=>{});
           item.heroImage=await page.locator('#app .vf-motion-backdrop').evaluate(el=>getComputedStyle(el).backgroundImage);
           if(!item.heroImage||item.heroImage==='none')report.errors.push({type:'hero-image-missing',width});
         }
@@ -89,6 +90,17 @@ try {
     }
   }
   await page.locator('#vf-language').selectOption('en');
+  for(const route of ['home','donate']){
+    activeRoute='mobile-screenshot:'+route;activeWidth=390;
+    await page.goto(base+'#'+route,{waitUntil:'domcontentloaded',timeout:45000});
+    await page.locator('#app').waitFor({state:'attached',timeout:15000});
+    await page.waitForTimeout(500);
+    const file=path.join(out,'screenshots','mobile-'+route+'-390.png');
+    await page.screenshot({path:file,fullPage:true,animations:'disabled'});
+    report.screenshots.push(file);
+  }
+  await page.goto(base+'#home',{waitUntil:'domcontentloaded',timeout:45000});
+  await page.locator('#vf-language').waitFor({state:'visible',timeout:15000});
   const menuButton=page.locator('#mb');
   if(await menuButton.isVisible()){
     await menuButton.click();
