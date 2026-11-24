@@ -35,7 +35,7 @@
  }
  function setupReveal(root){
   if(!('IntersectionObserver'in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var nodes=root.querySelectorAll('.sec,.card,.stats,.kpi,#vf-donation-feature,#vf-modern-visuals .vf-visual-card');
+  var nodes=root.querySelectorAll('.sec,.card,.stats,.kpi');
   nodes.forEach(function(node,i){
    if(node.classList.contains('vf-reveal'))return;
    node.classList.add('vf-reveal');
