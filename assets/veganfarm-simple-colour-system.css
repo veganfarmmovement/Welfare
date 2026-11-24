@@ -327,3 +327,20 @@ body>nav #mb{background:#173d2b!important;color:#fffdf5!important;border-color:#
 @media(prefers-reduced-motion:reduce){
   #app .vf-team-access *{transition:none!important;animation:none!important}
 }
+
+
+/* Team access gate hardening: keep the credential card opaque even when legacy route wrappers differ. */
+body .vf-team-access-card{
+  display:block!important;
+  background-color:#fff!important;
+  color:#1d2c21!important;
+  border:1px solid #e6e2d8!important;
+  border-radius:18px!important;
+  padding:clamp(22px,5vw,36px)!important;
+  box-shadow:0 18px 48px rgba(29,44,33,.08)!important;
+  opacity:1!important;
+  isolation:isolate;
+}
+body .vf-team-access-card :is(h1,h2,h3,h4,p,label,small,b,strong,span){
+  color:#1d2c21!important;
+}
