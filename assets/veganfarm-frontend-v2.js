@@ -97,6 +97,6 @@ function afterRoute(){
 window.go=function(keep){coreGo(keep);afterRoute()};
 window.addEventListener('hashchange',function(){setTimeout(afterRoute,0)});
 document.addEventListener('DOMContentLoaded',afterRoute,{once:true});
-coreGo(true);coreGo(true);afterRoute();
+coreGo(true);afterRoute();
 window.VeganFarmPresentation={version:2,owner:'assets/veganfarm-frontend-v2.js'};
 })();
