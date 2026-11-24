@@ -51,6 +51,8 @@ try{
   }
  }
  activeRoute='english-only';activeWidth=390;await page.setViewportSize({width:390,height:844});await page.goto(base+'#home',{waitUntil:'domcontentloaded'});
+ report.luxuryHomepageCheck=await page.evaluate(()=>({hero:!!document.querySelector('#app .vf-lx-hero'),map:!!document.querySelector('#app .vf-lx-map-panel'),impact:!!document.querySelector('#app .vf-lx-stat-grid'),donationJourney:!!document.querySelector('#app .vf-lx-donate-panel')}));
+ if(!report.luxuryHomepageCheck.hero||!report.luxuryHomepageCheck.map||!report.luxuryHomepageCheck.impact||!report.luxuryHomepageCheck.donationJourney)report.errors.push({type:'luxury-homepage-feature-missing',actual:report.luxuryHomepageCheck});
  report.englishOnlyCheck=await page.evaluate(()=>({lang:document.documentElement.lang,dir:document.documentElement.dir,languageControls:document.querySelectorAll('#vf-language,.vf-language-control,[aria-label*="Choose language"],[data-language-selector]').length,translationScripts:Array.from(document.scripts).filter(s=>(s.src||'').includes('veganfarm-languages')).length,nonEnglishOptions:Array.from(document.querySelectorAll('select option')).filter(o=>/^(hi|mr|gu|ur|ar|fr|es|ko|sd)$/i.test(o.value)).length}));
  if(report.englishOnlyCheck.lang!=='en'||report.englishOnlyCheck.dir!=='ltr'||report.englishOnlyCheck.languageControls||report.englishOnlyCheck.translationScripts||report.englishOnlyCheck.nonEnglishOptions)report.errors.push({type:'english-only-check-failed',actual:report.englishOnlyCheck});
  await page.locator('#mb').click();const menuOpen=await page.locator('#menu').evaluate(e=>e.classList.contains('open'));report.menuChecks.push({width:390,opens:menuOpen});if(!menuOpen)report.errors.push({type:'mobile-menu-failed'});
