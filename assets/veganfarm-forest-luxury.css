@@ -694,3 +694,55 @@ body{background:linear-gradient(145deg,#f3f1e5 0%,#e5ecd9 48%,#d8e5d0 100%)!impo
 #app .vf-motion-card.vf-learn:after{content:"LEARN • GROW • EMPOWER";position:absolute;z-index:2;top:22px;left:22px;padding:8px 12px;border-radius:30px;background:rgba(247,247,232,.92);color:#315c2d;font-size:10px;font-weight:800;letter-spacing:.12em}
 #app .vf-motion-card.vf-vegan:after{content:"KINDNESS IN EVERY CHOICE";position:absolute;z-index:2;top:22px;left:22px;padding:8px 12px;border-radius:30px;background:rgba(247,247,232,.92);color:#315c2d;font-size:10px;font-weight:800;letter-spacing:.12em}
 @media(max-width:820px){#app .vf-motion-card{min-height:350px!important}}
+
+
+/* VEGANFARM readability pass — universal dark text on light surfaces */
+:root{color-scheme:light!important;--vf-ink:#17251a;--vf-muted:#465648;--vf-page:#edf1e4;--vf-paper:#f8f8ef}
+html,body{background:#edf1e4!important;color:#17251a!important}
+body{background:linear-gradient(145deg,#f2f2e6 0%,#e7eedc 52%,#dce8d4 100%)!important;background-attachment:fixed!important}
+#app:not(#vf-never){background:transparent!important;color:#17251a!important}
+#app:not(#vf-never) *:not(img):not(video):not(canvas){color:#17251a!important;text-shadow:none!important}
+nav:not(#vf-never){background:rgba(248,248,239,.98)!important;color:#17251a!important;border-bottom:1px solid rgba(23,37,26,.14)!important;box-shadow:0 8px 26px rgba(30,55,32,.09)!important}
+nav:not(#vf-never) *{color:#17251a!important}
+nav:not(#vf-never) a.on{background:#dce9ce!important;color:#1c3c24!important}
+nav:not(#vf-never) .btn{background:#b7d94b!important;color:#17251a!important}
+footer:not(#vf-never){background:#dce8d0!important;color:#17251a!important;border-top:1px solid rgba(23,37,26,.14)!important}
+footer:not(#vf-never) *{color:#263b26!important}
+#app .hero{background:linear-gradient(115deg,#eaf0df 0%,#edf1e4 60%,#e1ebd8 100%)!important;color:#17251a!important;min-height:560px!important}
+#app .hero .in{background:rgba(249,249,239,.94)!important;border:1px solid rgba(23,37,26,.12)!important;border-radius:24px!important;padding:clamp(24px,3.5vw,42px)!important;box-shadow:0 18px 46px rgba(30,55,32,.10)!important;backdrop-filter:blur(10px)!important}
+#app .hero .in>span{background:#e3edd7!important;color:#31582d!important;border-color:rgba(49,88,45,.2)!important}
+#app .hero h1{color:#17251a!important;text-shadow:none!important}
+#app .hero p{color:#3d4d3e!important;line-height:1.75!important}
+#app .hero .btn,#app .btn{background:#b7d94b!important;color:#17251a!important;border:1px solid #8eae36!important;box-shadow:0 7px 18px rgba(40,75,30,.12)!important}
+#app .hero .btn.out,#app .btn.out{background:#f7f7ed!important;color:#17251a!important;border:1px solid rgba(23,37,26,.35)!important}
+#app .sec,#app .vf-impact-section,#app .vf-transparency-section,#app .vf-contact-strip,#app .vf-volunteer-section,#app .vf-quote-section,#app .vf-education-feature,#app .vf-detail-page,#app .vf-detail-content{background:#edf1e4!important;color:#17251a!important}
+#app .card,#app .note,#app .completed-section,#app .completed-case,#app .completed-total,#app .vf-focus-card,#app .vf-choice-card,#app .vf-about-image,#app .vf-contact-inner,#app .vf-transparency-steps,#app .vf-route-content .card{background:#f8f8ef!important;color:#17251a!important;border:1px solid rgba(23,37,26,.13)!important;box-shadow:0 12px 30px rgba(30,55,32,.07)!important}
+#app .vf-project-photo-card .vf-project-body,#app .vf-project-photo-card .vf-project-foot{background:#f8f8ef!important;color:#17251a!important}
+#app .vf-project-photo-card :is(h2,h3,h4,p,small,a,span){color:#17251a!important}
+#app .vf-project-photo-card .vf-project-foot a{color:#315c2d!important}
+#app .vf-project-empty,#app .vf-project-bottom-cta{background:#e3ecd8!important;color:#17251a!important;border-color:rgba(23,37,26,.18)!important}
+#app .vf-education-facts>div{border-color:rgba(23,37,26,.2)!important}
+#app .vf-motion-card{background-size:cover!important;background-position:center!important;min-height:420px!important}
+#app .vf-motion-card:before{background:linear-gradient(180deg,rgba(248,248,239,.10) 0%,rgba(248,248,239,.24) 38%,rgba(248,248,239,.96) 100%)!important}
+#app .vf-motion-card :is(strong,.vf-motion-label,.vf-motion-link){color:#17251a!important}
+#app .vf-motion-card .vf-motion-label{background:rgba(248,248,239,.96)!important;color:#31582d!important}
+#app .vf-motion-card .vf-motion-link{border-color:rgba(23,37,26,.28)!important;color:#31582d!important}
+#app .vf-quote-section blockquote{color:#17251a!important}
+#app .vf-quote-section{border-block:1px solid rgba(23,37,26,.1)!important}
+#app .vf-detail-page :is(h1,h2,h3,p,.vf-detail-note),#app .vf-detail-content :is(h1,h2,h3,p){color:#17251a!important}
+#app .vf-detail-page .card,#app .vf-route-content .card{background:#f8f8ef!important;color:#17251a!important;border-color:rgba(23,37,26,.15)!important}
+#app .vf-route-content .tbl th{background:#dce8d0!important;color:#17251a!important}
+#app .vf-route-content .tbl td{background:#f8f8ef!important;color:#17251a!important}
+#app .adm,#app .adm>*,#app .adm .panel,#app .adm .card,#app .adm .box,#app .adm aside,#app .adm main{background-color:#f3f5e9!important;color:#17251a!important;border-color:rgba(23,37,26,.14)!important}
+#app .adm table,#app .adm tr,#app .adm td,#app .adm th{background:#f8f8ef!important;color:#17251a!important;border-color:rgba(23,37,26,.16)!important}
+#app .adm th{background:#dce8d0!important}
+#app input,#app select,#app textarea,#app option{background:#fffef6!important;color:#17251a!important;border:1px solid #9cac8c!important}
+#app input::placeholder,#app textarea::placeholder{color:#59685a!important;opacity:1!important}
+#app label,#app .mut,#app small,#app .caption,#app .vf-detail-note,#app .vf-payment-note,#app .vf-image-disclaimer{color:#465648!important}
+#app p,#app li,#app label,#app .mut{font-size:15px!important;line-height:1.7!important}
+#app small{font-size:13px!important;line-height:1.55!important}
+#app .tag,#app .badge{background:#e2ecd6!important;color:#31582d!important;border:1px solid rgba(49,88,45,.16)!important}
+#app .vf-button-glass,#app .vf-button-cream,#app .vf-button-gold,#app .vf-button-dark{background:#b7d94b!important;color:#17251a!important;border-color:#8eae36!important}
+#app .vf-back-top,#vf-back-top{background:#b7d94b!important;color:#17251a!important}
+@media(max-width:800px){#app .hero{min-height:unset!important;padding:36px 0!important}#app .hero .in{padding:22px!important}#app .vf-motion-card{min-height:340px!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}#app *,#app *:before,#app *:after{animation:none!important;transition:none!important}}
