@@ -24,9 +24,16 @@ body:before{display:none!important}
 #app *:not(img):not(video):not(.vf-motion-backdrop){
   color:var(--vf-simple-text)!important;
   background-color:transparent!important;
-  background-image:none!important;
   box-shadow:none!important;
   text-shadow:none!important;
+}
+#app *:not(img):not(video):not(.vf-motion-backdrop):not(.hero):not(.vf-motion-hero):not(.vf-cinema):not(.vf-new-hero){
+  background-image:none!important;
+}
+#app .hero *:not(img):not(video):not(.vf-motion-backdrop){
+  color:var(--vf-simple-text)!important;
+  background-color:transparent!important;
+  background-image:none!important;
 }
 #app :is(section,article,.card,.panel,.box,.tile,.vf-reimagined-home,.vf-live-panel,.vf-campaign-grid,.vf-campaign-grid>*,.vf-impact-hero,.vf-impact-hero-copy,.vf-impact-stat,.vf-project-card,.vf-focus-card,.vf-motion-card,.vf-choice-card,.vf-detail-hero,.vf-route-top,.vf-route-content,.adm,.side,.main),
 #app :is(section,article,.card,.panel,.box,.tile) :is(.b,.vf-project-body,.vf-project-foot){
