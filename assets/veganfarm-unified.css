@@ -2195,3 +2195,13 @@ html[dir="rtl"] #app table{direction:rtl}
 #app .vf-team-access button[type=submit]:disabled{opacity:.65!important;cursor:wait!important}
 #app .vf-team-access #vf-team-gate-status{color:#536257!important;min-height:26px!important}
 @media(max-width:600px){#app .vf-team-access{padding:36px 16px!important}#app .vf-team-access .vf-team-access-panel{padding:24px 20px!important}}
+
+
+/* Team route shell also wraps legacy gate markup; enforce readable contrast at route level. */
+#app.vf-page-team .sec{background:#fffdf5!important;color:#1d2c21!important}
+#app.vf-page-team .sec .wrap{background:#fff!important;color:#1d2c21!important;border:1px solid #f2efe7!important;border-radius:18px!important;box-shadow:0 18px 56px rgba(29,44,33,.07)!important;padding:clamp(24px,4vw,44px)!important}
+#app.vf-page-team .sec :is(h1,h2,h3,h4,p,label,small,b,strong,span){color:#1d2c21!important}
+#app.vf-page-team .sec :is(input,select,textarea){background:#fff!important;color:#1d2c21!important;border:1px solid #dcd7ca!important}
+#app.vf-page-team .sec :is(button,.btn){background:#173d2b!important;color:#fff!important;border-color:#173d2b!important}
+#app.vf-page-team .sec :is(button,.btn).out{background:#fff!important;color:#173d2b!important}
+@media(max-width:600px){#app.vf-page-team .sec .wrap{padding:22px 18px!important}}
