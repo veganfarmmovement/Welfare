@@ -164,3 +164,9 @@ footer{border-top:1px solid var(--vf-simple-line)!important}
 #wa .wab{background:#173d2b!important;color:#fffdf5!important;border:1px solid #173d2b!important}
 footer{background:#fffdf5!important;color:#1d2c21!important}
 footer h1,footer h2,footer h3,footer p,footer span,footer small,footer a,footer b{color:#1d2c21!important}
+
+
+/* Final authority: footer stays ivory even when legacy #app footer rules are present. */
+#app footer,footer{background:#fffdf5!important;color:#1d2c21!important;border-top:1px solid #f2efe7!important}
+#app footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary),footer :is(h1,h2,h3,h4,p,li,span,small,strong,b,a,summary){color:#1d2c21!important}
+#app footer a:hover,footer a:hover{color:#286b36!important}
