@@ -38,12 +38,15 @@ assert.match(visualCss, /photo-1643786261573-9838e66d89dc[^"]*w=900/, "Mobile he
 assert.match(visualCss, /vf-photo-story-grid/, "Responsive gallery styles must exist");
 assert.match(visualCss, /prefers-reduced-motion:reduce/, "Image hover animation must respect reduced-motion settings");
 assert.match(html, /veganfarm-simple-colour-system\.css/, "The simple colour system must load on every page");
-assert.match(simpleColourCss, /--vf-simple-bg:#fffdf5/, "The website must use one consistent light background colour");
-assert.match(simpleColourCss, /--vf-simple-text:#1d2c21/, "The website must use one consistent dark text colour");
-assert.ok(simpleColourCss.includes("#app *:not(img):not(video):not(.vf-motion-backdrop){"), "Nested content must not add separate coloured text backgrounds");
-assert.ok(simpleColourCss.includes("footer{border-top:1px solid var(--vf-simple-line)!important}"), "Footer must use the same page background");
-assert.equal(simpleColourCss.split("{").length, simpleColourCss.split("}").length, "Simple colour stylesheet braces must be balanced");
-assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
+assert.match(html, /veganfarm-platform-system\\.css/, "The unified design system must load");
+assert.match(platformCss, /--vf-forest:#173D2B/, "Luxury forest palette must be defined");
+assert.match(platformCss, /--vf-ivory:#FFFDF5/, "Luxury ivory palette must be defined");
+assert.match(html, /id="vf-language"/, "Language selector must be present");
+assert.match(localeJs, /code:'sd'/, "Sindhi must be offered in the locale selector");
+assert.match(localeJs, /code:'ur',label:'اردو',dir:'rtl'/, "Urdu must use RTL");
+assert.match(localeJs, /code:'ar',label:'العربية',dir:'rtl'/, "Arabic must use RTL");
+assert.doesNotMatch(html, /photo-1557844352-761f2565b576|Plant-based food|Plant-based living/, "Food photography must not appear on the site");
+assert.equal(platformCss.split("{").length, platformCss.split("}").length, "Unified design stylesheet braces must be balanced");assert.doesNotMatch(visualCss, /photo-1776876031680-a2b42d79248f/, "The previous unverified hero image must be removed");
 assert.equal((visualCss.match(/\{/g)||[]).length,(visualCss.match(/\}/g)||[]).length,"Visual stylesheet braces must be balanced");
 new vm.Script(photoAsset, { filename: "veganfarm-private-case-photos.js" });
 
