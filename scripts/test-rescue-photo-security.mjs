@@ -87,6 +87,7 @@ assert.match(forestJs, /function footer\(/, "Forest presentation must own footer
 assert.match(forestJs, /id="fcon"><\/p><p id="socf"><\/p>/, "Presentation footer must preserve core notification and social-link mount points");
 assert.ok(html.includes("if(window.vfRole!=='team')return;") && html.indexOf("public_case_documents", html.indexOf("if(window.vfRole!=='team')return;")) > -1, "Anonymous visitors must not query restricted public case attachments");
 assert.match(forestJs, /vf-public-data-warning/, "Public data permission failures must be disclosed without exposing private case data");
+assert.match(forestJs, /route===\'home\'\|\|route===\'cases\'\|\|route\.indexOf\(\'case-\'\)===0/, "Public data notice must be limited to public rescue routes");
 assert.ok(html.includes("window.vfAfterLogin=function(){\n  if(window.vfRole!=='team')return Promise.resolve(baseAfterLogin&&baseAfterLogin());"), "Only authenticated Team sessions may load Team case attachments");
 assert.ok(html.includes("function enrichLoadedCases(){\n    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();"), "Anonymous visitors must not enrich cases from the private rescue_cases table");
 assert.match(visualCss, /#vf-piano-volume\{flex:1 1 110px;width:auto;min-width:0;max-width:100%/, "Optional piano controls must not create mobile horizontal overflow");
