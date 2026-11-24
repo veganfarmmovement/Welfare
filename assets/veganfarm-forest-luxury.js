@@ -135,7 +135,7 @@ function showPublicDataWarning(){
  var target=app.querySelector('.vf-live-panel')||app.querySelector('.vf-route-body')||app;
  target.insertBefore(note,target.firstChild);
 }
-function afterRoute(){updateNav();footer();decorateRoute();showPublicDataWarning();animate()}
+function afterRoute(){updateNav();footer();decorateRoute();showPublicDataWarning();var enquiries=document.getElementById('wa');if(enquiries)enquiries.hidden=(location.hash||'#home')==='#donate';animate()}
 go=function(keep){priorGo(keep);afterRoute()};
 window.addEventListener('vf:publicdataerror',showPublicDataWarning);
 document.addEventListener('DOMContentLoaded',afterRoute,{once:true});
