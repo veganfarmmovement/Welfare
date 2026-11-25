@@ -109,7 +109,7 @@ try{
 
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={loginVisible:await page.locator('#app .vf-admin-login').count()>0,dashboardVisible:await page.locator('#app .vf-admin-shell').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(!report.founderGate.loginVisible||report.founderGate.dashboardVisible)report.errors.push({type:'founder-access-gate-failed'});
  await page.goto(base+'#cases',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.querySelector('#app')&&document.querySelector('#app').innerText.includes('Kaalu'),{timeout:12000}).catch(()=>{});
+ await page.waitForFunction(()=>document.querySelector('#app')&&document.querySelector('#app').innerText.includes('Kaalu'),null,{timeout:12000}).catch(()=>{});
  report.publicCaseFeed={kaaluVisible:(await page.locator('#app').innerText()).includes('Kaalu'),caseCards:await page.locator('#app .card').count()};
  if(!report.publicCaseFeed.kaaluVisible)report.errors.push({type:'public-curated-case-feed-not-loaded',actual:report.publicCaseFeed});
 
