@@ -370,4 +370,16 @@ body>nav #menu details.more>.mp>a:hover,body>nav #menu details.more>.mp>a.on{bac
 .vf-admin-secondary:hover{background:#edf3eb!important;border-color:#9eb49e!important}
 .vf-admin-secondary:disabled{opacity:.65!important;cursor:wait!important}
 #vf-admin-auth-error{min-height:18px;margin:8px 0 0;color:#991b1b;font-size:12px;line-height:1.5}
-\n/* Education initiative: impact figures and editorial programme layout */\n.vf-education-impact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:12px 0 48px}\n.vf-education-stat{display:flex;min-height:132px;flex-direction:column;justify-content:center;gap:6px;padding:24px;background:#fffefa;border:1px solid #e5e2d8;border-radius:7px;box-shadow:0 12px 32px rgba(15,39,27,.055)}\n.vf-education-stat strong{font:500 clamp(30px,4vw,44px)/1 var(--vf-lx-serif,Georgia,serif);color:#286b36}\n.vf-education-stat span{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#68766c}\n.vf-education-story{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:clamp(24px,5vw,64px);align-items:center;margin:0 0 48px}\n.vf-education-story h2{font-size:clamp(30px,4vw,48px)!important;margin:10px 0 16px}\n.vf-education-story p{max-width:660px;color:#5e6d62}\n.vf-education-photo .vf-photo{margin:0}\n.vf-education-photo .vf-photo-media{aspect-ratio:4/3;border-radius:8px;overflow:hidden}\n.vf-completed-grid .completed-case .illustrative-label{display:block;position:static;margin:0;padding:8px 12px;background:#f3f0e6;color:#6c624d;font-size:11px;line-height:1.45}\n@media(max-width:700px){.vf-education-impact{grid-template-columns:1fr;gap:10px;margin-bottom:32px}.vf-education-stat{min-height:96px;padding:18px}.vf-education-story{grid-template-columns:1fr;gap:22px}}\n
+
+/* Education initiative: impact figures and editorial programme layout */
+.vf-education-impact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:12px 0 48px}
+.vf-education-stat{display:flex;min-height:132px;flex-direction:column;justify-content:center;gap:6px;padding:24px;background:#fffefa;border:1px solid #e5e2d8;border-radius:7px;box-shadow:0 12px 32px rgba(15,39,27,.055)}
+.vf-education-stat strong{font:500 clamp(30px,4vw,44px)/1 var(--vf-lx-serif,Georgia,serif);color:#286b36}
+.vf-education-stat span{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#68766c}
+.vf-education-story{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:clamp(24px,5vw,64px);align-items:center;margin:0 0 48px}
+.vf-education-story h2{font-size:clamp(30px,4vw,48px)!important;margin:10px 0 16px}
+.vf-education-story p{max-width:660px;color:#5e6d62}
+.vf-education-photo .vf-photo{margin:0}
+.vf-education-photo .vf-photo-media{aspect-ratio:4/3;border-radius:8px;overflow:hidden}
+.vf-completed-grid .completed-case .illustrative-label{display:block;position:static;margin:0;padding:8px 12px;background:#f3f0e6;color:#6c624d;font-size:11px;line-height:1.45}
+@media(max-width:700px){.vf-education-impact{grid-template-columns:1fr;gap:10px;margin-bottom:32px}.vf-education-stat{min-height:96px;padding:18px}.vf-education-story{grid-template-columns:1fr;gap:22px}}
