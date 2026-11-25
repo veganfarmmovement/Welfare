@@ -1,6 +1,6 @@
 /* VEGANFARM — Luxury cinematic presentation layer
    Presentation-only: does not alter routes, records, payment settings or access controls. */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
 :root{
  --vf-lx-ink:#18271f;--vf-lx-forest:#102f22;--vf-lx-forest-2:#1b4933;--vf-lx-leaf:#73936b;
  --vf-lx-ivory:#f8f7f1;--vf-lx-paper:#fffefa;--vf-lx-sand:#e9e4d8;--vf-lx-gold:#c9ad78;
