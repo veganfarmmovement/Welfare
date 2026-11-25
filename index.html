@@ -2444,7 +2444,7 @@ currentUser().then(function(u){
 /* VEGANFARM: retire individual Team accounts; shared code only. */
 (function () {
   'use strict';
-  var sharedCodePortal = window.TEAM2;
+  var sharedCodePortal = typeof P !== 'undefined' && typeof P['veganfarm-team'] === 'function' ? P['veganfarm-team'] : window.TEAM2;
   function renderTeamCodePortal() {
     return typeof sharedCodePortal === 'function'
       ? sharedCodePortal()
