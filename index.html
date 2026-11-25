@@ -2041,7 +2041,7 @@ currentUser().then(function(u){
       return client.from('case_documents').insert({case_id:caseId,document_type:docType,file_path:path,is_public:false,created_by:userId}).then(function(d){if(d.error)throw d.error;return path;});
     });
   }
-  window.tNew=function(e,forcedKind){
+  window.tNewLegacy=function(e,forcedKind){
     e.preventDefault();
     if(window.vfRole!=='team'){toast('Sign in with an approved Team Member account first.');return;}
     if(!TP.submit){toast('Case submissions are disabled by the Founder.');return;}
