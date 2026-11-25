@@ -108,6 +108,11 @@ try{
  await page.setViewportSize({width:1440,height:1000});
 
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={loginVisible:await page.locator('#app .vf-admin-login').count()>0,dashboardVisible:await page.locator('#app .vf-admin-shell').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(!report.founderGate.loginVisible||report.founderGate.dashboardVisible)report.errors.push({type:'founder-access-gate-failed'});
+ await page.goto(base+'#cases',{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('#app')&&document.querySelector('#app').innerText.includes('Kaalu'),{timeout:12000}).catch(()=>{});
+ report.publicCaseFeed={kaaluVisible:(await page.locator('#app').innerText()).includes('Kaalu'),caseCards:await page.locator('#app .card').count()};
+ if(!report.publicCaseFeed.kaaluVisible)report.errors.push({type:'public-curated-case-feed-not-loaded',actual:report.publicCaseFeed});
+
  // Capture a production baseline screenshot for visual comparison; it is never used as the test target.
  const baselinePage=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
  try{await baselinePage.goto('https://veganfarmmovement.github.io/Welfare/',{waitUntil:'domcontentloaded',timeout:20000});await baselinePage.waitForTimeout(500);const file=path.join(out,'screenshots','before-production-homepage.png');await baselinePage.screenshot({path:file,fullPage:false,animations:'disabled'});report.screenshots.push('before-production-homepage.png')}
