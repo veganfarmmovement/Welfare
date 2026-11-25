@@ -6,6 +6,7 @@ const read=(path)=>fs.readFileSync(new URL(path,import.meta.url),"utf8");
 const html=read("../index.html");
 const photoAsset=read("../assets/veganfarm-private-case-photos.js");
 const frontendJs=read("../assets/veganfarm-frontend-v2.js");
+const impactEnhancements=read("../impact-enhancements.js");
 const frontendCss=read("../assets/veganfarm-frontend-v2.css");
 const luxuryJs=read("../assets/veganfarm-luxury-cinematic.js");
 const luxuryCss=read("../assets/veganfarm-luxury-cinematic.css");
@@ -23,6 +24,7 @@ for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){
 }
 assert.ok(inlineCount>=15,"Existing core application modules must remain present and parse");
 new vm.Script(frontendJs,{filename:"veganfarm-frontend-v2.js"});
+new vm.Script(impactEnhancements,{filename:"impact-enhancements.js"});
 new vm.Script(luxuryJs,{filename:"veganfarm-luxury-cinematic.js"});
 new vm.Script(photoAsset,{filename:"veganfarm-private-case-photos.js"});
 
@@ -43,6 +45,9 @@ assert.match(frontendJs,/P\.home=home/,"V2 must own the homepage renderer");
 assert.match(frontendJs,/P\.projects=function/,"V2 must provide a dedicated Projects template");
 assert.match(frontendJs,/P\.education=function/,"V2 must provide a dedicated Education template");
 assert.match(frontendJs,/P\.impact=function/,"V2 must provide a dedicated Impact template");
+assert.match(impactEnhancements,/window\.vfCompletedCases/,"The final Impact renderer must use the completed-case data source");
+assert.match(impactEnhancements,/Recorded support:/,"Completed Impact cards must display their recorded support amounts");
+assert.match(impactEnhancements,/illustrative-label/,"Illustrative case photographs must be labelled");
 assert.match(frontendJs,/typeof window\.vfCompletedCases==='function'\?window\.vfCompletedCases\(\)/,"Impact summary must include completed case records");
 assert.match(frontendJs,/window\.vfCompletedWork\(\)/,"Impact page must render the completed case cards");
 assert.match(frontendJs,/more than 40 learners/,"Education page must report the free online classes for 40+ learners");
