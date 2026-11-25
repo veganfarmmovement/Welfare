@@ -815,6 +815,7 @@ return sb.from('profiles').select('role,status,display_name,email').eq('id',s.us
 vfUser=q.data||null;vfRole=vfUser&&vfUser.status==='approved'?vfUser.role:null;if(vfUser&&vfUser.role==='team'&&(!location.hash||location.hash==='#home'))location.hash='#team';return vfUser})})}
 
 function loadPublic(){if(vfRole==='founder')return Promise.resolve();
+/* Anonymous visitors read only the curated public_rescue_cases view, never the restricted rescue_cases table. */
 return Promise.all([
 sb.from('public_donation_feed').select('*').order('created_at',{ascending:true}),
 sb.from('public_financial_totals').select('*').single(),
