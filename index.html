@@ -2103,7 +2103,7 @@ currentUser().then(function(u){
   var oldFounderMore=window.vfLoadFounderMore;
   if(oldFounderMore)window.vfLoadFounderMore=function(){return Promise.resolve(oldFounderMore()).then(enrichLoadedCases);};
   var oldPublicMore=window.vfLoadPublicMore;
-  if(oldPublicMore)window.vfLoadPublicMore=function(){return Promise.resolve(oldPublicMore()).then(enrichLoadedCases);};
+  if(oldPublicMore)window.vfLoadPublicMore=function(){return Promise.resolve(oldPublicMore()).then(function(result){return Promise.resolve(enrichLoadedCases()).then(function(){return result;});});};
   var oldAfterLogin=window.vfAfterLogin;
   if(oldAfterLogin)window.vfAfterLogin=function(){return Promise.resolve(oldAfterLogin()).then(enrichLoadedCases);};
 
