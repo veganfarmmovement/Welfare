@@ -105,6 +105,9 @@ try{
   const grid=await page.locator('#vf-team-case-form .vf-case-grid').first().evaluate(e=>({columns:getComputedStyle(e).gridTemplateColumns.split(' ').length}));
   if(grid.columns!==1)report.errors.push({type:'team-form-mobile-layout-failed',kind,actual:grid});
  }
+ const submitHandler=await page.evaluate(()=>String(window.tNew));
+ report.teamSubmitHandler={secureEdgeFunction:submitHandler.includes('veganfarm-team-gate'),usesGateToken:submitHandler.includes('gateToken()')&&submitHandler.includes("fd.set('token',token)"),usesFormData:submitHandler.includes('new FormData(form)')};
+ if(!report.teamSubmitHandler.secureEdgeFunction||!report.teamSubmitHandler.usesGateToken||!report.teamSubmitHandler.usesFormData)report.errors.push({type:'team-submit-handler-not-secure',actual:report.teamSubmitHandler});
  await page.setViewportSize({width:1440,height:1000});
 
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={loginVisible:await page.locator('#app .vf-admin-login').count()>0,dashboardVisible:await page.locator('#app .vf-admin-shell').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(!report.founderGate.loginVisible||report.founderGate.dashboardVisible)report.errors.push({type:'founder-access-gate-failed'});
