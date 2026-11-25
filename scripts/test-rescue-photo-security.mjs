@@ -101,6 +101,7 @@ assert.ok(html.includes('name="treat"'),"The Treatment form must collect treatme
 assert.ok(html.includes('name="amt"'),"The Treatment form must collect estimated treatment cost");
 assert.ok(html.includes('name="case_video"'),"The Treatment form must support a case video");
 assert.ok(html.includes("window.tNew=async function(event,forcedKind)"),"Team case submissions must use the secure server handler");
+assert.ok(html.lastIndexOf("window.tNew=async function(event,forcedKind)")>html.lastIndexOf("window.tNew=function(e"),"The secure shared-code handler must be the final Team submit handler");
 assert.ok(html.includes("client.functions.invoke('veganfarm-team-gate',{body:fd})"),"Feeding and Treatment submissions must be sent to the Team Edge Function");
 
 assert.match(html,/client\.functions\.invoke\(\x27veganfarm-team-gate\x27/,"The active shared-code Team portal must use the existing Edge Function");
