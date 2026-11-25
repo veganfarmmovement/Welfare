@@ -35,6 +35,7 @@ assert.ok(html.includes("assets/veganfarm-luxury-cinematic.css"),"The luxury sty
 assert.ok(html.includes("assets/veganfarm-luxury-cinematic.js"),"The luxury presentation script must load");
 assert.match(luxuryJs,/P\.home=homepage/,"The cinematic layer must own the final homepage");
 assert.ok(luxuryJs.includes("city-level locations only"),"The rescue explorer must disclose approximate city-level locations");
+assert.ok(luxuryJs.includes("window.addEventListener('scroll'"),"Scroll reveals must have a visibility fallback");
 assert.match(luxuryCss,/prefers-reduced-motion:reduce/,"The luxury layer must respect reduced-motion preferences");
 assert.doesNotMatch(html,/veganfarm-unified\.css|veganfarm-simple-colour-system\.css|modern-upgrade\.js|veganfarm-editorial-redesign\.js|veganfarm-forest-luxury\.js/,"Legacy presentation layers must not be active");
 assert.doesNotMatch(html,/vf-language|veganfarm-languages/,"Language selectors and translation scripts must not be active");
