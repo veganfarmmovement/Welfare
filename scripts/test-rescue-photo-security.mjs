@@ -38,9 +38,11 @@ assert.ok(html.includes("assets/veganfarm-luxury-cinematic.js"),"The luxury pres
 assert.match(luxuryJs,/P\.home=homepage/,"The cinematic layer must own the final homepage");
 assert.ok(luxuryJs.includes("city-level locations only"),"The rescue explorer must disclose approximate city-level locations");
 assert.ok(luxuryJs.includes("window.addEventListener('scroll'"),"Scroll reveals must have a visibility fallback");
-assert.match(founderAdminJs,/unlockWithFounderAccount\(false\)/,"An approved signed-in Founder account must be able to open Admin without a stale PIN");
 assert.match(founderAdminJs,/this\.reset\(\);busy=false;await refresh\(\)/,"Successful PIN verification must release the login busy lock before loading the dashboard");
-assert.match(founderAdminJs,/async function unlockWithFounderAccount\(showError\)/,"Founder account unlock must use the server-verified route");
+assert.match(founderAdminJs,/sessionStorage\.removeItem\(KEY\)/,"Every fresh page load must clear any previous Founder session token");
+assert.doesNotMatch(founderAdminJs,/verify_auth|unlockWithFounderAccount|vf-admin-auth-login/,"Founder account sessions must not bypass the private access code");
+assert.match(founderAdminJs,/5\*60\*1000/,"Founder dashboard must auto-lock after five minutes of inactivity");
+assert.match(founderAdminJs,/if\(getToken\(\)\)logout\(\)/,"Leaving the Founder area must revoke the current session");
 assert.match(luxuryCss,/body\.vf-admin-active>nav/,"Admin mode must hide only the public top navigation");
 assert.match(luxuryCss,/\.vf-admin-sidebar nav\{display:grid!important/,"Founder sidebar navigation must remain visible");
 assert.match(luxuryCss,/prefers-reduced-motion:reduce/,"The luxury layer must respect reduced-motion preferences");
@@ -145,6 +147,7 @@ assert.match(photoAsset,/client\.storage\.from\(source\.bucket\)\.remove\(\[sour
 assert.match(photoAsset,/eq\('photo_path',storedPath\)\.neq\('id',item\.dbId\)/,"Founder deletion must check for other case references");
 assert.match(photoAsset,/storage-delete-failed/,"Storage deletion failures must be surfaced for manual cleanup");
 
+assert.match(edge,/action==="verify_auth"\) return reply\(\{error:"Founder access code is required\."\},401\)/,"Server must reject the previous Founder account-only bypass");
 assert.match(edge,/from\("rescue-case-photos"\)\.upload/,"Team Edge Function must upload to the private bucket");
 assert.match(edge,/photo_path: \`rescue-case-photos\/\$\{photoPath\}\`/,"Team Edge Function must persist the bucket prefix");
 assert.doesNotMatch(edge,/from\("case-photos"\)/,"Team Edge Function must not use legacy case-photos");
