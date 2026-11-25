@@ -88,6 +88,7 @@ assert.ok(!html.includes("APP.splice(0,APP.length,...APP.filter(function(a){retu
 
 
 assert.match(html,/vfTeamUnlock\(event\)/,"The existing server-verified Team unlock handler must remain connected");
+assert.ok(html.includes("var sharedCodePortal = typeof P !== 'undefined' && typeof P['veganfarm-team'] === 'function' ? P['veganfarm-team'] : window.TEAM2;"),"More-menu Team route must preserve the shared-code portal");
 assert.ok(html.includes("function feedingForm()"),"A dedicated Feeding form must be present");
 assert.ok(html.includes("function treatmentForm()"),"A dedicated Treatment form must be present");
 assert.ok(html.includes("caseSection('Feeding requirements'"),"The Feeding form must have its own feeding requirements section");
