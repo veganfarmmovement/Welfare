@@ -115,6 +115,12 @@ try{
  await page.waitForFunction(()=>document.querySelector('#app')&&document.querySelector('#app').innerText.includes('Kaalu'),null,{timeout:12000}).catch(()=>{});
  report.publicCaseFeed={kaaluVisible:(await page.locator('#app').innerText()).includes('Kaalu'),caseCards:await page.locator('#app .card').count()};
  if(!report.publicCaseFeed.kaaluVisible)report.errors.push({type:'public-curated-case-feed-not-loaded',actual:report.publicCaseFeed});
+ await page.goto(base+'#veganfarm-team',{waitUntil:'domcontentloaded'});
+ await page.waitForTimeout(150);
+ const teamRouteText=await page.locator('#app').innerText();
+ report.moreMenuTeamRoute={codeInput:await page.locator('#vf-team-code').count(),emailInputs:await page.locator('#app input[type="email"]').count(),secureHeading:teamRouteText.includes('Secure sign-in')};
+ if(report.moreMenuTeamRoute.codeInput!==1||report.moreMenuTeamRoute.emailInputs!==0||!report.moreMenuTeamRoute.secureHeading)report.errors.push({type:'more-menu-team-route-not-using-shared-code',actual:report.moreMenuTeamRoute,body:teamRouteText.slice(0,500)});
+
 
  // Capture a production baseline screenshot for visual comparison; it is never used as the test target.
  const baselinePage=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
