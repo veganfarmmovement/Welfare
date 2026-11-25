@@ -76,6 +76,21 @@ assert.match(html,/window\.VF_QR=QR/,"Donation presentation must reuse the exist
 assert.match(html,/function donSubmit\(e\)/,"The existing donation verification handler must remain connected");
 assert.match(html,/function fsub\(e,k/,"The existing Supabase-backed form submission handler must remain connected");
 assert.match(html,/vfTeamUnlock\(event\)/,"The existing server-verified Team unlock handler must remain connected");
+assert.match(html,/function feedingForm\\(\\)/,"A dedicated Feeding form must be present");
+assert.match(html,/function treatmentForm\\(\\)/,"A dedicated Treatment form must be present");
+assert.match(html,/caseSection\\('Feeding requirements'/,"The Feeding form must have its own feeding requirements section");
+assert.match(html,/caseSection\\('Veterinary and treatment details'/,"The Treatment form must have its own veterinary details section");
+assert.match(html,/name="fdaily"/,"The Feeding form must collect daily feeding cost");
+assert.match(html,/name="food_type"/,"The Feeding form must collect food type");
+assert.match(html,/name="frequency"/,"The Feeding form must collect feeding frequency");
+assert.match(html,/name="hosp"/,"The Treatment form must collect hospital details");
+assert.match(html,/name="cond"/,"The Treatment form must collect medical condition");
+assert.match(html,/name="treat"/,"The Treatment form must collect treatment details");
+assert.match(html,/name="amt"/,"The Treatment form must collect estimated treatment cost");
+assert.match(html,/name="case_video"/,"The Treatment form must support a case video");
+assert.match(html,/window\\.tNew=async function\\(event,forcedKind\\)/,"Team case submissions must use the secure server handler");
+assert.match(html,/client\\.functions\\.invoke\\('veganfarm-team-gate',\\{body:fd\\}\\)/,"Feeding and Treatment submissions must be sent to the Team Edge Function");
+
 assert.match(html,/client\.functions\.invoke\(\x27veganfarm-team-gate\x27/,"The active shared-code Team portal must use the existing Edge Function");
 assert.match(html,/assets\/veganfarm-private-case-photos\.js/,"The private signed-photo loader must remain included");
 assert.ok(html.includes("if(window.vfRole!=='team')return;")&&html.indexOf("public_case_documents",html.indexOf("if(window.vfRole!=='team')return;"))>-1,"Anonymous visitors must not query restricted case attachments");
