@@ -48,24 +48,27 @@ async function load() {
     ["profiles",db!.from("profiles").select("id,email,display_name,role,status,created_at").order("created_at",{ascending:false})],
   ] as const;
   const result:Record<string,unknown>={};
-  for(const [name,query] of names) {
+  const loaded=await Promise.all(names.map(async ([name,query])=>{
     const {data,error}=await query;
     if(error) throw new Error("Could not load "+name+": "+error.message);
-    result[name]=data||[];
-  }
+    return [name,data||[]] as const;
+  }));
+  for(const [name,rows] of loaded) result[name]=rows;
   const docs=result.documents as Record<string,unknown>[];
-  for(const d of docs) d.signed_url=await signed("case-documents",String(d.file_path||""));
   const donations=result.donations as Record<string,unknown>[];
-  for(const d of donations) d.screenshot_signed_url=await signed("donation-screenshots",String(d.screenshot_path||""));
   const expenses=result.expenses as Record<string,unknown>[];
-  for(const e of expenses) e.receipt_signed_url=await signed("expense-receipts",String(e.receipt_path||""));
   const cases=result.cases as Record<string,unknown>[];
-  for(const c of cases) {
-    const p=String(c.photo_path||"");
-    if(p.startsWith("rescue-case-photos/")) c.photo_url=await signed("rescue-case-photos",p.slice("rescue-case-photos/".length));
-    else if(p.startsWith("case-photos/")) c.photo_url=await signed("case-photos",p.slice("case-photos/".length));
-    else if(p) c.photo_url=await signed("rescue-case-photos",p);
-  }
+  await Promise.all([
+    Promise.all(docs.map(async d=>{d.signed_url=await signed("case-documents",String(d.file_path||""));})),
+    Promise.all(donations.map(async d=>{d.screenshot_signed_url=await signed("donation-screenshots",String(d.screenshot_path||""));})),
+    Promise.all(expenses.map(async e=>{e.receipt_signed_url=await signed("expense-receipts",String(e.receipt_path||""));})),
+    Promise.all(cases.map(async c=>{
+      const p=String(c.photo_path||"");
+      if(p.startsWith("rescue-case-photos/")) c.photo_url=await signed("rescue-case-photos",p.slice("rescue-case-photos/".length));
+      else if(p.startsWith("case-photos/")) c.photo_url=await signed("case-photos",p.slice("case-photos/".length));
+      else if(p) c.photo_url=await signed("rescue-case-photos",p);
+    }))
+  ]);
   return result;
 }
 Deno.serve(async (req:Request)=>{
@@ -84,6 +87,19 @@ Deno.serve(async (req:Request)=>{
     const {data,error}=await db.rpc("vf_founder_gate_verify",{p_pin:pin,p_token_hash:tokenHash,p_ip_hash:ipHash});
     if(error) { console.error("Founder gate error",error.message); return reply({error:"Founder access could not be verified."},500); }
     if(data!==true) return reply({error:"Incorrect Founder code or temporary lockout."},401);
+    return reply({ok:true,token:session,expires_in:28800});
+  }
+  if(action==="verify_auth") {
+    const authorization=req.headers.get("authorization")||"";
+    const jwt=authorization.replace(/^Bearer\s+/i,"");
+    if(!jwt || jwt===authorization) return reply({error:"Sign in with your Founder account first."},401);
+    const {data:userData,error:userError}=await db.auth.getUser(jwt);
+    const user=userData?.user;
+    if(userError || !user) return reply({error:"Your Founder sign-in has expired. Sign in again."},401);
+    const session=token(), tokenHash=await sha(session), ipHash=await sha(ip(req));
+    const {data,error}=await db.rpc("vf_founder_gate_auth_verify",{p_user_id:user.id,p_token_hash:tokenHash,p_ip_hash:ipHash});
+    if(error) { console.error("Founder account gate error",error.message); return reply({error:"Founder account could not be verified."},500); }
+    if(data!==true) return reply({error:"This signed-in account does not have approved Founder access."},403);
     return reply({ok:true,token:session,expires_in:28800});
   }
   const session=safe(body.token,200);
@@ -106,10 +122,40 @@ Deno.serve(async (req:Request)=>{
       if(!Number.isFinite(n)||n<0) return reply({error:"Enter a valid fundraising target."},400);
       patch.target_amount=n; patch.fundraising_target=n;
     }
-    if(body.status!==undefined) { patch.status=safe(body.status,100); patch.treatment_status=safe(body.status,100); }
+    if(body.status!==undefined) {
+      const nextStatus=safe(body.status,100);
+      patch.status=nextStatus; patch.treatment_status=nextStatus;
+      const isComplete=/^(completed|recovered|closed)$/i.test(nextStatus);
+      const {data:current,error:currentError}=await db.from("rescue_cases").select("extra,photo_path,photo_url").eq("id",id).maybeSingle();
+      if(currentError||!current) return reply({error:"Case not found."},404);
+      const extra=(current.extra&&typeof current.extra==="object")?{...current.extra}:{};
+      if(isComplete) {
+        const completedAmount=Number(body.completed_amount);
+        if(!Number.isFinite(completedAmount)||completedAmount<=0) return reply({error:"Enter the completed support amount before closing this case."},400);
+        extra.completed=true; extra.completed_amount=completedAmount; extra.completed_at=new Date().toISOString();
+        // Copy the submitted animal photograph into the public case-photos bucket only
+        // when the Founder completes the appeal. Medical documents remain private.
+        const storedPath=safe(current.photo_path,500);
+        if(storedPath && !current.photo_url) {
+          const sourcePath=storedPath.startsWith("rescue-case-photos/")?storedPath.slice("rescue-case-photos/".length):storedPath;
+          const {data:photoBlob,error:photoReadError}=await db.storage.from("rescue-case-photos").download(sourcePath);
+          if(!photoReadError && photoBlob) {
+            const ext=(sourcePath.split(".").pop()||"jpg").toLowerCase();
+            const contentType=ext==="png"?"image/png":"image/jpeg";
+            const publicPath="completed/"+id+"."+ext;
+            const {error:photoWriteError}=await db.storage.from("case-photos").upload(publicPath,photoBlob,{contentType,upsert:true});
+            if(!photoWriteError) patch.photo_url=URL+"/storage/v1/object/public/case-photos/"+publicPath;
+            else console.error("Completed case photo copy failed",photoWriteError.message);
+          } else console.error("Completed case photo read failed",photoReadError?.message);
+        }
+      } else {
+        delete extra.completed; delete extra.completed_amount; delete extra.completed_at;
+      }
+      patch.extra=extra;
+    }
     if(body.review_note!==undefined) patch.review_note=safe(body.review_note,2000);
     if(body.urgent!==undefined) { patch.urgent=body.urgent===true; patch.is_urgent=body.urgent===true; }
-    const {data,error}=await db.from("rescue_cases").update(patch).eq("id",id).select("id,case_code,publication").maybeSingle();
+    const {data,error}=await db.from("rescue_cases").update(patch).eq("id",id).select("id,case_code,publication,status,extra").maybeSingle();
     if(error||!data) return reply({error:error?.message||"Case not found."},400);
     await audit("Rescue Appeals","Case "+publication,id,"Founder changed publication to "+publication);
     return reply({ok:true,case:data});
