@@ -35,6 +35,20 @@ try{
     if(item.overflow)item.overflowElements=await page.evaluate(()=>Array.from(document.querySelectorAll('body *')).map(e=>({tag:e.tagName,id:e.id,cls:typeof e.className==='string'?e.className:'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)})).filter(x=>x.right>innerWidth+1&&x.width>0).slice(0,12));
     item.images=await page.locator('#app img').evaluateAll(imgs=>({total:imgs.length,loaded:imgs.filter(i=>i.complete&&i.naturalWidth>0).length,failed:imgs.filter(i=>i.complete&&i.naturalWidth===0).length}));
     if(!item.loaded)report.errors.push({type:'blank-route',route,width});
+    if(route==='impact'){
+     const body=await page.locator('#app').innerText();
+     const expected=['Golu','Pari','Dog','Delhi dog','₹3,000','₹6,000','₹14,000','₹6,900'];
+     item.completedCaseChecks=expected.filter(x=>body.includes(x));
+     item.illustrativeLabels=await page.locator('#app .illustrative-label').count();
+     const missing=expected.filter(x=>!body.includes(x));
+     if(missing.length||item.illustrativeLabels<4)report.errors.push({type:'completed-impact-cases-missing',missing,illustrativeLabels:item.illustrativeLabels,width});
+    }
+    if(route==='education'){
+     const body=await page.locator('#app').innerText();
+     item.educationChecks={fortyPlus:body.includes('40+'),online:body.toLowerCase().includes('online'),free:body.toLowerCase().includes('free')};
+     if(!item.educationChecks.fortyPlus||!item.educationChecks.online||!item.educationChecks.free)report.errors.push({type:'education-programme-details-missing',actual:item.educationChecks,width});
+    }
+
     if(!item.layout)report.errors.push({type:'missing-v2-layout',route,width});
     if(item.overflow)report.errors.push({type:'horizontal-overflow',route,width,scrollWidth:await page.evaluate(()=>document.documentElement.scrollWidth)});
     if(item.images.failed)report.errors.push({type:'broken-images',route,width,failed:item.images.failed});
