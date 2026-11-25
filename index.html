@@ -815,12 +815,17 @@ return sb.from('profiles').select('role,status,display_name,email').eq('id',s.us
 vfUser=q.data||null;vfRole=vfUser&&vfUser.status==='approved'?vfUser.role:null;if(vfUser&&vfUser.role==='team'&&(!location.hash||location.hash==='#home'))location.hash='#team';return vfUser})})}
 
 function loadPublic(){if(vfRole==='founder')return Promise.resolve();
-return Promise.all([sb.from('public_donation_feed').select('*').order('created_at',{ascending:true}),sb.from('public_financial_totals').select('*').single()]).then(function(r){
+return Promise.all([
+sb.from('public_donation_feed').select('*').order('created_at',{ascending:true}),
+sb.from('public_financial_totals').select('*').single(),
+window.vfLoadPublicMore?window.vfLoadPublicMore():Promise.resolve(false)
+]).then(function(r){
 if(r[0].error){console.warn('Public donation feed unavailable; rescue appeals will still load.',r[0].error)}else{
 DONS.length=0;(r[0].data||[]).forEach(function(x,i){DONS.push({id:'F'+i,n:x.donor,a:+x.amount,cat:x.category,tg:x.target_label||'',caseId:x.case_id||null,when:fmt(x.created_at),pub:x.donor==='Anonymous'?'anon':'name'})})}
 if(r[1].error){PUBLIC_VERIFIED_TOTAL=null;console.warn('Public financial totals unavailable; rescue appeals will still load.',r[1].error)}else{PUBLIC_VERIFIED_TOTAL=Number(r[1].data.verified_donations)||0;EXP=Number(r[1].data.approved_expenses)||0}
-/* Anonymous visitors read only the curated public_rescue_cases view; never query the restricted rescue_cases table directly. */
-return window.vfLoadPublicMore?window.vfLoadPublicMore():0}).then(function(){go(true)})}
+if(r[2]===false)window.vfPublicDataError=true;else window.vfPublicDataError=false;
+go(true)
+})}
 window.vfRefreshPublicData=loadPublic;
 
 function loadFounder(){PUBLIC_VERIFIED_TOTAL=null;return Promise.all([sb.from('donations').select('*').order('created_at',{ascending:true}),sb.from('audit_log').select('*').order('created_at',{ascending:false}).limit(500)]).then(function(res){
@@ -965,8 +970,8 @@ ev.forEach(function(e,i){var n=i+1;LG.push([n,fmt(e.ts),e.k==='don'?'Donation':'
 window.vfReload=function(){return window.vfLoadFounder().then(window.vfLoadFounderMore)};
 window.shareVfCase=function(caseCode){var url=location.origin+location.pathname+'#case-'+encodeURIComponent(caseCode);var title='Help this VEGANFARM rescue appeal';var message='Please support or share this Founder-approved animal rescue appeal: '+url;if(navigator.share){navigator.share({title:title,text:message,url:url}).catch(function(err){if(err&&err.name!=='AbortError')console.error(err)})}else if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(message).then(function(){toast('Appeal link copied. Share it with your contacts.')},function(){window.prompt('Copy this appeal link',url)})}else{window.prompt('Copy this appeal link',url)}};
 window.vfLoadPublicMore=function(){return sb.from('public_rescue_cases').select('*').order('created_at',{ascending:false}).then(function(r){
-if(r.error){console.error('Public rescue appeals could not be loaded:',r.error);return}
-APP.length=0;(r.data||[]).forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases();go(true)})};
+if(r.error){console.error('Public rescue appeals could not be loaded:',r.error);return false}
+APP.length=0;(r.data||[]).forEach(function(c){var a=mapCase(c);a.src='';APP.push(a);goLive(a)});syncCases();return true})};
 /* Load approved appeals for every visitor, without requiring Founder or Team sign-in. */
 function refreshPublicAppeals(){return window.vfRefreshPublicData?window.vfRefreshPublicData():window.vfLoadPublicMore()}
 /* Public case data is loaded after auth/role resolution below. */
