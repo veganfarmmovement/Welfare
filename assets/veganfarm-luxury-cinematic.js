@@ -81,6 +81,19 @@ function reveal(){
  var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('vf-lx-visible');observer.unobserve(entry.target)}})},{threshold:.12,rootMargin:'0px 0px -35px 0px'});
  items.forEach(function(el){el.setAttribute('data-vf-observed','1');observer.observe(el)});
 }
+var revealScrollQueued=false;
+window.addEventListener('scroll',function(){
+ if(revealScrollQueued)return;
+ revealScrollQueued=true;
+ window.requestAnimationFrame(function(){
+  revealScrollQueued=false;
+  app.querySelectorAll('.vf-lx-reveal:not(.vf-lx-visible)').forEach(function(el){
+   var rect=el.getBoundingClientRect();
+   if(rect.top<window.innerHeight&&rect.bottom>0)el.classList.add('vf-lx-visible');
+  });
+ });
+},{passive:true});
+
 document.addEventListener('click',function(e){
  var marker=e.target.closest&&e.target.closest('[data-vf-city]');
  if(marker){var city=marker.getAttribute('data-vf-city');app.querySelectorAll('[data-vf-city]').forEach(function(b){b.setAttribute('aria-pressed',String(b===marker))});app.querySelectorAll('[data-vf-case-city]').forEach(function(row){row.hidden=!(row.getAttribute('data-vf-case-city')===city||row.getAttribute('data-vf-case-city')==='other')})}
