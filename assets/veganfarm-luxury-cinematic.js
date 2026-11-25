@@ -17,7 +17,7 @@ var cityPoints=[
  {key:'chandigarh',names:['chandigarh'],x:49,y:20}
 ];
 function publishedCases(){
- try{return typeof cases!=='undefined'&&Array.isArray(cases)?cases.filter(function(c){return c&&c.id&&c.name&&!/^(Completed|Recovered|Closed)$/i.test(String(c.status||''))}):[]}catch(e){return []}
+ try{return typeof cases!=='undefined'&&Array.isArray(cases)?cases.filter(function(c){return c&&c.id&&c.name&&!/^(Completed|Recovered|Closed|Archived)$/i.test(String(c.status||''))}):[]}catch(e){return []}
 }
 function cityFor(value){
  var s=String(value||'').toLowerCase();
