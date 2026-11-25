@@ -79,6 +79,11 @@ assert.match(browserAudit,/team-access-desktop\.png/,"Browser audit must capture
 assert.match(html,/window\.VF_QR=QR/,"Donation presentation must reuse the existing UPI QR data");
 assert.match(html,/function donSubmit\(e\)/,"The existing donation verification handler must remain connected");
 assert.match(html,/function fsub\(e,k/,"The existing Supabase-backed form submission handler must remain connected");
+
+assert.match(html,/sb\\.from\\('public_rescue_cases'\\)\\.select\\('\*'\\)/,"Public rescue appeals must use the curated public view");
+assert.match(html,/Anonymous visitors read only the curated public_rescue_cases view/,"Anonymous visitors must not be blocked from the safe public case feed");
+assert.doesNotMatch(html,/if\\(!vfRole\\)\\{window\\.vfPublicDataError=true/,"Anonymous visitors must not be prevented from loading published cases");
+
 assert.match(html,/vfTeamUnlock\(event\)/,"The existing server-verified Team unlock handler must remain connected");
 assert.ok(html.includes("function feedingForm()"),"A dedicated Feeding form must be present");
 assert.ok(html.includes("function treatmentForm()"),"A dedicated Treatment form must be present");
