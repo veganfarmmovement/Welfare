@@ -3,13 +3,15 @@
 'use strict';
 var sb=window.vfSupabase,app=document.getElementById('app');
 if(!app||!sb)return;
-var KEY='vf_founder_session_v1',data=null,active='admin',busy=false;
+var KEY='vf_founder_session_v1',data=null,active='admin',busy=false,idleTimer=null;
 // Never restore Founder access from browser storage: every fresh page load requires the private code.
 try{sessionStorage.removeItem(KEY);}catch(e){}
 var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var money=function(v){return '₹'+(Number(v)||0).toLocaleString('en-IN',{maximumFractionDigits:2})};
 var getToken=function(){try{return sessionStorage.getItem(KEY)||''}catch(e){return ''}};
 var setToken=function(v){try{if(v)sessionStorage.setItem(KEY,v);else sessionStorage.removeItem(KEY)}catch(e){}};
+function armIdleLock(){if(idleTimer)clearTimeout(idleTimer);if(!getToken())return;idleTimer=setTimeout(function(){logout();alert('Founder dashboard locked after 5 minutes of inactivity. Enter your code to continue.');},5*60*1000);}
+['pointerdown','keydown','touchstart','mousemove'].forEach(function(eventName){document.addEventListener(eventName,function(){if(getToken())armIdleLock();},{passive:true});});
 var errorText=async function(e){try{var r=e&&e.context;if(r&&r.clone){var j=await r.clone().json();if(j&&j.error)return j.error}}catch(x){}return e&&e.message||'Request failed. Try again.'};
 async function api(action,extra){
  var body=Object.assign({action:action,token:getToken()},extra||{});
@@ -35,6 +37,7 @@ function shell(route,content){
  document.getElementById('vf-admin-refresh').onclick=refresh;
  app.querySelectorAll('[data-vf-action]').forEach(function(el){el.addEventListener('click',handleAction)});
  app.querySelectorAll('form[data-vf-form]').forEach(function(el){el.addEventListener('submit',handleForm)});
+ armIdleLock();
 }
 function stat(label,value,sub){return '<article class="vf-admin-stat"><small>'+esc(label)+'</small><strong>'+esc(value)+'</strong><span>'+esc(sub||'Live database record')+'</span></article>'}
 function overview(){
