@@ -89,19 +89,7 @@ Deno.serve(async (req:Request)=>{
     if(data!==true) return reply({error:"Incorrect Founder code or temporary lockout."},401);
     return reply({ok:true,token:session,expires_in:28800});
   }
-  if(action==="verify_auth") {
-    const authorization=req.headers.get("authorization")||"";
-    const jwt=authorization.replace(/^Bearer\s+/i,"");
-    if(!jwt || jwt===authorization) return reply({error:"Sign in with your Founder account first."},401);
-    const {data:userData,error:userError}=await db.auth.getUser(jwt);
-    const user=userData?.user;
-    if(userError || !user) return reply({error:"Your Founder sign-in has expired. Sign in again."},401);
-    const session=token(), tokenHash=await sha(session), ipHash=await sha(ip(req));
-    const {data,error}=await db.rpc("vf_founder_gate_auth_verify",{p_user_id:user.id,p_token_hash:tokenHash,p_ip_hash:ipHash});
-    if(error) { console.error("Founder account gate error",error.message); return reply({error:"Founder account could not be verified."},500); }
-    if(data!==true) return reply({error:"This signed-in account does not have approved Founder access."},403);
-    return reply({ok:true,token:session,expires_in:28800});
-  }
+  if(action==="verify_auth") return reply({error:"Founder access code is required."},401);
   const session=safe(body.token,200);
   if(!await valid(session)) return reply({error:"Founder session expired. Sign in again."},401);
   if(action==="load") {
