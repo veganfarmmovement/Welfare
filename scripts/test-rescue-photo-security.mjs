@@ -6,6 +6,7 @@ const read=(path)=>fs.readFileSync(new URL(path,import.meta.url),"utf8");
 const html=read("../index.html");
 const photoAsset=read("../assets/veganfarm-private-case-photos.js");
 const frontendJs=read("../assets/veganfarm-frontend-v2.js");
+const founderAdminJs=read("../assets/veganfarm-founder-admin.js");
 const impactEnhancements=read("../impact-enhancements.js");
 const frontendCss=read("../assets/veganfarm-frontend-v2.css");
 const luxuryJs=read("../assets/veganfarm-luxury-cinematic.js");
@@ -24,6 +25,7 @@ for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)){
 }
 assert.ok(inlineCount>=15,"Existing core application modules must remain present and parse");
 new vm.Script(frontendJs,{filename:"veganfarm-frontend-v2.js"});
+new vm.Script(founderAdminJs,{filename:"veganfarm-founder-admin.js"});
 new vm.Script(impactEnhancements,{filename:"impact-enhancements.js"});
 new vm.Script(luxuryJs,{filename:"veganfarm-luxury-cinematic.js"});
 new vm.Script(photoAsset,{filename:"veganfarm-private-case-photos.js"});
@@ -36,6 +38,11 @@ assert.ok(html.includes("assets/veganfarm-luxury-cinematic.js"),"The luxury pres
 assert.match(luxuryJs,/P\.home=homepage/,"The cinematic layer must own the final homepage");
 assert.ok(luxuryJs.includes("city-level locations only"),"The rescue explorer must disclose approximate city-level locations");
 assert.ok(luxuryJs.includes("window.addEventListener('scroll'"),"Scroll reveals must have a visibility fallback");
+assert.match(founderAdminJs,/unlockWithFounderAccount\(false\)/,"An approved signed-in Founder account must be able to open Admin without a stale PIN");
+assert.match(founderAdminJs,/this\.reset\(\);busy=false;await refresh\(\)/,"Successful PIN verification must release the login busy lock before loading the dashboard");
+assert.match(founderAdminJs,/async function unlockWithFounderAccount\(showError\)/,"Founder account unlock must use the server-verified route");
+assert.match(luxuryCss,/body\.vf-admin-active>nav/,"Admin mode must hide only the public top navigation");
+assert.match(luxuryCss,/\.vf-admin-sidebar nav\{display:grid!important/,"Founder sidebar navigation must remain visible");
 assert.match(luxuryCss,/prefers-reduced-motion:reduce/,"The luxury layer must respect reduced-motion preferences");
 assert.doesNotMatch(html,/veganfarm-unified\.css|veganfarm-simple-colour-system\.css|modern-upgrade\.js|veganfarm-editorial-redesign\.js|veganfarm-forest-luxury\.js/,"Legacy presentation layers must not be active");
 assert.doesNotMatch(html,/vf-language|veganfarm-languages/,"Language selectors and translation scripts must not be active");
