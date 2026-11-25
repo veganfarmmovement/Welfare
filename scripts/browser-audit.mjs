@@ -97,7 +97,7 @@ try{
   const item={kind,fields,missing,missingOptionalUploads:extras,grid};
   report.teamForms.push(item);
   if(missing.length||extras.length||grid.display!=='grid'||grid.columns!==2)report.errors.push({type:'team-form-render-failed',actual:item});
-  if(width===1440)await save('team-'+kind.toLowerCase()+'-form-desktop.png',true);
+  await save('team-'+kind.toLowerCase()+'-form-desktop.png',true);
  }
  await page.setViewportSize({width:390,height:844});
  for(const kind of ['Feeding','Treatment']){
