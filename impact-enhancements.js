@@ -47,15 +47,28 @@
     return item.completed === true || /^(Completed|Recovered|Closed)$/i.test(String(item.st || item.status || ''));
   }
   function livePublishedCases() {
+    if (typeof window.vfCompletedCases === 'function') {
+      return window.vfCompletedCases().map(function (item) {
+        return {
+          id: item.id,
+          name: item.n || item.animal_name || 'Animal rescue case',
+          location: item.loc || item.location || 'Location not provided',
+          photo: item.photo || item.photoUrl || '',
+          amount: Number(item.completedAmount || item.amount || 0),
+          illustrative: item.illustrative === true
+        };
+      });
+    }
     var all = typeof APP !== 'undefined' && Array.isArray(APP) ? APP : [];
     return all.filter(function (item) {
-      return item && item.pub === 'Published' && isCompleted(item);
+      return item && (item.pub === 'Published' || item.pub === 'Archived') && isCompleted(item);
     }).map(function (item) {
       return {
         id: item.id,
         name: item.n || item.animal_name || 'Animal rescue case',
         location: item.loc || item.location || 'Location not provided',
-        photo: item.photo || '',
+        photo: item.photo || item.photoUrl || '',
+        amount: Number(item.completedAmount || 0),
         illustrative: item.illustrative === true
       };
     });
@@ -72,12 +85,14 @@
     }).length;
     var cards = completed.map(function (item) {
       var photo = item.photo
-        ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.illustrative ? 'Illustrative animal-care photograph' : 'Photograph for ' + item.name) + '" loading="lazy" decoding="async" onerror="this.remove();this.parentNode.classList.add(\'photo-fallback\')">'
+        ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.illustrative ? 'Illustrative animal-care photograph' : 'Photograph for ' + item.name) + '" loading="lazy" decoding="async" onerror="this.remove();this.parentNode.classList.add(\\'photo-fallback\\')">'
         : '';
-      return '<article class="vf-completed-card"><div class="vf-completed-photo' + (photo ? '' : ' photo-fallback') + '">' + photo + (item.illustrative ? '<span class="vf-illustrative">Illustrative image</span>' : '') + '</div><div class="vf-completed-body"><span class="vf-completed-label">Published · completed</span><h3>' + esc(item.name) + '</h3><p class="vf-completed-location">Location: ' + esc(item.location) + '</p></div></article>';
+      var amount = Number(item.amount || 0);
+      var amountText = amount ? 'Recorded support: ₹' + amount.toLocaleString('en-IN') : 'Support amount not recorded';
+      return '<article class="vf-completed-card"><div class="vf-completed-photo' + (photo ? '' : ' photo-fallback') + '">' + photo + (item.illustrative ? '<span class="vf-illustrative illustrative-label">Illustrative image</span>' : '') + '</div><div class="vf-completed-body"><span class="vf-completed-label">Completed · Founder-reviewed</span><h3>' + esc(item.name) + '</h3><p class="vf-completed-location">Location: ' + esc(item.location) + '</p><p class="vf-completed-location">' + esc(amountText) + '</p></div></article>';
     }).join('');
     return '<section class="vf-impact-hero"><div class="vf-impact-hero-copy"><h2>Every life matters.<br>Every act of care counts.</h2><p>VEGANFARM Movement supports animal treatment and community welfare through reviewed initiatives. The figures below are calculated from published rescue-case records.</p></div>' + art() + '</section>' +
-      '<div class="vf-impact-stats"><div class="vf-impact-stat"><b>' + completed.length + '</b><span>Published completed rescue cases</span></div><div class="vf-impact-stat"><b>' + published.length + '</b><span>Total published rescue cases</span></div><div class="vf-impact-stat"><b>' + active + '</b><span>Active published rescue appeals</span></div></div>' +
+      '<div class="vf-impact-stats"><div class="vf-impact-stat"><b>' + completed.length + '</b><span>Completed rescue cases</span></div><div class="vf-impact-stat"><b>' + published.length + '</b><span>Total published rescue cases</span></div><div class="vf-impact-stat"><b>' + active + '</b><span>Active published rescue appeals</span></div></div>' +
       '<div class="vf-completed-heading"><h2>Completed animal cases</h2><p>Published case records · VEGANFARM Movement</p></div>' +
       '<div class="vf-completed-grid">' + (cards || '<p class="vf-impact-note">No completed rescue cases are currently published. Case stories will appear here after Founder review and publication.</p>') + '</div>' +
       '<p class="vf-impact-note">This page shows case counts from published records only. It does not estimate donations, expenses or financial impact. Financial figures should be checked against verified donation and approved expense records.</p>';
