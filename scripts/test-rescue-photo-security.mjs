@@ -106,7 +106,7 @@ assert.ok(html.includes("client.functions.invoke('veganfarm-team-gate',{body:fd}
 
 assert.match(html,/client\.functions\.invoke\(\x27veganfarm-team-gate\x27/,"The active shared-code Team portal must use the existing Edge Function");
 assert.match(html,/assets\/veganfarm-private-case-photos\.js/,"The private signed-photo loader must remain included");
-assert.ok(html.includes("if(window.vfRole!=='team')return;")&&html.indexOf("public_case_documents",html.indexOf("if(window.vfRole!=='team')return;"))>-1,"Anonymous visitors must not query restricted case attachments");
+assert.ok(html.includes("if(window.vfRole!=='team'||!ids.length)return true;")&&html.indexOf("public_case_documents",html.indexOf("if(window.vfRole!=='team'||!ids.length)return true;"))>-1,"Anonymous visitors must not query restricted case attachments");
 assert.ok(html.includes("window.vfAfterLogin=function(){if(window.vfRole!=='team')return Promise.resolve();"),"Only authenticated Team sessions may load Team case attachments");
 assert.ok(html.includes("function enrichLoadedCases(){\n    if(window.vfRole!=='founder'&&window.vfRole!=='team')return Promise.resolve();"),"Anonymous visitors must not enrich private rescue-case records");
 
