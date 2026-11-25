@@ -17,12 +17,19 @@ async function api(action,extra){
  return r.data;
 }
 function login(){
- app.innerHTML='<section class="vf-admin-login"><div class="vf-admin-login-card"><div class="vf-admin-mark">VF</div><span class="vf-admin-kicker">PRIVATE FOUNDER WORKSPACE</span><h1>Founder administration</h1><p>Enter the Founder access code to securely open the VEGANFARM control centre.</p><form id="vf-admin-login-form"><label for="vf-admin-pin">Founder access code</label><input id="vf-admin-pin" name="pin" type="password" autocomplete="current-password" required maxlength="100" placeholder="Enter your private code"><p id="vf-admin-login-error" role="alert"></p><button class="vf-admin-primary" type="submit">Unlock administration</button></form><small>Protected server-side verification · temporary session · private records</small></div></section>';
+ app.innerHTML='<section class="vf-admin-login"><div class="vf-admin-login-card"><div class="vf-admin-mark">VF</div><span class="vf-admin-kicker">PRIVATE FOUNDER WORKSPACE</span><h1>Founder administration</h1><p>Enter the Founder access code to securely open the VEGANFARM control centre.</p><form id="vf-admin-login-form"><label for="vf-admin-pin">Founder access code</label><input id="vf-admin-pin" name="pin" type="password" autocomplete="current-password" required maxlength="100" placeholder="Enter your private code"><p id="vf-admin-login-error" role="alert"></p><button class="vf-admin-primary" type="submit">Unlock administration</button></form><div class="vf-admin-login-divider"><span>OR</span></div><button type="button" class="vf-admin-secondary" id="vf-admin-auth-login">Continue with signed-in Founder account</button><p id="vf-admin-auth-error" role="alert"></p><small>Protected server-side verification · temporary session · private records</small></div></section>';
  document.getElementById('vf-admin-login-form').addEventListener('submit',async function(e){
   e.preventDefault();if(busy)return;busy=true;var btn=this.querySelector('button'),err=document.getElementById('vf-admin-login-error'),pin=this.elements.pin.value;
   btn.disabled=true;btn.textContent='Verifying securely…';err.textContent='';
   try{var r=await sb.functions.invoke('veganfarm-founder-admin',{body:{action:'verify',pin:pin}});if(r.error)throw new Error(await errorText(r.error));if(!r.data||!r.data.ok||!r.data.token)throw new Error(r.data&&r.data.error||'Access denied.');setToken(r.data.token);this.reset();await refresh();}
   catch(x){err.textContent=await errorText(x);btn.disabled=false;btn.textContent='Unlock administration';}
+  finally{busy=false;}
+ });
+ document.getElementById('vf-admin-auth-login').addEventListener('click',async function(){
+  if(busy)return;busy=true;var btn=this,err=document.getElementById('vf-admin-auth-error');
+  btn.disabled=true;btn.textContent='Checking Founder account…';err.textContent='';
+  try{var r=await sb.functions.invoke('veganfarm-founder-admin',{body:{action:'verify_auth'}});if(r.error)throw new Error(await errorText(r.error));if(!r.data||!r.data.ok||!r.data.token)throw new Error(r.data&&r.data.error||'Founder account verification failed.');setToken(r.data.token);await refresh();}
+  catch(x){err.textContent=await errorText(x);btn.disabled=false;btn.textContent='Continue with signed-in Founder account';}
   finally{busy=false;}
  });
 }
