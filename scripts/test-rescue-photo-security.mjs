@@ -13,6 +13,7 @@ const luxuryJs=read("../assets/veganfarm-luxury-cinematic.js");
 const luxuryCss=read("../assets/veganfarm-luxury-cinematic.css");
 const browserAudit=read("./browser-audit.mjs");
 const edge=read("../supabase/functions/veganfarm-team-gate/index.ts");
+const founderEdge=read("../supabase/functions/veganfarm-founder-admin/index.ts");
 const migration=read("../supabase-phase7-private-case-photo-storage.sql");
 const rollback=read("../supabase-phase7-private-case-photo-storage-rollback.sql");
 
@@ -147,7 +148,7 @@ assert.match(photoAsset,/client\.storage\.from\(source\.bucket\)\.remove\(\[sour
 assert.match(photoAsset,/eq\('photo_path',storedPath\)\.neq\('id',item\.dbId\)/,"Founder deletion must check for other case references");
 assert.match(photoAsset,/storage-delete-failed/,"Storage deletion failures must be surfaced for manual cleanup");
 
-assert.ok(edge.includes('if(action==="verify_auth") return reply({error:"Founder access code is required."},401);'),"Server must reject the previous Founder account-only bypass");
+assert.ok(founderEdge.includes('if(action==="verify_auth") return reply({error:"Founder access code is required."},401);'),"Server must reject the previous Founder account-only bypass");
 assert.match(edge,/from\("rescue-case-photos"\)\.upload/,"Team Edge Function must upload to the private bucket");
 assert.match(edge,/photo_path: \`rescue-case-photos\/\$\{photoPath\}\`/,"Team Edge Function must persist the bucket prefix");
 assert.doesNotMatch(edge,/from\("case-photos"\)/,"Team Edge Function must not use legacy case-photos");
