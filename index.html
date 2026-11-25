@@ -1154,30 +1154,21 @@ function loadFounderCaseExtras(){
 window.vfLoadFounderMore=function(){return Promise.resolve(baseMore&&baseMore()).then(restoreFounderState).then(loadFounderCaseExtras);};
 window.vfReload=function(){return Promise.resolve(window.vfLoadFounder&&window.vfLoadFounder()).then(window.vfLoadFounderMore).then(function(){go(true);});};
 window.vfLoadPublicMore=function(){
-  // Do not query a view that currently lacks an anonymous SELECT grant. No private-table fallback.
-  if(!window.vfRole){
-    window.vfPublicDataError=true;
-    window.dispatchEvent(new Event('vf:publicdataerror'));
-    return Promise.resolve();
-  }
-  return Promise.resolve(basePublicMore&&basePublicMore()).then(function(){
-    APP.splice(0,APP.length,...APP.filter(function(a){return !a.completed&&!/^(Completed|Recovered|Closed)$/i.test(String(a.status||''));}));
+  // Public visitors use only the curated public_rescue_cases view. The view exposes no rescuer contact details or private attachments.
+  return Promise.resolve(basePublicMore&&basePublicMore()).then(function(loaded){
+    if(loaded===false)throw new Error('The public rescue case feed could not be loaded.');
     if(typeof syncCases==='function')syncCases();
     var ids=APP.filter(function(a){return a.dbId;}).map(function(a){return a.dbId;});
-    if(!ids.length)return;
-    // Anonymous visitors receive published case fields and signed case photographs only.
-    // Do not query the optional document view until the visitor has an authenticated app role.
-    if(window.vfRole!=='team')return;
+    if(window.vfRole!=='team'||!ids.length)return true;
+    // Only an authenticated Team session can request its permitted public case documents.
     return sb.from('public_case_documents').select('case_id,document_type,file_path,is_public').in('case_id',ids).then(function(r){
-      if(r.error)throw r.error;var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};a.docsPub=a.docsPub||{};a.docsPath=a.docsPath||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';a.docsPath[k]=d.file_path;jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(s.error)throw s.error;a.docs[k]=s.data.signedUrl;a.docsPub[k]=true;}));});return Promise.all(jobs).then(function(){if(typeof syncCases==='function')syncCases();if(typeof go==='function')go(true);});
+      if(r.error)throw r.error;var jobs=[];(r.data||[]).forEach(function(d){var a=APP.find(function(x){return x.dbId===d.case_id;});if(!a)return;a.docs=a.docs||{};a.docsPub=a.docsPub||{};a.docsPath=a.docsPath||{};var k=d.document_type==='medical_report'?'rep':d.document_type==='veterinary_bill'?'bill':d.document_type==='treatment_video'?'video':'other';a.docsPath[k]=d.file_path;jobs.push(sb.storage.from('case-documents').createSignedUrl(d.file_path,3600).then(function(s){if(s.error)throw s.error;a.docs[k]=s.data.signedUrl;a.docsPub[k]=true;}));});return Promise.all(jobs).then(function(){if(typeof syncCases==='function')syncCases();return true;});
     });
   }).catch(function(error){
-    // Keep public browsing available when the published-view grant is unavailable.
-    // Do not fall back to querying the private rescue_cases table as anon.
     window.vfPublicDataError=error;
-    console.warn('Public rescue case data is unavailable to anonymous visitors; private case data was not queried.',error);
+    console.warn('Public rescue case data is unavailable; private case data was not queried.',error);
     window.dispatchEvent(new Event('vf:publicdataerror'));
-    return null;
+    return false;
   });
 };
 window.vfAfterLogin=function(){
