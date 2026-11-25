@@ -83,6 +83,9 @@ assert.match(html,/function fsub\(e,k/,"The existing Supabase-backed form submis
 assert.ok(html.includes("sb.from('public_rescue_cases').select('*')"),"Public rescue appeals must use the curated public view");
 assert.match(html,/Anonymous visitors read only the curated public_rescue_cases view/,"Anonymous visitors must not be blocked from the safe public case feed");
 assert.ok(!html.includes("if(!vfRole){window.vfPublicDataError=true"),"Anonymous visitors must not be prevented from loading published cases");
+assert.ok(!html.includes("if(!window.vfRole){\n    window.vfPublicDataError=true;"),"The public view loader must allow anonymous access to curated published records");
+assert.ok(!html.includes("APP.splice(0,APP.length,...APP.filter(function(a){return !a.completed"),"Completed records must remain available to the Impact page");
+
 
 assert.match(html,/vfTeamUnlock\(event\)/,"The existing server-verified Team unlock handler must remain connected");
 assert.ok(html.includes("function feedingForm()"),"A dedicated Feeding form must be present");
