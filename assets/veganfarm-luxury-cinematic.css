@@ -363,3 +363,10 @@ body>nav #menu details.more>.mp>a:hover,body>nav #menu details.more>.mp>a.on{bac
 #app form.vf-case-form .vf-case-section-head,.vf2-page form.vf-case-form .vf-case-section-head{display:block!important;width:100%!important;margin:0 0 16px!important}
 #app form.vf-case-form .vf-case-form-intro,.vf2-page form.vf-case-form .vf-case-form-intro{display:block!important;width:100%!important;margin:0 0 30px!important}
 @media(max-width:680px){#app form.vf-case-form,.vf2-page form.vf-case-form{width:100%!important;margin:18px auto 34px!important;padding:20px 16px!important}#app form.vf-case-form .vf-case-grid,.vf2-page form.vf-case-form .vf-case-grid{grid-template-columns:minmax(0,1fr)!important;row-gap:16px!important}#app form.vf-case-form .vf-case-field.vf-case-wide,.vf2-page form.vf-case-form .vf-case-field.vf-case-wide{grid-column:1!important}}
+
+.vf-admin-login-divider{display:flex;align-items:center;gap:12px;margin:18px 0 12px;color:#879188;font-size:10px;font-weight:800;letter-spacing:.16em}
+.vf-admin-login-divider:before,.vf-admin-login-divider:after{content:"";height:1px;flex:1;background:#e5e9e2}
+.vf-admin-secondary{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:48px!important;padding:12px 16px!important;border:1px solid #cfd9ce!important;border-radius:10px!important;background:#f7f9f5!important;color:#254b35!important;font-size:13px!important;font-weight:800!important;cursor:pointer!important}
+.vf-admin-secondary:hover{background:#edf3eb!important;border-color:#9eb49e!important}
+.vf-admin-secondary:disabled{opacity:.65!important;cursor:wait!important}
+#vf-admin-auth-error{min-height:18px;margin:8px 0 0;color:#991b1b;font-size:12px;line-height:1.5}
