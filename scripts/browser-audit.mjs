@@ -69,6 +69,30 @@ try{
  if(!report.team.heading.includes('Secure sign-in')||!report.team.bodyText.includes('Authorised Team members only')||!report.team.card||report.team.card.bg!=='rgb(255, 255, 255)'||report.team.buttonContrast<4.5)report.errors.push({type:'team-access-visual-failed',actual:report.team});
  await page.locator('#vf-team-code').focus();await page.keyboard.press('Tab');await page.keyboard.press('Shift+Tab');const focus=await page.locator('#vf-team-code').evaluate(e=>parseFloat(getComputedStyle(e).outlineWidth)>=3);if(!focus)report.errors.push({type:'team-focus-style-missing'});
  await save('team-access-mobile.png',true);await page.setViewportSize({width:1440,height:1000});await save('team-access-desktop.png',true);
+ report.teamForms=[];
+ await page.evaluate(()=>{let host=document.getElementById('vf-team-case-form');if(!host){host=document.createElement('div');host.id='vf-team-case-form';document.querySelector('#app').appendChild(host);}});
+ for(const kind of ['Feeding','Treatment']){
+  await page.evaluate(k=>window.showTeamCaseForm(k),kind);
+  const form=page.locator('#vf-team-case-form form.vf-case-form');
+  const fields=await form.locator('input,select,textarea').evaluateAll(es=>es.map(e=>e.name).filter(Boolean));
+  const grid=await form.locator('.vf-case-grid').first().evaluate(e=>({display:getComputedStyle(e).display,columns:getComputedStyle(e).gridTemplateColumns.split(' ').length}));
+  const required=await form.locator('[required]').evaluateAll(es=>es.map(e=>e.name));
+  const expected=kind==='Feeding'?['n','animal_type','loc','photo','desc','fn','food_type','frequency','fdaily','vname','vphone']:['n','animal_type','loc','photo','desc','hosp','cond','treat','amt','vname','vphone'];
+  const missing=expected.filter(x=>!fields.includes(x)||!required.includes(x));
+  const extras=kind==='Treatment'?['rep','bill','case_video','attachments'].filter(x=>!fields.includes(x)):[];
+  const item={kind,fields,missing,missingOptionalUploads:extras,grid};
+  report.teamForms.push(item);
+  if(missing.length||extras.length||grid.display!=='grid'||grid.columns!==2)report.errors.push({type:'team-form-render-failed',actual:item});
+  if(width===1440)await save('team-'+kind.toLowerCase()+'-form-desktop.png',true);
+ }
+ await page.setViewportSize({width:390,height:844});
+ for(const kind of ['Feeding','Treatment']){
+  await page.evaluate(k=>window.showTeamCaseForm(k),kind);
+  const grid=await page.locator('#vf-team-case-form .vf-case-grid').first().evaluate(e=>({columns:getComputedStyle(e).gridTemplateColumns.split(' ').length}));
+  if(grid.columns!==1)report.errors.push({type:'team-form-mobile-layout-failed',kind,actual:grid});
+ }
+ await page.setViewportSize({width:1440,height:1000});
+
  await page.goto(base+'#admin',{waitUntil:'domcontentloaded'});await page.waitForTimeout(200);report.founderGate={loginVisible:await page.locator('#app .vf-admin-login').count()>0,dashboardVisible:await page.locator('#app .vf-admin-shell').count()>0,bodyText:(await page.locator('#app').innerText()).slice(0,700)};if(!report.founderGate.loginVisible||report.founderGate.dashboardVisible)report.errors.push({type:'founder-access-gate-failed'});
  // Capture a production baseline screenshot for visual comparison; it is never used as the test target.
  const baselinePage=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
