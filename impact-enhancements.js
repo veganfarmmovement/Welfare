@@ -85,7 +85,7 @@
     }).length;
     var cards = completed.map(function (item) {
       var photo = item.photo
-        ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.illustrative ? 'Illustrative animal-care photograph' : 'Photograph for ' + item.name) + '" loading="lazy" decoding="async" onerror="this.remove();this.parentNode.classList.add(\\'photo-fallback\\')">'
+        ? '<img src="' + esc(item.photo) + '" alt="' + esc(item.illustrative ? 'Illustrative animal-care photograph' : 'Photograph for ' + item.name) + '" loading="lazy" decoding="async" onerror="this.remove();this.parentNode.classList.add(\'photo-fallback\')">'
         : '';
       var amount = Number(item.amount || 0);
       var amountText = amount ? 'Recorded support: ₹' + amount.toLocaleString('en-IN') : 'Support amount not recorded';
