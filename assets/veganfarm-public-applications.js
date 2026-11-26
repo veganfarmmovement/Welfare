@@ -97,5 +97,5 @@ P.adoption=adoptionPage;P['fund-grant']=grantPage;
 function injectNav(){var menu=document.getElementById('menu');if(!menu)return;[['adoption','Adoption'],['fund-grant','Fund Grant']].forEach(function(x){if(!menu.querySelector('a[href="#'+x[0]+'"]')){var a=document.createElement('a');a.className='l '+(location.hash==='#'+x[0]?'on':'');a.href='#'+x[0];a.textContent=x[1];menu.appendChild(a);}});}
 var oldGo=window.go;if(typeof oldGo==='function'){window.go=function(keep){var r=oldGo(keep);injectNav();return r;};}
 window.addEventListener('hashchange',function(){setTimeout(function(){injectNav();if(location.hash==='#adoption'){loadWa();loadAdoptions();bindAdoption();}if(location.hash==='#fund-grant')bindGrant();},120);});
-setTimeout(function(){injectNav();loadWa();if(!location.hash||location.hash==='#home'){if(typeof window.go==='function')window.go(true);}if(location.hash==='#adoption'){loadAdoptions();bindAdoption();}if(location.hash==='#fund-grant')bindGrant();},200);
+setTimeout(function(){injectNav();loadWa();if(!location.hash||location.hash==='#home'||location.hash==='#adoption'||location.hash==='#fund-grant'){if(typeof window.go==='function')window.go(true);}if(location.hash==='#adoption'){loadAdoptions();bindAdoption();}if(location.hash==='#fund-grant')bindGrant();},200);
 })();
