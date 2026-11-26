@@ -81,7 +81,8 @@ function genericTable(title,rows,cols,buttons){
 function content(route){
  if(route==='admin')return overview();
  if(route==='admin-cases')return caseCards();
- if(route==='admin-adoptions')return adoptionCards();\n if(route==='admin-grants')return grantCards();
+ if(route==='admin-adoptions')return adoptionCards();
+ if(route==='admin-grants')return grantCards();
  if(route==='admin-donations')return donations();
  if(route==='admin-expenses')return expenses();
  if(route==='admin-volunteers')return genericTable('Volunteers',data.volunteers||[],['Name','Email','Phone','Status','Created at'],r=>'<button data-vf-action="volunteer-review" data-id="'+esc(r.id)+'">Mark reviewed</button> <button data-vf-action="volunteer-approve" data-id="'+esc(r.id)+'">Approve</button> <button class="danger" data-vf-action="volunteer-reject" data-id="'+esc(r.id)+'">Reject</button>');
