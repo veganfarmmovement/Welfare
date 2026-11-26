@@ -7,7 +7,7 @@ await import('./test-rescue-photo-security.mjs');
 
 const base=process.env.VF_BASE_URL||'http://127.0.0.1:4173/';
 const widths=[360,390,430,768,1024,1440,1920];
-const routes=['home','about','cases','case-archived','projects','education','impact','transparency','donate','volunteer','contact','stories','policy-privacy','policy-donation','policy-refund','policy-terms','policy-financial','policy-volunteer','team','admin','admin-cases','admin-donations','admin-expenses','admin-volunteers','admin-messages','admin-stories','admin-team','admin-settings','admin-security','admin-audit'];
+const routes=['home','about','cases','adoption','fund-grant','case-archived','projects','education','impact','transparency','donate','volunteer','contact','stories','policy-privacy','policy-donation','policy-refund','policy-terms','policy-financial','policy-volunteer','team','admin','admin-cases','admin-adoptions','admin-grants','admin-donations','admin-expenses','admin-volunteers','admin-messages','admin-stories','admin-team','admin-settings','admin-security','admin-audit'];
 const out=path.resolve('artifacts');fs.mkdirSync(path.join(out,'screenshots'),{recursive:true});
 const report={base,widths,routes,routeChecks:[],errors:[],networkFailures:[],screenshots:[],englishOnlyCheck:null,menuChecks:[]};
 let activeRoute='',activeWidth=0;
