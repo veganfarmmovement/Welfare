@@ -38,6 +38,7 @@ jobs:
           node --check assets/veganfarm-frontend-v2.js
           node --check assets/veganfarm-luxury-cinematic.js
           node --check assets/veganfarm-founder-admin.js
+          node --check assets/veganfarm-public-applications.js
           node --check scripts/browser-audit.mjs
       - name: Start local static preview
         run: |
