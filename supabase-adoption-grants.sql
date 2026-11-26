@@ -99,6 +99,16 @@ alter table public.fund_grant_applications enable row level security;
 alter table public.fund_grant_documents enable row level security;
 alter table public.public_intake_rate_limits enable row level security;
 
+-- Explicitly deny direct browser/API access. The Edge Function uses service_role.
+create policy deny_direct_client_access on public.adoption_cases
+  for all to anon, authenticated using (false) with check (false);
+create policy deny_direct_client_access on public.fund_grant_applications
+  for all to anon, authenticated using (false) with check (false);
+create policy deny_direct_client_access on public.fund_grant_documents
+  for all to anon, authenticated using (false) with check (false);
+create policy deny_direct_client_access on public.public_intake_rate_limits
+  for all to anon, authenticated using (false) with check (false);
+
 revoke all on public.adoption_cases from public, anon, authenticated;
 revoke all on public.fund_grant_applications from public, anon, authenticated;
 revoke all on public.fund_grant_documents from public, anon, authenticated;
