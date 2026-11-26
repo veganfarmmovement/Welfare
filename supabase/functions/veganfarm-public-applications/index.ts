@@ -69,15 +69,20 @@ async function founderValid(tokenValue: string) {
 }
 async function uploadFiles(bucket: string, id: string, files: File[], max: number, types: string[]) {
   const paths: string[]=[];
-  for(const file of files) {
-    if(!validFile(file,max,types)) throw new Error("One or more files are too large or use an unsupported format.");
-    if(!(await signatureOk(file))) throw new Error("A file does not match its declared file type.");
-    const path=id+"/"+crypto.randomUUID()+"."+ext(file.type);
-    const {error}=await db!.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});
-    if(error) throw new Error("A supporting file could not be uploaded.");
-    paths.push(path);
+  try {
+    for(const file of files) {
+      if(!validFile(file,max,types)) throw new Error("One or more files are too large or use an unsupported format.");
+      if(!(await signatureOk(file))) throw new Error("A file does not match its declared file type.");
+      const path=id+"/"+crypto.randomUUID()+"."+ext(file.type);
+      const {error}=await db!.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});
+      if(error) throw new Error("A supporting file could not be uploaded.");
+      paths.push(path);
+    }
+    return paths;
+  } catch(error) {
+    await cleanFiles(bucket,paths);
+    throw error;
   }
-  return paths;
 }
 async function cleanFiles(bucket: string, paths: string[]) {
   if(paths.length) await db!.storage.from(bucket).remove(paths);
@@ -87,9 +92,13 @@ async function handle(req: Request) {
   if(req.method!=="POST") return reply({error:"Method not allowed."},405);
   if(!db) return reply({error:"The application service is not configured."},503);
   let body: Record<string,unknown>={};
+  let requestForm: FormData|null=null;
   const contentType=req.headers.get("content-type")||"";
   if(contentType.includes("application/json")) {
     try { body=await req.json(); } catch { return reply({error:"Invalid request."},400); }
+  } else if(contentType.includes("multipart/form-data")) {
+    try { requestForm=await req.clone().formData(); body.action=requestForm.get("action"); }
+    catch { return reply({error:"Invalid form submission."},400); }
   }
   const action=safe(body.action,60);
   try {
@@ -111,7 +120,7 @@ async function handle(req: Request) {
     }
 
     if(action==="submit_adoption") {
-      const form=await req.formData();
+      const form=requestForm || await req.formData();
       if(safe(form.get("website"),200)) return reply({ok:true,message:"Submission received."});
       if(form.get("consent")!=="on") return reply({error:"Confirm that you have permission to submit these details and photographs."},400);
       await rateLimit(req,"adoption",5);
@@ -162,7 +171,7 @@ async function handle(req: Request) {
     if(action==="submit_grant") {
       const user=await verifiedUser(req);
       if(!user) return reply({error:"Verify your email with the OTP before submitting a Fund Grant application."},401);
-      const form=await req.formData();
+      const form=requestForm || await req.formData();
       if(safe(form.get("website"),200)) return reply({ok:true,message:"Application received."});
       if(form.get("consent")!=="on") return reply({error:"Accept the grant application declaration before submitting."},400);
       await rateLimit(req,"grant",3);
