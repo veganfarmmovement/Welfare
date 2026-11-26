@@ -20,7 +20,8 @@ async function api(action,extra){
  if(!r.data||r.data.ok!==true)throw new Error(r.data&&r.data.error||'Founder request failed.');
  return r.data;
 }
-async function featureApi(action,extra){var r=await sb.functions.invoke('veganfarm-public-applications',{body:Object.assign({action:action,token:getToken()},extra||{})});if(r.error)throw new Error(await errorText(r.error));if(!r.data||r.data.ok!==true)throw new Error(r.data&&r.data.error||'Application review request failed.');return r.data;}\nfunction login(){
+async function featureApi(action,extra){var r=await sb.functions.invoke('veganfarm-public-applications',{body:Object.assign({action:action,token:getToken()},extra||{})});if(r.error)throw new Error(await errorText(r.error));if(!r.data||r.data.ok!==true)throw new Error(r.data&&r.data.error||'Application review request failed.');return r.data;}
+function login(){
  app.innerHTML='<section class="vf-admin-login"><div class="vf-admin-login-card"><div class="vf-admin-mark">VF</div><span class="vf-admin-kicker">PRIVATE FOUNDER WORKSPACE</span><h1>Founder administration</h1><p>Enter the Founder access code to securely open the VEGANFARM control centre.</p><form id="vf-admin-login-form"><label for="vf-admin-pin">Founder access code</label><input id="vf-admin-pin" name="pin" type="password" autocomplete="current-password" required maxlength="100" placeholder="Enter your private code"><p id="vf-admin-login-error" role="alert"></p><button class="vf-admin-primary" type="submit">Unlock administration</button></form><small>Protected server-side verification · temporary session · private records</small></div></section>';
  document.getElementById('vf-admin-login-form').addEventListener('submit',async function(e){
   e.preventDefault();if(busy)return;busy=true;var btn=this.querySelector('button'),err=document.getElementById('vf-admin-login-error'),pin=this.elements.pin.value;
