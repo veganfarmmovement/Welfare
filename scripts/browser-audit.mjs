@@ -14,7 +14,9 @@ let activeRoute='',activeWidth=0;
 const browser=await chromium.launch({headless:true});
 const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
 page.on('pageerror',e=>report.errors.push({type:'pageerror',message:e.message,route:activeRoute,width:activeWidth}));
-page.on('console',m=>{if(m.type()==='error')report.errors.push({type:'console',message:m.text(),route:activeRoute,width:activeWidth})});
+const localPreview=['127.0.0.1','localhost'].includes(new URL(base).hostname);
+page.on('console',m=>{if(m.type()==='error'){const message=m.text();const expectedLocalCors=localPreview&&(message.includes('blocked by CORS policy')&&message.includes('isijlklxfdqhrlpjxadj.supabase.co/functions/v1/veganfarm-public-applications')||message.includes('Failed to load resource: net::ERR_FAILED'));if(!expectedLocalCors)report.errors.push({type:'console',message,route:activeRoute,width:activeWidth})}});
+page.on('requestfailed',r=>{const expectedLocalCors=localPreview&&r.url().includes('isijlklxfdqhrlpjxadj.supabase.co/functions/v1/veganfarm-public-applications');if(!expectedLocalCors)report.networkFailures.push({type:'requestfailed',url:r.url(),failure:r.failure()?.errorText,route:activeRoute,width:activeWidth})});
 page.on('response',r=>{if(r.status()>=400)report.networkFailures.push({status:r.status(),url:r.url(),route:activeRoute,width:activeWidth})});
 const save=async(name,fullPage=true)=>{await page.locator('#app img[loading="lazy"]').evaluateAll(imgs=>imgs.forEach(img=>img.loading='eager'));await page.waitForFunction(()=>Array.from(document.querySelectorAll('#app img')).every(img=>img.complete),{timeout:10000}).catch(()=>{});const reveals=page.locator('#app .vf-lx-reveal');if(await reveals.count())await reveals.evaluateAll(async els=>{for(const el of els){el.scrollIntoView({behavior:'auto',block:'center'});await new Promise(resolve=>setTimeout(resolve,120));}});await page.waitForTimeout(250);await page.evaluate(()=>window.scrollTo(0,0));const file=path.join(out,'screenshots',name);await page.screenshot({path:file,fullPage,animations:'disabled'});report.screenshots.push(name)};
 try{
