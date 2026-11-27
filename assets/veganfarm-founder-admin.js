@@ -3,7 +3,7 @@
 'use strict';
 var sb=window.vfSupabase,app=document.getElementById('app');
 if(!app||!sb)return;
-var KEY='vf_founder_session_v1',data=null,active='admin',busy=false,idleTimer=null,featureData={adoptions:[],grants:[]};
+var KEY='vf_founder_session_v1',data=null,active='admin',busy=false,idleTimer=null,featureData={adoptions:[],grants:[]},featureLoadError='';
 // Never restore Founder access from browser storage: every fresh page load requires the private code.
 try{sessionStorage.removeItem(KEY);}catch(e){}
 var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
@@ -113,7 +113,7 @@ function grantCards(){
 }
 async function refresh(){
  if(busy)return;busy=true;
- try{if(!getToken()){login();return;}var r=await api('load');data=r.data;try{featureData=await featureApi('admin_load');}catch(featureError){console.error('Adoption / Fund Grant queue could not load',featureError);featureData={adoptions:[],grants:[]};}var route=(location.hash||'#admin').slice(1);if(!nav.some(x=>x[0]===route))route='admin';shell(route,content(route));}
+ try{if(!getToken()){login();return;}var r=await api('load');data=r.data;try{featureData=await featureApi('admin_load');featureLoadError='';}catch(featureError){console.error('Adoption / Fund Grant queue could not load',featureError);featureLoadError=featureError&&featureError.message||'The database request failed. Retry to load the saved records.';}var route=(location.hash||'#admin').slice(1);if(!nav.some(x=>x[0]===route))route='admin';shell(route,content(route));}
  catch(e){if(/session expired/i.test(e.message)){setToken('');login();}else{app.innerHTML='<section class="vf-admin-login"><div class="vf-admin-login-card"><h2>Dashboard could not load</h2><p>'+esc(e.message)+'</p><button class="vf-admin-primary" id="vf-admin-retry">Try again</button></div></section>';document.getElementById('vf-admin-retry').onclick=refresh;}}
  finally{busy=false;}
 }
