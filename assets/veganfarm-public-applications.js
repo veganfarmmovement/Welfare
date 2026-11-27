@@ -9,6 +9,7 @@ var css=`
 .vf-app-eyebrow{color:#477b3d;font-size:11px;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
 .vf-app-title{font-size:clamp(30px,5vw,48px);line-height:1.08;color:#193b25;margin:10px 0}
 .vf-app-lead{max-width:720px;color:#66736a;line-height:1.7}
+.vf-app-panel[hidden],.vf-app-panel form[hidden]{display:none!important}
 .vf-app-panel{background:#fff;border:1px solid #e7e9df;border-radius:22px;padding:clamp(18px,3vw,30px);box-shadow:0 16px 44px rgba(31,55,35,.07);margin:22px 0}
 .vf-app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
 .vf-app-field{display:flex;flex-direction:column;gap:7px;margin:0 0 15px;color:#263b2d;font-size:13px;font-weight:700}
@@ -101,8 +102,7 @@ document.getElementById('vf-grant-change-email').addEventListener('click',functi
 var grantOtpPanel=document.getElementById('vf-grant-otp-panel'),grantContinuePanel=document.getElementById('vf-grant-continue-panel'),grantFormPanel=document.getElementById('vf-grant-form-panel'),grantContinueButton=document.getElementById('vf-grant-continue');
 function openGrantForm(){grantContinuePanel.hidden=true;grantFormPanel.hidden=false;grantFormPanel.scrollIntoView({behavior:'smooth',block:'start'});}
 grantContinueButton.addEventListener('click',openGrantForm,{once:true});
-/* Restore a valid verified session if the applicant returns or a valid auth link opened the site. */
-sb.auth.getUser().then(function(result){var user=result&&result.data&&result.data.user;if(!result.error&&user&&user.email_confirmed_at){grantEmail=user.email||'';grantOtpPanel.hidden=true;grantContinuePanel.hidden=false;document.getElementById('vf-grant-verified-email').textContent='Email verified: '+grantEmail+'. Continue to complete your Fund Grant application.';}}).catch(function(){});
+/* Always require a fresh OTP request and code entry when opening Fund Grant. Existing browser sessions do not skip this step. */
 verifyForm.addEventListener('submit',async function(e){
  e.preventDefault();
  var button=verifyForm.querySelector('button[type=submit]'),otp=verifyForm.elements.otp.value.replace(/\s/g,''),status=document.getElementById('vf-grant-email-status');
