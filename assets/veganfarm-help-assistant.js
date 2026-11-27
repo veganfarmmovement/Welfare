@@ -15,7 +15,7 @@ var topics=[
 {title:'Contact',keys:['contact','whatsapp','phone','email','speak to someone','human support'],answer:'For help the assistant cannot resolve, use the official contact details displayed on the Contact page. The assistant cannot access private application records or make decisions for VEGANFARM.',url:'#contact',label:'Contact page'}
 ];
 var css=[
-'#vf-help-launch{position:fixed;right:22px;bottom:22px;z-index:99990;border:0;border-radius:999px;padding:14px 19px;background:#286b36;color:#fff;font:700 14px inherit;box-shadow:0 12px 35px #173c2740;cursor:pointer;display:flex;align-items:center;gap:9px}',
+'#vf-help-launch{position:fixed;right:22px;bottom:22px;z-index:99990;border:0;border-radius:999px;padding:14px 19px;background:#286b36;color:#fff;font:700 14px Arial,sans-serif;box-shadow:0 12px 35px #173c2740;cursor:pointer;display:flex;align-items:center;gap:9px}',
 '#vf-help-launch span:first-child{font-size:19px}',
 '#vf-help-panel{position:fixed;right:22px;bottom:86px;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100dvh - 120px));z-index:99991;background:#fff;color:#203327;border:1px solid #dce7dd;border-radius:20px;box-shadow:0 22px 70px #132b1d38;display:none;overflow:hidden;font-family:inherit}',
 '#vf-help-panel.vf-open{display:flex;flex-direction:column}',
@@ -35,7 +35,7 @@ var css=[
 '#vf-help-input:focus{border-color:#39844a;box-shadow:0 0 0 3px #39844a18}',
 '#vf-help-send{border:0;border-radius:12px;padding:0 15px;background:#286b36;color:#fff;font-weight:700;cursor:pointer}',
 '#vf-help-foot{padding:0 13px 10px;background:#fff;color:#778379;font-size:10px}',
-'@media(max-width:520px){#vf-help-launch{right:14px;bottom:14px}#vf-help-panel{right:8px;bottom:75px;width:calc(100vw - 16px);height:min(640px,calc(100dvh - 95px))}'
+'@media(max-width:520px){#vf-help-launch{right:14px;bottom:14px}#vf-help-panel{right:8px;bottom:75px;width:calc(100vw - 16px);height:min(640px,calc(100dvh - 95px))}}'
 ].join('');
 var style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
 var launch=document.createElement('button');launch.id='vf-help-launch';launch.type='button';launch.innerHTML='<span aria-hidden="true">✳</span><span>VEGANFARM Help</span>';
@@ -43,7 +43,7 @@ var panel=document.createElement('section');panel.id='vf-help-panel';panel.setAt
 document.body.appendChild(launch);document.body.appendChild(panel);
 var messages=panel.querySelector('#vf-help-messages'),input=panel.querySelector('#vf-help-input');
 function add(text,who,link,label){var d=document.createElement('div');d.className='vf-help-msg '+(who==='user'?'vf-help-user':'vf-help-bot');d.textContent=text;if(link){var a=document.createElement('a');a.className='vf-help-link';a.href=link;a.textContent=label||'Open page';d.appendChild(document.createElement('br'));d.appendChild(a)}messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
-function answer(q){var text=q.toLowerCase().replace(/[^a-z0-9\\s]/g,' ').replace(/\\s+/g,' ').trim(),best=null,score=0;topics.forEach(function(t){var n=0;t.keys.forEach(function(k){if(text.includes(k))n+=k.includes(' ')?3:1});t.title.toLowerCase().split(/\\s+/).forEach(function(w){if(w.length>3&&text.includes(w))n++});if(n>score){score=n;best=t}});if(best&&score>0){add(best.answer,'bot',best.url,best.label);return}add('I can guide you through VEGANFARM Movement topics: animal adoption, Fund Grant applications, animal rescue support, donations, education, volunteering, the Team portal, impact and website policies. Please ask a question about one of these areas or choose a topic below.','bot')}
+function answer(q){var text=q.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim(),best=null,score=0;topics.forEach(function(t){var n=0;t.keys.forEach(function(k){if(text.includes(k))n+=k.includes(' ')?3:1});t.title.toLowerCase().split(/\s+/).forEach(function(w){if(w.length>3&&text.includes(w))n++});if(n>score){score=n;best=t}});if(best&&score>0){add(best.answer,'bot',best.url,best.label);return}add('I can guide you through VEGANFARM Movement topics: animal adoption, Fund Grant applications, animal rescue support, donations, education, volunteering, the Team portal, impact and website policies. Please ask a question about one of these areas or choose a topic below.','bot')}
 function ask(q){q=String(q||'').trim();if(!q)return;add(q,'user');answer(q)}
 launch.addEventListener('click',function(){panel.classList.toggle('vf-open');if(panel.classList.contains('vf-open')&&!messages.children.length)add('Hello. I am the VEGANFARM website assistant. I can guide you through VEGANFARM Movement pages, projects, applications, donations and website policies. What would you like help finding?','bot');if(panel.classList.contains('vf-open'))input.focus()});
 panel.querySelector('#vf-help-close').addEventListener('click',function(){panel.classList.remove('vf-open')});
