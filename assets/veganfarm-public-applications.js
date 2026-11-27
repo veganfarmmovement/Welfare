@@ -80,11 +80,11 @@ function bindGrant(){
 var emailForm=document.getElementById('vf-grant-email-form'),verifyForm=document.getElementById('vf-grant-verify-form'),grantForm=document.getElementById('vf-grant-form'),trackForm=document.getElementById('vf-grant-track-form');
 if(!emailForm||emailForm.dataset.bound)return;emailForm.dataset.bound='1';
 var otpInput=verifyForm&&verifyForm.elements.otp;
-if(otpInput){otpInput.addEventListener('input',function(){this.value=this.value.replace(/\\D/g,'').slice(0,6);});otpInput.addEventListener('paste',function(){var el=this;setTimeout(function(){el.value=el.value.replace(/\\D/g,'').slice(0,6);},0);});}
+if(otpInput){otpInput.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,6);});otpInput.addEventListener('paste',function(){var el=this;setTimeout(function(){el.value=el.value.replace(/\D/g,'').slice(0,6);},0);});}
 async function requestGrantOtp(){
  var status=document.getElementById('vf-grant-email-status'),sendButton=emailForm.querySelector('button[type=submit]');
  grantEmail=emailForm.elements.email.value.trim().toLowerCase();
- if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(grantEmail))throw new Error('Enter a valid email address.');
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(grantEmail))throw new Error('Enter a valid email address.');
  sendButton.disabled=true;status.hidden=false;status.className='vf-app-status';status.textContent='Requesting a new verification code…';
  try{
   var result=await sb.auth.signInWithOtp({email:grantEmail,options:{shouldCreateUser:true}});
@@ -99,7 +99,7 @@ document.getElementById('vf-grant-resend').addEventListener('click',async functi
 document.getElementById('vf-grant-change-email').addEventListener('click',function(){grantOtpSent=false;verifyForm.hidden=true;emailForm.querySelector('input[name=email]').focus();var status=document.getElementById('vf-grant-email-status');status.hidden=true;status.className='vf-app-status';});
 verifyForm.addEventListener('submit',async function(e){
  e.preventDefault();
- var button=verifyForm.querySelector('button[type=submit]'),otp=verifyForm.elements.otp.value.replace(/\\s/g,''),status=document.getElementById('vf-grant-email-status');
+ var button=verifyForm.querySelector('button[type=submit]'),otp=verifyForm.elements.otp.value.replace(/\s/g,''),status=document.getElementById('vf-grant-email-status');
  if(!grantOtpSent){status.hidden=false;status.className='vf-app-status error';status.textContent='Request a verification code first.';return;}
  if(!/^[0-9]{6}$/.test(otp)){status.hidden=false;status.className='vf-app-status error';status.textContent='Enter the six-digit code from the latest email.';verifyForm.elements.otp.focus();return;}
  button.disabled=true;status.hidden=false;status.className='vf-app-status';status.textContent='Verifying your email…';
