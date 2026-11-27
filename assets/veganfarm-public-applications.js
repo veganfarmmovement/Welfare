@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 var sb=window.vfSupabase, endpoint='veganfarm-public-applications';
-var adoptionCache=[],waDigits='919823762859',grantEmail='',grantOtpSent=false;
+var adoptionCache=[],adoptionLoading=false,waDigits='919823762859',grantEmail='',grantOtpSent=false;
 var esc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};
 var css=`
 .vf-app-wrap{max-width:1120px;margin:0 auto;padding:30px 20px 70px}
@@ -51,16 +51,19 @@ return '<section class="vf-app-wrap"><div class="vf2-page-hero"><span class="vf-
 area('Health condition / medical information','health_status',false)+area('Why does this animal need adoption?','adoption_reason',true)+area('Suitable home / adopter requirements','home_requirements',false)+area('Special care or other requirements','special_requirements',false)+area('Additional description','description',false)+
 '<label class="vf-app-field">Animal photographs * <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple required></label><label class="vf-app-field">Supporting documents (optional) <input type="file" name="documents" accept="image/jpeg,image/png,image/webp,application/pdf" multiple></label>'+
 '<label class="vf-app-field" style="font-weight:500"><span><input type="checkbox" name="consent" required> I confirm that I have permission to submit these details and photographs, and agree that VEGANFARM may publish selected adoption information after approval.</span></label><label class="vf-app-honey">Website <input name="website" tabindex="-1" autocomplete="off"></label><p id="vf-adoption-status" class="vf-app-status" role="status" aria-live="polite" hidden></p><button class="vf-app-btn" type="submit">Submit adoption case for review</button></form></div>'+
-'<h2 class="vf-app-section-title">Approved animals looking for homes</h2><p class="vf-app-lead">Only cases approved by VEGANFARM appear here. Use the WhatsApp button on an individual case to enquire about that specific animal.</p><div id="vf-adoption-list" class="vf-app-cards"><p class="vf-app-note">Loading approved adoption cases…</p></div></section>';
+'<h2 class="vf-app-section-title">Approved animals looking for homes</h2><p class="vf-app-lead">Only cases approved by VEGANFARM appear here. This list refreshes automatically while the page is open. Use the WhatsApp button on an individual case to enquire about that specific animal.</p><button class="vf-app-btn secondary" type="button" id="vf-adoption-refresh">Refresh approved cases</button><div id="vf-adoption-list" class="vf-app-cards"><p class="vf-app-note">Loading approved adoption cases…</p></div></section>';
 }
 async function loadAdoptions(){
-var target=document.getElementById('vf-adoption-list');if(!target)return;
+var target=document.getElementById('vf-adoption-list');if(!target||adoptionLoading)return;
+adoptionLoading=true;
 try{var r=await invoke('list_adoptions');adoptionCache=r.cases||[];target.innerHTML=adoptionCache.length?adoptionCache.map(function(c){
 var msg='Hello VEGANFARM Movement, I am interested in adopting '+(c.animal_name||'this animal')+'. Case ID: '+c.case_code+'. Please connect me with the concerned person and guide me through the adoption process.';
 var link='https://wa.me/'+waDigits+'?text='+encodeURIComponent(msg);
 return '<article class="vf-app-card">'+(c.photos&&c.photos[0]?'<img src="'+esc(c.photos[0])+'" alt="'+esc(c.animal_name)+' available for adoption">':'<div style="height:220px;background:#f2f4ed"></div>')+'<div class="vf-app-card-body"><div class="vf-app-meta">'+esc(c.case_code)+' · '+esc(c.animal_type||'Animal')+' · '+esc(c.animal_location||'')+'</div><h3>'+esc(c.animal_name)+'</h3><div class="vf-app-meta">'+[c.breed,c.age_text,c.gender].filter(Boolean).map(esc).join(' · ')+'</div><p>'+esc(c.adoption_reason||c.description||'This animal is looking for a responsible home.')+'</p>'+(c.health_status?'<p><b>Health:</b> '+esc(c.health_status)+'</p>':'')+'<p class="vf-app-meta">Vaccination: '+esc(c.vaccination_status||'Not specified')+' · Sterilisation: '+esc(c.sterilisation_status||'Not specified')+'</p><a class="vf-app-btn" target="_blank" rel="noopener noreferrer" href="'+esc(link)+'">I WANT TO ADOPT</a></div></article>';
 }).join(''):'<p class="vf-app-status">There are no approved adoption cases available at the moment.</p>';
-}catch(e){target.innerHTML='<p class="vf-app-status error">Approved adoption cases could not be loaded. Please refresh the page.</p>';}}
+}catch(e){target.innerHTML='<p class="vf-app-status error">Approved adoption cases could not be loaded. Please refresh the page.</p>';}
+finally{adoptionLoading=false;}}
+
 function bindAdoption(){
  var form=document.getElementById('vf-adoption-form');if(!form||form.dataset.bound)return;form.dataset.bound='1';
  var draftKey='vf_adoption_draft_v1',draftNotice=document.createElement('p');
@@ -147,5 +150,8 @@ P.adoption=adoptionPage;P['fund-grant']=grantPage;
 function injectNav(){var menu=document.getElementById('menu');if(!menu)return;[['adoption','Adoption'],['fund-grant','Fund Grant']].forEach(function(x){if(!menu.querySelector('a[href="#'+x[0]+'"]')){var a=document.createElement('a');a.className='l '+(location.hash==='#'+x[0]?'on':'');a.href='#'+x[0];a.textContent=x[1];menu.appendChild(a);}});}
 var oldGo=window.go;if(typeof oldGo==='function'){window.go=function(keep){var r=oldGo(keep);injectNav();return r;};}
 window.addEventListener('hashchange',function(){setTimeout(function(){injectNav();if(location.hash==='#adoption'){loadWa();loadAdoptions();bindAdoption();}if(location.hash==='#fund-grant')bindGrant();},120);});
+document.addEventListener('click',function(e){if(e.target&&e.target.id==='vf-adoption-refresh')loadAdoptions();});
+setInterval(function(){if(location.hash==='#adoption'&&document.visibilityState==='visible')loadAdoptions();},20000);
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&location.hash==='#adoption')loadAdoptions();});
 injectNav();loadWa();if(!location.hash||location.hash==='#home'||location.hash==='#adoption'||location.hash==='#fund-grant'){if(typeof window.go==='function')window.go(true);}if(location.hash==='#adoption'){loadAdoptions();bindAdoption();}if(location.hash==='#fund-grant')bindGrant();
 })();
