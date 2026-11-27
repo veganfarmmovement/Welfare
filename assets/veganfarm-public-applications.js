@@ -62,12 +62,23 @@ return '<article class="vf-app-card">'+(c.photos&&c.photos[0]?'<img src="'+esc(c
 }).join(''):'<p class="vf-app-status">There are no approved adoption cases available at the moment.</p>';
 }catch(e){target.innerHTML='<p class="vf-app-status error">Approved adoption cases could not be loaded. Please refresh the page.</p>';}}
 function bindAdoption(){
-var form=document.getElementById('vf-adoption-form');if(!form||form.dataset.bound)return;form.dataset.bound='1';
-form.addEventListener('submit',async function(e){e.preventDefault();var status=document.getElementById('vf-adoption-status'),button=form.querySelector('button[type=submit]');status.hidden=false;status.className='vf-app-status';status.textContent='Submitting your adoption case securely…';button.disabled=true;
-try{var fd=new FormData(form);fd.set('urgent',fd.get('urgent')==='Yes'?'true':'false');if(!fd.get('consent'))throw new Error('Please confirm permission and consent before submitting.');var p=fd.getAll('photos').filter(function(x){return x instanceof File&&x.size>0;});if(!p.length||p.length>5)throw new Error('Upload between 1 and 5 animal photographs.');var docs=fd.getAll('documents').filter(function(x){return x instanceof File&&x.size>0;});if(docs.length>5)throw new Error('Upload no more than 5 supporting documents.');var result=await sb.functions.invoke(endpoint,{body:(function(){fd.set('action','submit_adoption');return fd;})()});if(result.error)throw result.error;if(!result.data||!result.data.ok)throw new Error(result.data&&result.data.error||'Submission failed.');form.reset();status.textContent='Submitted successfully. Your reference is '+result.data.case_code+'. The case will remain private until VEGANFARM reviews and approves it.';}
-catch(err){status.className='vf-app-status error';status.textContent=err.message||'Could not submit. Please try again.';}
-finally{button.disabled=false;}
-});
+ var form=document.getElementById('vf-adoption-form');if(!form||form.dataset.bound)return;form.dataset.bound='1';
+ var draftKey='vf_adoption_draft_v1',draftNotice=document.createElement('p');
+ draftNotice.className='vf-app-note';draftNotice.setAttribute('role','status');draftNotice.textContent='Your typed form details are saved temporarily in this browser tab so a refresh will not erase them. Uploaded photos and documents must be selected again after a refresh. Avoid using a shared device.';
+ form.insertBefore(draftNotice,form.firstChild);
+ function saveDraft(){
+  try{var values={};Array.prototype.forEach.call(form.elements,function(el){if(!el.name||['file','submit','button'].includes(el.type)||el.name==='website')return;if(el.type==='checkbox'||el.type==='radio')values[el.name]=el.checked;else values[el.name]=el.value;});sessionStorage.setItem(draftKey,JSON.stringify(values));}catch(e){console.warn('Adoption draft could not be saved in this browser tab.',e);}
+ }
+ function restoreDraft(){
+  try{var raw=sessionStorage.getItem(draftKey);if(!raw)return;var values=JSON.parse(raw);Object.keys(values).forEach(function(name){var el=form.elements.namedItem(name);if(!el)return;if(el.type==='checkbox'||el.type==='radio')el.checked=!!values[name];else if(el.type!=='file')el.value=values[name];});draftNotice.textContent='Your previous typed details have been restored. Please reselect any animal photos or supporting documents; browsers do not allow websites to restore uploaded files.';}catch(e){console.warn('Adoption draft could not be restored.',e);}
+ }
+ restoreDraft();
+ form.addEventListener('input',saveDraft);form.addEventListener('change',saveDraft);
+ form.addEventListener('submit',async function(e){e.preventDefault();var status=document.getElementById('vf-adoption-status'),button=form.querySelector('button[type=submit]');status.hidden=false;status.className='vf-app-status';status.textContent='Submitting your adoption case securely…';button.disabled=true;
+ try{var fd=new FormData(form);fd.set('urgent',fd.get('urgent')==='Yes'?'true':'false');if(!fd.get('consent'))throw new Error('Please confirm permission and consent before submitting.');var p=fd.getAll('photos').filter(function(x){return x instanceof File&&x.size>0;});if(!p.length||p.length>5)throw new Error('Upload between 1 and 5 animal photographs.');var docs=fd.getAll('documents').filter(function(x){return x instanceof File&&x.size>0;});if(docs.length>5)throw new Error('Upload no more than 5 supporting documents.');var result=await sb.functions.invoke(endpoint,{body:(function(){fd.set('action','submit_adoption');return fd;})()});if(result.error)throw result.error;if(!result.data||!result.data.ok)throw new Error(result.data&&result.data.error||'Submission failed.');form.reset();try{sessionStorage.removeItem(draftKey);}catch(e){}draftNotice.textContent='Your application has been submitted. The saved draft has been cleared from this browser tab.';status.textContent='Submitted successfully. Your reference is '+result.data.case_code+'. The case will remain private until VEGANFARM reviews and approves it.';}
+ catch(err){status.className='vf-app-status error';status.textContent=err.message||'Could not submit. Your typed details remain saved in this browser tab; please check your uploaded files and try again.';}
+ finally{button.disabled=false;}
+ });
 }
 function grantPage(){
 setTimeout(bindGrant,80);
