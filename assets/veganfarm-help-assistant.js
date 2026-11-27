@@ -1,0 +1,53 @@
+(function(){
+'use strict';
+if(window.__vfHelpAssistantLoaded)return;window.__vfHelpAssistantLoaded=true;
+var topics=[
+{title:'About VEGANFARM',keys:['about','what is veganfarm','organisation','movement','mission','founder'],answer:'VEGANFARM Movement is an independent, currently unregistered welfare movement working on animal welfare, vegan awareness and education. It is not a registered NGO. Visit About for its mission and work.',url:'#about',label:'About VEGANFARM'},
+{title:'Animal adoption',keys:['adoption','adopt','submit adoption','list animal','dog adoption','cat adoption'],answer:'Open the Adoption page and complete “Add an Adoption Case”. No OTP is required. VEGANFARM reviews submissions before publication. Only approved cases appear publicly. The “I WANT TO ADOPT” button opens a WhatsApp enquiry for that animal.',url:'#adoption',label:'Open Adoption'},
+{title:'Fund Grant',keys:['fund grant','grant','financial help','funding application','apply for fund','treatment funding'],answer:'The Fund Grant application requires email verification with a one-time code. Complete the application and attach supporting documents after verification. VEGANFARM reviews applications; submission does not mean automatic approval.',url:'#fund-grant',label:'Open Fund Grant'},
+{title:'Animal rescue',keys:['rescue','animal treatment','medical bill','vet bill','rescuer','feeding','treatment case'],answer:'VEGANFARM supports genuine independent rescuers with animal treatment costs when they cannot manage the bill. Requests are reviewed and are not automatically approved. Use the relevant application or authorised Team workflow.',url:'#cases',label:'Rescue information'},
+{title:'Donations',keys:['donate','donation','upi','qr','payment','bank','contribute','donor','receipt'],answer:'Visit the Donate page for the current payment options and beneficiary details. Check the beneficiary name shown in your payment app and retain your transaction confirmation. Do not rely on payment details shared in unofficial messages.',url:'#donate',label:'Open Donate page'},
+{title:'Education',keys:['education','english class','classes','students','ashram','aashram','teaching'],answer:'VEGANFARM supports free English-speaking education classes. Visit the Education page for project information and updates published on the website.',url:'#education',label:'Education project'},
+{title:'Volunteering',keys:['volunteer','join','team member','work with you','help veganfarm'],answer:'Open the Volunteer page to review the information and joining process. Do not share passwords, OTPs or sensitive identity documents in chat.',url:'#volunteer',label:'Volunteer with us'},
+{title:'Team portal',keys:['team portal','team login','team access','submit feeding','submit treatment'],answer:'The Team portal is for authorised team members. Open the Team page and follow the shared-access instructions provided to your team. Do not share the access code publicly.',url:'#team',label:'Team portal'},
+{title:'Impact',keys:['impact','completed cases','past work','work done','success story','results'],answer:'The Impact and Our Past Work sections show selected work and updates published by VEGANFARM. Open these pages for current public information.',url:'#impact',label:'View Impact'},
+{title:'Policies',keys:['privacy','policy','terms','refund','legal','data','personal information','complaint'],answer:'The website publishes a Privacy Policy, Donation and Fundraising Policy, Refund Policy, Terms and Conditions, Financial Transparency Policy, Volunteer and Team Code of Conduct, and Organisational and Legal Disclosure. Review the relevant policy before submitting information or making a contribution.',url:'#policy-privacy',label:'View website policies'},
+{title:'Contact',keys:['contact','whatsapp','phone','email','speak to someone','human support'],answer:'For help the assistant cannot resolve, use the official contact details displayed on the Contact page. The assistant cannot access private application records or make decisions for VEGANFARM.',url:'#contact',label:'Contact page'}
+];
+var css=[
+'#vf-help-launch{position:fixed;right:22px;bottom:22px;z-index:99990;border:0;border-radius:999px;padding:14px 19px;background:#286b36;color:#fff;font:700 14px inherit;box-shadow:0 12px 35px #173c2740;cursor:pointer;display:flex;align-items:center;gap:9px}',
+'#vf-help-launch span:first-child{font-size:19px}',
+'#vf-help-panel{position:fixed;right:22px;bottom:86px;width:min(390px,calc(100vw - 28px));height:min(590px,calc(100dvh - 120px));z-index:99991;background:#fff;color:#203327;border:1px solid #dce7dd;border-radius:20px;box-shadow:0 22px 70px #132b1d38;display:none;overflow:hidden;font-family:inherit}',
+'#vf-help-panel.vf-open{display:flex;flex-direction:column}',
+'#vf-help-head{background:linear-gradient(130deg,#286b36,#174b2b);color:white;padding:17px 18px;display:flex;align-items:center;gap:12px}',
+'#vf-help-head .vf-mark{width:38px;height:38px;border-radius:12px;background:#ffffff22;display:grid;place-items:center;font-size:20px}',
+'#vf-help-head strong{display:block;font-size:15px}#vf-help-head small{display:block;opacity:.85;margin-top:3px;font-size:11px}',
+'#vf-help-close{margin-left:auto;border:0;background:#ffffff20;color:#fff;border-radius:9px;width:34px;height:34px;font-size:20px;cursor:pointer}',
+'#vf-help-messages{flex:1;overflow:auto;padding:15px;background:#f8faf7;display:flex;flex-direction:column;gap:11px}',
+'.vf-help-msg{max-width:90%;padding:11px 13px;border-radius:14px;font-size:13px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}',
+'.vf-help-bot{align-self:flex-start;background:#fff;border:1px solid #e3ebe3;border-top-left-radius:5px}',
+'.vf-help-user{align-self:flex-end;background:#e5f1e5;border:1px solid #d3e6d4;border-top-right-radius:5px}',
+'.vf-help-link{display:inline-flex;margin-top:9px;padding:8px 11px;border-radius:9px;background:#286b36;color:#fff!important;text-decoration:none!important;font-weight:700;font-size:12px}',
+'#vf-help-topics{padding:9px 12px;display:flex;gap:7px;overflow:auto;border-top:1px solid #edf1ed;background:#fff}',
+'#vf-help-topics button{white-space:nowrap;border:1px solid #dbe6db;background:#fff;color:#285d34;border-radius:999px;padding:7px 10px;font-size:11px;cursor:pointer}',
+'#vf-help-form{display:flex;gap:8px;padding:12px;border-top:1px solid #e8eee8;background:#fff}',
+'#vf-help-input{min-width:0;flex:1;border:1px solid #d8e2d8;border-radius:12px;padding:12px;font:inherit;font-size:13px;outline:none}',
+'#vf-help-input:focus{border-color:#39844a;box-shadow:0 0 0 3px #39844a18}',
+'#vf-help-send{border:0;border-radius:12px;padding:0 15px;background:#286b36;color:#fff;font-weight:700;cursor:pointer}',
+'#vf-help-foot{padding:0 13px 10px;background:#fff;color:#778379;font-size:10px}',
+'@media(max-width:520px){#vf-help-launch{right:14px;bottom:14px}#vf-help-panel{right:8px;bottom:75px;width:calc(100vw - 16px);height:min(640px,calc(100dvh - 95px))}'
+].join('');
+var style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
+var launch=document.createElement('button');launch.id='vf-help-launch';launch.type='button';launch.innerHTML='<span aria-hidden="true">✳</span><span>VEGANFARM Help</span>';
+var panel=document.createElement('section');panel.id='vf-help-panel';panel.setAttribute('aria-label','VEGANFARM website help assistant');panel.innerHTML='<div id="vf-help-head"><div class="vf-mark">✳</div><div><strong>VEGANFARM Help Assistant</strong><small>Website guidance · VEGANFARM only</small></div><button id="vf-help-close" type="button" aria-label="Close help">×</button></div><div id="vf-help-messages" aria-live="polite"></div><div id="vf-help-topics"><button type="button" data-topic="Animal adoption">Adoption</button><button type="button" data-topic="Fund Grant">Fund Grant</button><button type="button" data-topic="Donations">Donations</button><button type="button" data-topic="Volunteering">Volunteering</button><button type="button" data-topic="Team portal">Team portal</button></div><form id="vf-help-form"><input id="vf-help-input" type="text" maxlength="500" placeholder="Ask about VEGANFARM..." autocomplete="off" aria-label="Ask about VEGANFARM"><button id="vf-help-send" type="submit">Send</button></form><div id="vf-help-foot">Public website guidance only. This assistant cannot access private applications or approve requests.</div>';
+document.body.appendChild(launch);document.body.appendChild(panel);
+var messages=panel.querySelector('#vf-help-messages'),input=panel.querySelector('#vf-help-input');
+function add(text,who,link,label){var d=document.createElement('div');d.className='vf-help-msg '+(who==='user'?'vf-help-user':'vf-help-bot');d.textContent=text;if(link){var a=document.createElement('a');a.className='vf-help-link';a.href=link;a.textContent=label||'Open page';d.appendChild(document.createElement('br'));d.appendChild(a)}messages.appendChild(d);messages.scrollTop=messages.scrollHeight}
+function answer(q){var text=q.toLowerCase().replace(/[^a-z0-9\\s]/g,' ').replace(/\\s+/g,' ').trim(),best=null,score=0;topics.forEach(function(t){var n=0;t.keys.forEach(function(k){if(text.includes(k))n+=k.includes(' ')?3:1});t.title.toLowerCase().split(/\\s+/).forEach(function(w){if(w.length>3&&text.includes(w))n++});if(n>score){score=n;best=t}});if(best&&score>0){add(best.answer,'bot',best.url,best.label);return}add('I can guide you through VEGANFARM Movement topics: animal adoption, Fund Grant applications, animal rescue support, donations, education, volunteering, the Team portal, impact and website policies. Please ask a question about one of these areas or choose a topic below.','bot')}
+function ask(q){q=String(q||'').trim();if(!q)return;add(q,'user');answer(q)}
+launch.addEventListener('click',function(){panel.classList.toggle('vf-open');if(panel.classList.contains('vf-open')&&!messages.children.length)add('Hello. I am the VEGANFARM website assistant. I can guide you through VEGANFARM Movement pages, projects, applications, donations and website policies. What would you like help finding?','bot');if(panel.classList.contains('vf-open'))input.focus()});
+panel.querySelector('#vf-help-close').addEventListener('click',function(){panel.classList.remove('vf-open')});
+panel.querySelector('#vf-help-form').addEventListener('submit',function(e){e.preventDefault();ask(input.value);input.value='';input.focus()});
+panel.querySelectorAll('[data-topic]').forEach(function(b){b.addEventListener('click',function(){ask(b.getAttribute('data-topic'))})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')panel.classList.remove('vf-open')});
+})();
