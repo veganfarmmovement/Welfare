@@ -87,7 +87,7 @@ async function requestGrantOtp(){
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(grantEmail))throw new Error('Enter a valid email address.');
  sendButton.disabled=true;status.hidden=false;status.className='vf-app-status';status.textContent='Requesting a new verification code…';
  try{
-  var result=await sb.auth.signInWithOtp({email:grantEmail,options:{shouldCreateUser:true}});
+  var result=await sb.auth.signInWithOtp({email:grantEmail,options:{shouldCreateUser:true,emailRedirectTo:'https://veganfarmmovement.github.io/Welfare/'}});
   if(result.error)throw result.error;
   grantOtpSent=true;verifyForm.hidden=false;document.getElementById('vf-grant-otp-destination').textContent=grantEmail;verifyForm.elements.otp.value='';verifyForm.elements.otp.focus();
   status.textContent='Verification email requested for '+grantEmail+'. Enter the latest six-digit code from the email. Check Spam and Promotions if it is not in your inbox.';
