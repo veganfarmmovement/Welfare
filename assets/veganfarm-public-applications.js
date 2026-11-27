@@ -79,6 +79,8 @@ return '<section class="vf-app-wrap"><div class="vf2-page-hero"><span class="vf-
 function bindGrant(){
 var emailForm=document.getElementById('vf-grant-email-form'),verifyForm=document.getElementById('vf-grant-verify-form'),grantForm=document.getElementById('vf-grant-form'),trackForm=document.getElementById('vf-grant-track-form');
 if(!emailForm||emailForm.dataset.bound)return;emailForm.dataset.bound='1';
+var otpInput=verifyForm&&verifyForm.elements.otp;
+if(otpInput){otpInput.addEventListener('input',function(){this.value=this.value.replace(/\\D/g,'').slice(0,6);});otpInput.addEventListener('paste',function(){var el=this;setTimeout(function(){el.value=el.value.replace(/\\D/g,'').slice(0,6);},0);});}
 async function requestGrantOtp(){
  var status=document.getElementById('vf-grant-email-status'),sendButton=emailForm.querySelector('button[type=submit]');
  grantEmail=emailForm.elements.email.value.trim().toLowerCase();
@@ -87,8 +89,8 @@ async function requestGrantOtp(){
  try{
   var result=await sb.auth.signInWithOtp({email:grantEmail,options:{shouldCreateUser:true}});
   if(result.error)throw result.error;
-  grantOtpSent=true;verifyForm.hidden=false;document.getElementById('vf-grant-otp-destination').textContent=grantEmail;verifyForm.elements.otp.value='';
-  status.textContent='A sign-in email request was accepted. If the email template is configured for OTP, enter the six-digit code. Check spam and promotions too.';
+  grantOtpSent=true;verifyForm.hidden=false;document.getElementById('vf-grant-otp-destination').textContent=grantEmail;verifyForm.elements.otp.value='';verifyForm.elements.otp.focus();
+  status.textContent='Verification email requested for '+grantEmail+'. Enter the latest six-digit code from the email. Check Spam and Promotions if it is not in your inbox.';
  }catch(error){status.className='vf-app-status error';status.textContent=error.message||'Could not request a verification email.';throw error;}
  finally{sendButton.disabled=false;}
 }
@@ -108,8 +110,8 @@ verifyForm.addEventListener('submit',async function(e){
   if(!session||!user||!user.email_confirmed_at)throw new Error('The code was accepted without a confirmed email session. Request a new code and try again.');
   var current=await sb.auth.getUser();
   if(current.error||!current.data.user||current.data.user.id!==user.id||!current.data.user.email_confirmed_at)throw new Error('Email session could not be confirmed. Please request a new code.');
-  grantOtpSent=false;document.getElementById('vf-grant-otp-panel').hidden=true;document.getElementById('vf-grant-form-panel').hidden=false;
-  document.getElementById('vf-grant-verified-email').textContent='Verified email: '+grantEmail;
+  grantOtpSent=false;verifyForm.elements.otp.value='';document.getElementById('vf-grant-otp-panel').hidden=true;document.getElementById('vf-grant-form-panel').hidden=false;
+  document.getElementById('vf-grant-verified-email').textContent='Email verified: '+grantEmail+'. You can now complete the Fund Grant application.';
  }catch(error){
   status.hidden=false;status.className='vf-app-status error';var message=String(error&&error.message||'Verification failed.');
   if(/invalid|expired|otp|token/i.test(message))message='That code is incorrect or expired. Use the latest six-digit code or request a new one.';
